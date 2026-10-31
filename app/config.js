@@ -31,3 +31,6 @@ export const LASER_TAG_COLORS = {
 /** Boundaries layer minzoom (line visibility). */
 export const BOUNDARIES_MIN_ZOOM = 11;
 export const BOUNDARIES_LABEL_MIN_ZOOM = 13;
+
+/** Laser year labels at polygon centers — only below this zoom. */
+export const LASER_LABEL_MAX_ZOOM = 13;

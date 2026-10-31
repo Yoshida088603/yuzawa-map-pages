@@ -9,6 +9,7 @@ export const LAYER_IDS = {
   shinrinOutline: "yuzawa-shinrin-outline",
   shinrinParcelsLine: "yuzawa-shinrin-parcels-line",
   laserFill: "yuzawa-laser-fill",
+  laserLabel: "yuzawa-laser-label",
   memosHalo: "yuzawa-memos-halo",
   memosCircle: "yuzawa-memos-circle",
   memosLabel: "yuzawa-memos-label",
@@ -21,6 +22,7 @@ export const SOURCE_IDS = {
   shinrin: "yuzawa-shinrin-src",
   shinrinParcels: "yuzawa-shinrin-parcels-src",
   laser: "yuzawa-laser-src",
+  laserLabels: "yuzawa-laser-labels-src",
   memos: "yuzawa-memos-src",
   gps: "yuzawa-gps-src",
 };
@@ -33,6 +35,7 @@ export function bringOverlaysFront(map) {
     LAYER_IDS.shinrinOutline,
     LAYER_IDS.shinrinParcelsLine,
     LAYER_IDS.laserFill,
+    LAYER_IDS.laserLabel,
     LAYER_IDS.memosHalo,
     LAYER_IDS.memosCircle,
     LAYER_IDS.memosLabel,
