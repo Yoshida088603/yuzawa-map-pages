@@ -1,5 +1,5 @@
 /* yuzawa-map-pages Service Worker — L1 offline: shell + memos + laser + shinrin outline */
-const SHELL_CACHE = "yuzawa-shell-v2";
+const SHELL_CACHE = "yuzawa-shell-v3";
 const DATA_CACHE = "yuzawa-data-v1";
 const PARCEL_CACHE = "yuzawa-parcels-v1";
 
@@ -19,6 +19,7 @@ const SHELL_URLS = [
   "./app/sheets.js",
   "./app/gestures.js",
   "./app/actions.js",
+  "./app/aist-3ddb.js",
   "./app/attributions.js",
   "./app/layer-order.js",
   "./app/pmtiles-protocol.js",
