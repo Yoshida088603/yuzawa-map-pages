@@ -22,8 +22,18 @@ import {
 import { bindGestures } from "./gestures.js";
 import { bringOverlaysFront } from "./layer-order.js";
 import { initStore } from "./store.js";
-import { addGpsLayers, bindGpsButton } from "./gps.js";
+import { addGpsLayers, bindGpsButton, stopFollow } from "./gps.js";
 import { registerServiceWorker } from "./offline.js";
+
+function bindHomeButton(map) {
+  const btn = document.getElementById("btn-home");
+  if (!btn) return;
+  btn.addEventListener("click", (e) => {
+    e.preventDefault();
+    stopFollow();
+    fitInitialYear(map, hudPadding());
+  });
+}
 
 const statusEl = document.getElementById("boot-status");
 
@@ -96,6 +106,7 @@ async function main() {
   fitInitialYear(map, hudPadding());
   bindGestures(map);
   bindGpsButton(map, setGpsHudStatus);
+  bindHomeButton(map);
   updateHudSyncBadge();
 
   status("OSM 背景を準備しています…");

@@ -1,5 +1,5 @@
 /* yuzawa-map-pages Service Worker — L1 offline: shell + memos + laser + shinrin outline */
-const SHELL_CACHE = "yuzawa-shell-v1";
+const SHELL_CACHE = "yuzawa-shell-v2";
 const DATA_CACHE = "yuzawa-data-v1";
 const PARCEL_CACHE = "yuzawa-parcels-v1";
 

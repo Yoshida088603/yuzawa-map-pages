@@ -60,10 +60,10 @@ body {
   cursor: pointer;
 }
 
+#btn-home,
 #btn-gps {
   position: absolute;
   right: calc(12px + var(--sat-r));
-  bottom: calc(var(--hud-h) + var(--sat-b) + 28px);
   z-index: 5;
   width: var(--touch);
   height: var(--touch);
@@ -75,6 +75,14 @@ body {
   font-size: 1.15rem;
   line-height: 1;
   cursor: pointer;
+}
+
+#btn-gps {
+  bottom: calc(var(--hud-h) + var(--sat-b) + 28px);
+}
+
+#btn-home {
+  bottom: calc(var(--hud-h) + var(--sat-b) + 28px + var(--touch) + 8px);
 }
 
 #btn-gps.following {
