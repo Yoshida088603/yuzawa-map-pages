@@ -111,6 +111,25 @@ robocopy ..\yuzawa_NInI_henkan\public . /E /XD .git .venv-scripts
 4. ブラウザのNetwork/ConsoleにCORS/401/403等のエラーがないかを記録します。
 5. 公開版ZIP取得の実機確認が完了するまで、内部版の接続先切替は進めません。
 
-### 内部版（将来・別PR）
+### 内部版（差分入力のみ・公開版は残す）
 
-公開版で検索と実ZIP取得が証拠付きで通るまで着手しません。内部版URL・Cookie・トークンは本リポジトリに入れません。接続方式は「Pages直叩き / 同一オリジン配備 / 組織承認済み認証」を比較し、認証の迂回は行いません。
+公開版ボタン・公開probeはそのまま使えます。内部は **変わりうる値だけ** を実行時入力します（ホスト名・Cookie・トークンはリポジトリに書かない）。
+
+変わりうる入力:
+- `--base` / 地図の localStorage `aist3ddb.internal.base`（必須・公開URLは不可）
+- `credentials`（地図: `omit`|`include`。内部でセッションCookieが要るなら `include`）
+- 任意: `--features-path` / `--zipdata-path`（既定は公開と同じ `/api/v1/...`）
+- 任意: `--cookie-env` / `--token-env` / `--header`（値は環境変数から。レポートに秘密は出さない）
+
+probe（venv）:
+
+```powershell
+.\.venv\Scripts\python.exe .\scripts\probe_aist_3ddb_internal.py `
+  --base https://YOUR-INTERNAL-HOST/3ddb `
+  --lng 140.55 --lat 39.16 `
+  --cookie-env AIST_3DDB_COOKIE `
+  --probe-zipdata `
+  --out .\artifacts\aist-3ddb-internal-probe.json
+```
+
+地図UI: 長押しメニュー →「内部版の接続先を設定」で base 等をこのブラウザの localStorage にだけ保存 →「内部版を検索」。クリアは設定プロンプトを空にする。

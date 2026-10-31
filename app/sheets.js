@@ -25,6 +25,12 @@ import {
   build3ddbZipUrl,
   probe3ddbZip,
   AIST_PUBLIC_TEST_POINT,
+  AIST_PUBLIC_BASE,
+  AIST_DEFAULT_FEATURES_PATH,
+  AIST_DEFAULT_ZIPDATA_PATH,
+  readInternal3ddbConfig,
+  writeInternal3ddbConfig,
+  clearInternal3ddbConfig,
 } from "./aist-3ddb.js";
 
 function $(id) {
@@ -454,37 +460,50 @@ export function openActionSheet(lng, lat, memoFeature) {
     closeAllSheets();
   });
 
-  // 公開版のみ。ZIP本体はCORS越しにfetchせず、ユーザー操作による通常のリンク遷移で取得する。
-  const aistBtn = addBtn("AIST 3DDB：元データZIPを検索", async () => {
+  // 公開版は固定。内部版は localStorage の差分設定のみ（ホスト等はリポに埋め込まない）。
+  async function runAistSearch(triggerBtn, opts) {
     const previous = $("aist-3ddb-results");
     if (previous) previous.remove();
+
+    const kind = opts.kind || "public";
+    const base = opts.base || AIST_PUBLIC_BASE;
+    const credentials = opts.credentials || "omit";
+    const featuresPath = opts.featuresPath || AIST_DEFAULT_FEATURES_PATH;
+    const zipdataPath = opts.zipdataPath || AIST_DEFAULT_ZIPDATA_PATH;
 
     const panel = document.createElement("div");
     panel.id = "aist-3ddb-results";
     const status = document.createElement("p");
     status.className = "sheet-hint";
-    status.textContent = "3DDB公開版を検索しています…";
+    status.textContent =
+      kind === "internal" ? "3DDB内部版を検索しています…" : "3DDB公開版を検索しています…";
     panel.appendChild(status);
-    // ボタン直後に差し込み、一覧をすぐスクロールできるようにする
-    aistBtn.insertAdjacentElement("afterend", panel);
+    triggerBtn.insertAdjacentElement("afterend", panel);
     panel.scrollIntoView({ block: "nearest", behavior: "smooth" });
-    aistBtn.disabled = true;
+    triggerBtn.disabled = true;
 
     try {
-      const { items, total, limit } = await search3ddbAtPoint(lng, lat);
+      const { items, total, limit } = await search3ddbAtPoint(lng, lat, {
+        base,
+        credentials,
+        featuresPath,
+        zipdataPath,
+      });
       const notice = document.createElement("p");
       notice.className = "sheet-hint";
       notice.textContent =
+        (kind === "internal" ? `内部base: ${base}（credentials=${credentials}）。` : "公開版API。") +
         "検索は地図のバウンディングボックスではなく、クリック地点の POINT 交差です。" +
-        "ヒットは「その点を含む登録データ一式」で、区全体など広域被覆も混ざります。" +
         "下の全件から選んでください（切り出しではありません）。";
       panel.appendChild(notice);
 
       status.textContent = items.length
         ? `全${items.length}件を表示（API総件数 ${total}件）。取得URLあり → 被覆が小さい順。`
-        : "公開版に該当する登録データは見つかりませんでした。";
+        : kind === "internal"
+          ? "内部版に該当する登録データは見つかりませんでした。"
+          : "公開版に該当する登録データは見つかりませんでした。";
 
-      if (!items.length) {
+      if (!items.length && kind === "public") {
         const tip = document.createElement("p");
         tip.className = "sheet-hint";
         tip.textContent =
@@ -534,9 +553,8 @@ export function openActionSheet(lng, lat, memoFeature) {
         meta.textContent = bits.join(" · ");
         wrap.appendChild(meta);
 
-        // Prefer URLs already present in the search payload (external_links / 3dtiles).
         for (const linkInfo of ext) {
-          if (linkInfo.type === "3dtiles") continue; // 表示用。元データ取得の主ボタンにはしない
+          if (linkInfo.type === "3dtiles") continue;
           const link = document.createElement("a");
           link.className = "aist-3ddb-zip-link";
           link.href = linkInfo.url;
@@ -562,7 +580,6 @@ export function openActionSheet(lng, lat, memoFeature) {
           wrap.appendChild(tilesLink);
         }
 
-        // Fallback: official zipdata/{id} — often 404 on public demo when external_links exist.
         if (item.downloadable && !hasArchive) {
           const probeStatus = document.createElement("p");
           probeStatus.className = "sheet-hint aist-3ddb-probe";
@@ -571,20 +588,20 @@ export function openActionSheet(lng, lat, memoFeature) {
 
           const link = document.createElement("a");
           link.className = "aist-3ddb-zip-link";
-          link.href = build3ddbZipUrl(item.regId);
+          link.href = build3ddbZipUrl(item.regId, base, zipdataPath);
           link.target = "_blank";
           link.rel = "noopener noreferrer";
           link.textContent = `zipdata を開く（ID ${item.regId}）`;
           wrap.appendChild(link);
 
-          probe3ddbZip(item.regId)
+          probe3ddbZip(item.regId, { base, credentials, zipdataPath })
             .then((probe) => {
               if (probe.ok) {
                 probeStatus.textContent = `zipdata疎通: HTTP ${probe.status}`;
               } else {
                 probeStatus.textContent =
                   probe.reason +
-                  " リストに external_links が無い登録です。公開ZIP未提供の可能性が高いです。";
+                  " リストに external_links が無い登録です。ZIP未提供の可能性が高いです。";
                 probeStatus.classList.add("aist-3ddb-probe-fail");
                 link.textContent = `zipdata（現在 HTTP ${probe.status}）`;
                 link.classList.add("aist-3ddb-zip-link-warn");
@@ -600,21 +617,86 @@ export function openActionSheet(lng, lat, memoFeature) {
       }
     } catch (e) {
       status.textContent =
-        "公開版の検索に失敗しました。APIのCORS制限、接続状態、サーバー応答などを確認してください。";
+        kind === "internal"
+          ? "内部版の検索に失敗しました。base・VPN/認証・CORS・パスを確認してください。"
+          : "公開版の検索に失敗しました。APIのCORS制限、接続状態、サーバー応答などを確認してください。";
       const detail = document.createElement("p");
       detail.className = "sheet-hint";
       detail.textContent = String(e?.message || e);
       panel.appendChild(detail);
-      // 直接開くとCORS制限を受けずにHTTP応答の確認ができる（検索結果の自動解析は不可）。
       const inspect = document.createElement("a");
       inspect.className = "aist-3ddb-zip-link";
-      inspect.href = build3ddbPointSearchUrl(lng, lat);
+      inspect.href = build3ddbPointSearchUrl(lng, lat, base, 100, featuresPath);
       inspect.target = "_blank";
       inspect.rel = "noopener noreferrer";
       inspect.textContent = "検索APIの応答を別タブで確認（area=POINT）";
       panel.appendChild(inspect);
     } finally {
-      aistBtn.disabled = false;
+      triggerBtn.disabled = false;
+    }
+  }
+
+  const aistPublicBtn = addBtn("AIST 3DDB：公開版を検索", async () => {
+    await runAistSearch(aistPublicBtn, {
+      kind: "public",
+      base: AIST_PUBLIC_BASE,
+      credentials: "omit",
+    });
+  });
+
+  const internalCfg = readInternal3ddbConfig();
+  const aistInternalBtn = addBtn(
+    internalCfg ? "AIST 3DDB：内部版を検索" : "AIST 3DDB：内部版（未設定）",
+    async () => {
+      const cfg = readInternal3ddbConfig();
+      if (!cfg) {
+        alert(
+          "内部版は未設定です。「内部版の接続先を設定」で base URL だけ入力してください（リポジトリには保存されません）。"
+        );
+        return;
+      }
+      await runAistSearch(aistInternalBtn, cfg);
+    },
+    { disabled: !internalCfg }
+  );
+
+  addBtn("AIST 3DDB：内部版の接続先を設定", () => {
+    const cur = readInternal3ddbConfig();
+    const base = window.prompt(
+      "内部版の base URL（例: https://host.example/3ddb）。公開版URLは不可。空でクリア。",
+      cur?.base || ""
+    );
+    if (base === null) return;
+    if (!String(base).trim()) {
+      clearInternal3ddbConfig();
+      alert("内部版設定をクリアしました。シートを開き直してください。");
+      return;
+    }
+    const credIn = window.prompt(
+      "credentials（omit / include）。内部でCookieが要る場合は include。",
+      cur?.credentials || "include"
+    );
+    if (credIn === null) return;
+    const featuresPath = window.prompt(
+      "features パス（通常はそのまま）",
+      cur?.featuresPath || AIST_DEFAULT_FEATURES_PATH
+    );
+    if (featuresPath === null) return;
+    const zipdataPath = window.prompt(
+      "zipdata パス（{id} 必須。通常はそのまま）",
+      cur?.zipdataPath || AIST_DEFAULT_ZIPDATA_PATH
+    );
+    if (zipdataPath === null) return;
+    try {
+      writeInternal3ddbConfig({
+        base,
+        credentials: credIn,
+        featuresPath,
+        zipdataPath,
+      });
+      alert("内部版設定を保存しました（このブラウザの localStorage のみ）。シートを開き直して内部版検索を使ってください。");
+    } catch (err) {
+      alert("設定に失敗: " + ((err && err.message) || err));
     }
   });
 

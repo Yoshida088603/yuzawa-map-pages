@@ -22,12 +22,113 @@ export const AIST_PUBLIC_TEST_POINT = {
   label: "産総研つくばセンター付近",
 };
 
+/** localStorage keys for internal endpoint overrides (never commit values). */
+export const AIST_INTERNAL_LS_KEYS = {
+  base: "aist3ddb.internal.base",
+  credentials: "aist3ddb.internal.credentials",
+  featuresPath: "aist3ddb.internal.featuresPath",
+  zipdataPath: "aist3ddb.internal.zipdataPath",
+};
+
+export const AIST_DEFAULT_FEATURES_PATH = "/api/v1/services/ALL/features";
+export const AIST_DEFAULT_ZIPDATA_PATH = "/api/v1/zipdata/{id}";
+
 function checkedBase(base) {
   const url = new URL(String(base));
   if (url.protocol !== "https:" || url.username || url.password || url.search || url.hash) {
     throw new Error("3DDBの接続先は認証情報を含まないHTTPSのURLを指定してください。");
   }
   return url.href.replace(/\/$/, "");
+}
+
+function normalizeCredentials(value, fallback = "omit") {
+  const v = String(value || fallback).toLowerCase();
+  if (v !== "omit" && v !== "include") {
+    throw new Error("credentials は omit または include にしてください。");
+  }
+  return v;
+}
+
+function normalizeFeaturesPath(path) {
+  const raw = String(path || AIST_DEFAULT_FEATURES_PATH).trim() || AIST_DEFAULT_FEATURES_PATH;
+  if (!raw.startsWith("/") || raw.includes("://") || raw.includes("?")) {
+    throw new Error("featuresPath は / から始まるパスにしてください。");
+  }
+  return raw.replace(/\/$/, "") || AIST_DEFAULT_FEATURES_PATH;
+}
+
+function normalizeZipdataPath(path) {
+  const raw = String(path || AIST_DEFAULT_ZIPDATA_PATH).trim() || AIST_DEFAULT_ZIPDATA_PATH;
+  if (!raw.startsWith("/") || raw.includes("://") || !raw.includes("{id}")) {
+    throw new Error("zipdataPath は / から始まり {id} を含むパスにしてください。");
+  }
+  return raw;
+}
+
+/** Read internal overrides from localStorage. Missing/invalid base => null. */
+export function readInternal3ddbConfig(storage = globalThis.localStorage) {
+  if (!storage) return null;
+  let baseRaw = "";
+  try {
+    baseRaw = String(storage.getItem(AIST_INTERNAL_LS_KEYS.base) || "").trim();
+  } catch {
+    return null;
+  }
+  if (!baseRaw) return null;
+  let base;
+  try {
+    base = checkedBase(baseRaw);
+  } catch {
+    return null;
+  }
+  if (base === AIST_PUBLIC_BASE || base === AIST_PUBLIC_BASE_DOCUMENTED) {
+    // Public hosts stay on the public button; internal config must be a different base.
+    return null;
+  }
+  let credentials = "include";
+  let featuresPath = AIST_DEFAULT_FEATURES_PATH;
+  let zipdataPath = AIST_DEFAULT_ZIPDATA_PATH;
+  try {
+    credentials = normalizeCredentials(
+      storage.getItem(AIST_INTERNAL_LS_KEYS.credentials) || "include",
+      "include"
+    );
+    const fp = storage.getItem(AIST_INTERNAL_LS_KEYS.featuresPath);
+    const zp = storage.getItem(AIST_INTERNAL_LS_KEYS.zipdataPath);
+    if (fp) featuresPath = normalizeFeaturesPath(fp);
+    if (zp) zipdataPath = normalizeZipdataPath(zp);
+  } catch {
+    return null;
+  }
+  return { base, credentials, featuresPath, zipdataPath, kind: "internal" };
+}
+
+/** Persist internal overrides. Does not store tokens. */
+export function writeInternal3ddbConfig(partial, storage = globalThis.localStorage) {
+  if (!storage) throw new Error("localStorage が使えません。");
+  const base = checkedBase(partial.base);
+  if (base === AIST_PUBLIC_BASE || base === AIST_PUBLIC_BASE_DOCUMENTED) {
+    throw new Error("公開版URLは内部設定に入れず、公開版ボタンを使ってください。");
+  }
+  const credentials = normalizeCredentials(partial.credentials ?? "include", "include");
+  const featuresPath = normalizeFeaturesPath(partial.featuresPath);
+  const zipdataPath = normalizeZipdataPath(partial.zipdataPath);
+  storage.setItem(AIST_INTERNAL_LS_KEYS.base, base);
+  storage.setItem(AIST_INTERNAL_LS_KEYS.credentials, credentials);
+  storage.setItem(AIST_INTERNAL_LS_KEYS.featuresPath, featuresPath);
+  storage.setItem(AIST_INTERNAL_LS_KEYS.zipdataPath, zipdataPath);
+  return { base, credentials, featuresPath, zipdataPath, kind: "internal" };
+}
+
+export function clearInternal3ddbConfig(storage = globalThis.localStorage) {
+  if (!storage) return;
+  for (const key of Object.values(AIST_INTERNAL_LS_KEYS)) {
+    try {
+      storage.removeItem(key);
+    } catch {
+      /* ignore */
+    }
+  }
 }
 
 function pushCoord(out, p) {
@@ -176,7 +277,13 @@ function compareItems(a, b) {
   return a.regId - b.regId;
 }
 
-export function build3ddbPointSearchUrl(lng, lat, base = AIST_PUBLIC_BASE, limit = 100) {
+export function build3ddbPointSearchUrl(
+  lng,
+  lat,
+  base = AIST_PUBLIC_BASE,
+  limit = 100,
+  featuresPath = AIST_DEFAULT_FEATURES_PATH
+) {
   if (!Number.isFinite(lng) || lng < -180 || lng > 180 ||
       !Number.isFinite(lat) || lat < -90 || lat > 90) {
     throw new Error("検索座標が不正です。");
@@ -184,26 +291,45 @@ export function build3ddbPointSearchUrl(lng, lat, base = AIST_PUBLIC_BASE, limit
   if (!Number.isInteger(limit) || limit < 1 || limit > 400) {
     throw new Error("検索件数は1～400にしてください。");
   }
-  const url = new URL(`${checkedBase(base)}/api/v1/services/ALL/features`);
+  const root = checkedBase(base);
+  const path = normalizeFeaturesPath(featuresPath);
+  const url = new URL(`${root}${path}`);
   // Point-in-coverage search. Not a map-view bounding box.
   url.searchParams.set("area", `POINT(${lng} ${lat})`);
   url.searchParams.set("limit", String(limit));
   return url.href;
 }
 
-export function build3ddbZipUrl(regId, base = AIST_PUBLIC_BASE) {
+export function build3ddbZipUrl(
+  regId,
+  base = AIST_PUBLIC_BASE,
+  zipdataPath = AIST_DEFAULT_ZIPDATA_PATH
+) {
   const id = Number(regId);
   if (!Number.isSafeInteger(id) || id < 1 || String(regId).trim() !== String(id)) {
     throw new Error("登録IDが不正です。");
   }
-  return `${checkedBase(base)}/api/v1/zipdata/${id}`;
+  const path = normalizeZipdataPath(zipdataPath).replaceAll("{id}", String(id));
+  return `${checkedBase(base)}${path}`;
 }
 
-export async function search3ddbAtPoint(lng, lat, { base = AIST_PUBLIC_BASE, limit = 100, request = fetch } = {}) {
-  const url = build3ddbPointSearchUrl(lng, lat, base, limit);
+export async function search3ddbAtPoint(
+  lng,
+  lat,
+  {
+    base = AIST_PUBLIC_BASE,
+    limit = 100,
+    request = fetch,
+    credentials = "omit",
+    featuresPath = AIST_DEFAULT_FEATURES_PATH,
+    zipdataPath = AIST_DEFAULT_ZIPDATA_PATH,
+  } = {}
+) {
+  const cred = normalizeCredentials(credentials, "omit");
+  const url = build3ddbPointSearchUrl(lng, lat, base, limit, featuresPath);
   const response = await request(url, {
     headers: { Accept: "application/json" },
-    credentials: "omit", // Public stage: never send cookies to 3DDB.
+    credentials: cred,
     cache: "no-store",
   });
   if (!response.ok) throw new Error(`3DDB検索APIがHTTP ${response.status}を返しました。`);
@@ -230,8 +356,8 @@ export async function search3ddbAtPoint(lng, lat, { base = AIST_PUBLIC_BASE, lim
       coverage,
       coverageLabel: formatCoverageLabel(coverage),
       externalLinks,
-      // Official zipdata/{id} often 404 on public demo; prefer external_links when present.
-      zipdataUrl: build3ddbZipUrl(id, base),
+      // Prefer external_links when present; zipdata is fallback / internal.
+      zipdataUrl: build3ddbZipUrl(id, base, zipdataPath),
     });
   }
   items.sort(compareItems);
@@ -241,6 +367,8 @@ export async function search3ddbAtPoint(lng, lat, { base = AIST_PUBLIC_BASE, lim
     total: Number.isSafeInteger(total) && total >= 0 ? total : items.length,
     limit,
     searchMode: "POINT",
+    base: checkedBase(base),
+    credentials: cred,
   };
 }
 
@@ -248,9 +376,18 @@ export async function search3ddbAtPoint(lng, lat, { base = AIST_PUBLIC_BASE, lim
  * Lightweight ZIP endpoint check. Does not download the archive body.
  * Prefer HEAD; fall back to a 1-byte Range GET when HEAD is not allowed.
  */
-export async function probe3ddbZip(regId, { base = AIST_PUBLIC_BASE, request = fetch } = {}) {
-  const url = build3ddbZipUrl(regId, base);
-  const common = { credentials: "omit", cache: "no-store" };
+export async function probe3ddbZip(
+  regId,
+  {
+    base = AIST_PUBLIC_BASE,
+    request = fetch,
+    credentials = "omit",
+    zipdataPath = AIST_DEFAULT_ZIPDATA_PATH,
+  } = {}
+) {
+  const cred = normalizeCredentials(credentials, "omit");
+  const url = build3ddbZipUrl(regId, base, zipdataPath);
+  const common = { credentials: cred, cache: "no-store" };
   let response = await request(url, { method: "HEAD", ...common });
   if (response.status === 405 || response.status === 501) {
     response = await request(url, {

@@ -12,6 +12,10 @@ import {
   formatCoverageLabel,
   extractExternalLinks,
   absolutize3ddbUrl,
+  readInternal3ddbConfig,
+  writeInternal3ddbConfig,
+  clearInternal3ddbConfig,
+  AIST_DEFAULT_FEATURES_PATH,
 } from "../app/aist-3ddb.js";
 
 const url = new URL(build3ddbPointSearchUrl(140.1, 36));
@@ -63,6 +67,37 @@ assert.match(ext[0].url, /^https:\/\/gic-tokyo\.s3\./);
 assert.equal(ext[1].type, "copc");
 assert.match(ext[1].url, /^https:\/\/gsvrg\.ipri\.aist\.go\.jp\/3ddb-pds\//);
 assert.equal(absolutize3ddbUrl("http://evil.example/x"), null);
+
+const mem = new Map();
+const fakeStorage = {
+  getItem: (k) => (mem.has(k) ? mem.get(k) : null),
+  setItem: (k, v) => mem.set(k, String(v)),
+  removeItem: (k) => mem.delete(k),
+};
+assert.equal(readInternal3ddbConfig(fakeStorage), null);
+assert.throws(
+  () => writeInternal3ddbConfig({ base: AIST_PUBLIC_BASE }, fakeStorage),
+  /公開版/
+);
+const saved = writeInternal3ddbConfig(
+  { base: "https://internal.example/3ddb", credentials: "include" },
+  fakeStorage
+);
+assert.equal(saved.base, "https://internal.example/3ddb");
+assert.equal(saved.credentials, "include");
+assert.equal(saved.featuresPath, AIST_DEFAULT_FEATURES_PATH);
+assert.equal(readInternal3ddbConfig(fakeStorage).base, "https://internal.example/3ddb");
+clearInternal3ddbConfig(fakeStorage);
+assert.equal(readInternal3ddbConfig(fakeStorage), null);
+
+assert.equal(
+  build3ddbPointSearchUrl(140.1, 36, "https://internal.example/3ddb", 10, "/api/v1/services/ALL/features"),
+  "https://internal.example/3ddb/api/v1/services/ALL/features?area=POINT%28140.1+36%29&limit=10"
+);
+assert.equal(
+  build3ddbZipUrl(12, "https://internal.example/3ddb", "/api/v1/zipdata/{id}"),
+  "https://internal.example/3ddb/api/v1/zipdata/12"
+);
 
 let requestOptions;
 const found = await search3ddbAtPoint(140.1, 36, {
