@@ -85,11 +85,14 @@ robocopy ..\yuzawa_NInI_henkan\public . /E /XD .git .venv-scripts
 ## AIST 3DDB公開版から元データZIPを検索する
 
 地図上の地点を **右クリック**（タッチ端末では長押し）→「AIST 3DDB：元データZIPを検索」を選択します。
-経度・緯度（WGS84）を3DDB公開APIの `area=POINT(lon lat)` に渡し、該当する登録データを表示します。
+経度・緯度（WGS84）を3DDB公開APIの `area=POINT(lon lat)` に渡し、**該当する登録データを全件一覧**します（人が選ぶ）。
 
-- `downloadable: true` の登録データだけ、ユーザーが「元データZIPを取得」を押してダウンロードページを開けます。クリックした点だけを切り出すのではなく **登録データ一式** のZIPです。
+- **地図表示範囲のバウンディングボックス検索ではありません。** クリック点を含む登録データの被覆ポリゴンがヒットします。区全体の CITYGML など広域データも混ざるのはそのためです。
+- 一覧は「取得URLあり → 被覆が小さい順」で並べ、各件に概算の被覆サイズを表示します。
+- 取得URLは **検索レスポンスの `external_links` を優先**します（例: 都デジタルツインの S3 ZIP=`archive`、COPC=`copc`）。`reg_id` から自前で推測して作るのではありません。
+- `external_links` が無い場合のみ公式 `…/api/v1/zipdata/{reg_id}` を出し、疎通結果を表示します（公開デモでは 404 が多い）。
+- クリックした点の切り出しではなく **登録データ一式** の取得です。
 - 検索API: `GET https://gsvrg.ipri.aist.go.jp/3ddb_demo/api/v1/services/ALL/features`（公式文書の `gsrt.digiarc.aist.go.jp` は301先。**ブラウザのCORS fetchは別オリジン301を追えない**ため、クライアントは最終ホストを直接指定）
-- ZIP API: `GET …/api/v1/zipdata/{reg_id}`（リンク遷移。本体は `fetch` しない）
 - 検索件数は初期最大100件（API総件数が多い場合は画面に注意表示）。
 - 検索結果表示後、ZIPエンドポイントへ軽量疎通（HEAD等）を行い、HTTPエラー理由を画面に出します。
 - 公開版検索のCORSは `Access-Control-Allow-Origin: *` を実測済み（2026-10-31）。失敗時はエラーと検索URL確認リンクを表示します。
