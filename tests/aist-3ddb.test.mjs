@@ -16,7 +16,24 @@ import {
   writeInternal3ddbConfig,
   clearInternal3ddbConfig,
   AIST_DEFAULT_FEATURES_PATH,
+  Aist3ddbError,
+  previewBodyText,
+  build3ddbDiagnosticsReport,
 } from "../app/aist-3ddb.js";
+
+function mockResponse({ ok = true, status = 200, body = "", headers = {} } = {}) {
+  return {
+    ok,
+    status,
+    statusText: ok ? "OK" : "ERR",
+    type: "cors",
+    url: "https://example.test/mock",
+    headers: {
+      get: (k) => headers[String(k).toLowerCase()] ?? null,
+    },
+    text: async () => body,
+  };
+}
 
 const url = new URL(build3ddbPointSearchUrl(140.1, 36));
 assert.equal(url.searchParams.get("area"), "POINT(140.1 36)");
@@ -99,50 +116,54 @@ assert.equal(
   "https://internal.example/3ddb/api/v1/zipdata/12"
 );
 
+assert.match(previewBodyText("Authorization: Bearer secret-token"), /\[REDACTED\]/);
+
+const payloadOk = {
+  properties: { all: 3 },
+  features: [
+    {
+      properties: { reg_id: 11, title: "big CityGML", service_name: "CITYGML", downloadable: false },
+      geometries: [
+        {
+          type: "Polygon",
+          coordinates: [[[139, 35], [140, 35], [140, 36], [139, 36], [139, 35]]],
+        },
+      ],
+    },
+    {
+      properties: {
+        reg_id: 10,
+        title: "ZIP available",
+        service_name: "LAS",
+        downloadable: true,
+        external_links: [
+          {
+            external_link: "https://example.com/a.zip",
+            external_link_type: "archive",
+          },
+        ],
+      },
+      geometries: [
+        {
+          type: "Polygon",
+          coordinates: [[[139.68, 35.65], [139.685, 35.65], [139.685, 35.655], [139.68, 35.655], [139.68, 35.65]]],
+        },
+      ],
+    },
+    {
+      properties: { reg_id: 10, title: "duplicate", downloadable: true },
+    },
+  ],
+};
+
 let requestOptions;
 const found = await search3ddbAtPoint(140.1, 36, {
   request: async (_url, options) => {
     requestOptions = options;
-    return {
-      ok: true,
-      json: async () => ({
-        properties: { all: 3 },
-        features: [
-          {
-            properties: { reg_id: 11, title: "big CityGML", service_name: "CITYGML", downloadable: false },
-            geometries: [
-              {
-                type: "Polygon",
-                coordinates: [[[139, 35], [140, 35], [140, 36], [139, 36], [139, 35]]],
-              },
-            ],
-          },
-          {
-            properties: {
-              reg_id: 10,
-              title: "ZIP available",
-              service_name: "LAS",
-              downloadable: true,
-              external_links: [
-                {
-                  external_link: "https://example.com/a.zip",
-                  external_link_type: "archive",
-                },
-              ],
-            },
-            geometries: [
-              {
-                type: "Polygon",
-                coordinates: [[[139.68, 35.65], [139.685, 35.65], [139.685, 35.655], [139.68, 35.655], [139.68, 35.65]]],
-              },
-            ],
-          },
-          {
-            properties: { reg_id: 10, title: "duplicate", downloadable: true },
-          },
-        ],
-      }),
-    };
+    return mockResponse({
+      body: JSON.stringify(payloadOk),
+      headers: { "content-type": "application/json", "access-control-allow-origin": "*" },
+    });
   },
 });
 assert.equal(found.total, 3);
@@ -156,10 +177,72 @@ assert.equal(found.items[1].regId, 11);
 assert.equal(found.items[1].downloadable, false);
 assert.match(found.items[0].coverageLabel, /被覆/);
 assert.equal(requestOptions.credentials, "omit");
-await assert.rejects(
-  search3ddbAtPoint(140.1, 36, { request: async () => ({ ok: false, status: 403 }) }),
-  /HTTP 403/
-);
+assert.equal(found.diagnostics.response.status, 200);
+
+let caught;
+try {
+  await search3ddbAtPoint(140.1, 36, {
+    request: async () =>
+      mockResponse({
+        ok: false,
+        status: 403,
+        body: "Forbidden Authorization: Bearer abc",
+        headers: { "content-type": "text/plain" },
+      }),
+  });
+} catch (e) {
+  caught = e;
+}
+assert.ok(caught instanceof Aist3ddbError);
+assert.match(caught.message, /HTTP 403/);
+assert.equal(caught.diagnostics.phase, "http");
+assert.equal(caught.diagnostics.response.status, 403);
+assert.match(caught.diagnostics.response.body_preview, /\[REDACTED\]/);
+assert.ok(Array.isArray(caught.diagnostics.troubleshooting_hints));
+
+const report = build3ddbDiagnosticsReport({
+  kind: "internal",
+  lng: 140.55,
+  lat: 39.16,
+  base: "https://internal.example/3ddb",
+  credentials: "include",
+  error: caught,
+});
+assert.equal(report.kind, "internal");
+assert.equal(report.config.credentials, "include");
+assert.match(JSON.stringify(report), /HTTP 403/);
+assert.doesNotMatch(JSON.stringify(report), /Bearer abc/);
+assert.equal(report.checks.base, "https://internal.example/3ddb");
+assert.equal(report.checks.api_origin, "https://internal.example");
+assert.match(report.checks.manual_inspect_url, /area=POINT/);
+assert.equal(report.checks.path.features_path_is_default, true);
+assert.equal(report.checks.vpn_auth.detectable_from_browser, false);
+
+let fetchErr;
+try {
+  await search3ddbAtPoint(140.55, 39.16, {
+    base: "https://internal.example/3ddb",
+    credentials: "include",
+    request: async () => {
+      throw new TypeError("Failed to fetch");
+    },
+  });
+} catch (e) {
+  fetchErr = e;
+}
+const fetchReport = build3ddbDiagnosticsReport({
+  kind: "internal",
+  lng: 140.55,
+  lat: 39.16,
+  base: "https://internal.example/3ddb",
+  credentials: "include",
+  error: fetchErr,
+});
+assert.equal(fetchReport.phase, "fetch");
+assert.match(fetchReport.error.message, /Failed to fetch/);
+assert.equal(fetchReport.request.base, "https://internal.example/3ddb");
+assert.equal(fetchReport.checks.manual_inspect_url, fetchReport.request.url);
+assert.match(fetchReport.troubleshooting_hints.join("\n"), /ACAO/);
 
 const zipOk = await probe3ddbZip(423, {
   request: async (_url, options) => {

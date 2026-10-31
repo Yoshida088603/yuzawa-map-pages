@@ -313,6 +313,284 @@ export function build3ddbZipUrl(
   return `${checkedBase(base)}${path}`;
 }
 
+const SAFE_RESPONSE_HEADERS = [
+  "content-type",
+  "content-length",
+  "cache-control",
+  "date",
+  "server",
+  "vary",
+  "access-control-allow-origin",
+  "access-control-allow-credentials",
+  "access-control-allow-methods",
+  "access-control-allow-headers",
+  "access-control-expose-headers",
+  "www-authenticate",
+];
+
+/** Error with a redacted troubleshooting payload (no cookies/tokens). */
+export class Aist3ddbError extends Error {
+  constructor(message, diagnostics = {}) {
+    super(message);
+    this.name = "Aist3ddbError";
+    this.diagnostics = diagnostics;
+  }
+}
+
+export function collectSafeResponseHeaders(response) {
+  const out = {};
+  if (!response?.headers?.get) return out;
+  for (const name of SAFE_RESPONSE_HEADERS) {
+    try {
+      const v = response.headers.get(name);
+      if (v != null && v !== "") out[name] = v;
+    } catch {
+      /* ignore */
+    }
+  }
+  return out;
+}
+
+export function previewBodyText(text, max = 2000) {
+  const raw = String(text ?? "");
+  const clipped = raw.length > max ? `${raw.slice(0, max)}…[truncated ${raw.length} chars]` : raw;
+  // Soft-redact obvious secrets if a gateway echoed them.
+  return clipped
+    .replace(/(authorization\s*[:=]\s*)([^\s,;]+)/gi, "$1[REDACTED]")
+    .replace(/(cookie\s*[:=]\s*)([^\n]+)/gi, "$1[REDACTED]")
+    .replace(/(bearer\s+)[a-z0-9._\-]+/gi, "$1[REDACTED]");
+}
+
+function classifyFailureHint({ phase, status, networkErrorName, networkErrorMessage }) {
+  const msg = String(networkErrorMessage || "").toLowerCase();
+  if (phase === "fetch" || networkErrorName === "TypeError") {
+    if (msg.includes("failed to fetch") || msg.includes("networkerror") || msg.includes("load failed")) {
+      return [
+        "Failed to fetch: ブラウザJSからは HTTP ステータスも ACAO も読めません（CORS遮断とVPN/DNS失敗が区別できない）。",
+        "checks.manual_inspect_url を別タブで開き、ステータスと Access-Control-Allow-Origin を確認してください。",
+        "checks の page_origin と api_origin が違う場合、サーバ側でその Origin（または *）を許可する必要があります。",
+        "VPN未接続・証明書・混合コンテンツ（httpsページ→http API）も同症状になります。",
+        "内部版で Cookie が必要なら credentials=include と、ACAO が * ではなく具体 Origin + Allow-Credentials かを確認してください。",
+      ];
+    }
+  }
+  if (status === 401 || status === 403) {
+    return ["認証/権限エラーです。ログイン状態・Cookie・トークン・許可グループを確認してください。"];
+  }
+  if (status === 404) {
+    return ["パスまたは base が違う可能性が高いです（features-path / ホスト）。checks.manual_inspect_url を確認。"];
+  }
+  if (status === 301 || status === 302 || status === 307 || status === 308) {
+    return ["リダイレクトが返っています。公開版と同様、最終ホストを base に直接指定してください。"];
+  }
+  if (status >= 500) {
+    return ["サーバ側エラーです。内部3DDBの稼働状況を確認してください。"];
+  }
+  if (phase === "json") {
+    return ["HTTPは成功したが JSON 形式が想定外です。APIパスやプロキシのHTMLエラーページ混入を疑ってください。"];
+  }
+  return ["ログJSONの request / response / checks を確認し、probe_aist_3ddb_internal.py でも同じ base を試してください。"];
+}
+
+/** Explicit checklist for base / path / CORS / VPN-related triage. */
+export function build3ddbChecks({
+  kind,
+  lng,
+  lat,
+  base,
+  credentials,
+  featuresPath,
+  zipdataPath,
+  limit = 100,
+  phase = null,
+  responseHeaders = null,
+}) {
+  let apiOrigin = null;
+  let manualInspectUrl = null;
+  let mixedContent = null;
+  let baseParseOk = true;
+  let baseParseError = null;
+  try {
+    manualInspectUrl = build3ddbPointSearchUrl(
+      lng,
+      lat,
+      base,
+      Number.isInteger(limit) ? limit : 100,
+      featuresPath
+    );
+    apiOrigin = new URL(manualInspectUrl).origin;
+  } catch (err) {
+    baseParseOk = false;
+    baseParseError = String(err?.message || err);
+  }
+
+  const pageOrigin =
+    typeof location !== "undefined" && location?.origin ? location.origin : null;
+  const pageProtocol =
+    typeof location !== "undefined" && location?.protocol ? location.protocol : null;
+  if (apiOrigin && pageProtocol) {
+    try {
+      mixedContent = pageProtocol === "https:" && new URL(apiOrigin).protocol === "http:";
+    } catch {
+      mixedContent = null;
+    }
+  }
+
+  const acao = responseHeaders?.["access-control-allow-origin"] || null;
+  const acac = responseHeaders?.["access-control-allow-credentials"] || null;
+
+  return {
+    kind: kind || null,
+    base: base || null,
+    base_parse_ok: baseParseOk,
+    base_parse_error: baseParseError,
+    features_path: featuresPath || null,
+    zipdata_path: zipdataPath || null,
+    credentials_mode: credentials || null,
+    credentials_note:
+      credentials === "include"
+        ? "Cookie 送信を試みます。サーバは ACAO=* ではなく具体 Origin + Allow-Credentials: true が必要なことが多いです。"
+        : "Cookie は送りません（公開版既定）。",
+    page_origin: pageOrigin,
+    api_origin: apiOrigin,
+    cross_origin: Boolean(pageOrigin && apiOrigin && pageOrigin !== apiOrigin),
+    mixed_content_risk: mixedContent,
+    manual_inspect_url: manualInspectUrl,
+    manual_inspect_note:
+      "画面の「検索APIの応答を別タブで確認」と同じURL。別タブなら CORS を受けずにHTTP応答を見られます。",
+    cors: {
+      observed_acao: acao,
+      observed_allow_credentials: acac,
+      note:
+        phase === "fetch"
+          ? "Failed to fetch では ACAO を観測できません。別タブまたはサーバ設定で確認してください。"
+          : "応答ヘッダから読めた範囲のみ記録（読めない場合は null）。",
+    },
+    vpn_auth: {
+      detectable_from_browser: false,
+      note: "VPN接続有無や社内認証の成功はJSから直接判定できません。Failed to fetch / 401/403 の状況証拠として扱ってください。",
+      online: typeof navigator !== "undefined" ? navigator.onLine : null,
+    },
+    path: {
+      features_path: featuresPath || null,
+      expected_default_features_path: AIST_DEFAULT_FEATURES_PATH,
+      features_path_is_default: (featuresPath || AIST_DEFAULT_FEATURES_PATH) === AIST_DEFAULT_FEATURES_PATH,
+      zipdata_path: zipdataPath || null,
+      expected_default_zipdata_path: AIST_DEFAULT_ZIPDATA_PATH,
+    },
+  };
+}
+
+function browserContext() {
+  const nav = typeof navigator !== "undefined" ? navigator : null;
+  const loc = typeof location !== "undefined" ? location : null;
+  return {
+    href: loc?.href || null,
+    origin: loc?.origin || null,
+    online: nav?.onLine ?? null,
+    userAgent: nav?.userAgent || null,
+    language: nav?.language || null,
+    timezone: (() => {
+      try {
+        return Intl.DateTimeFormat().resolvedOptions().timeZone;
+      } catch {
+        return null;
+      }
+    })(),
+  };
+}
+
+/**
+ * Build a downloadable troubleshooting report. Never includes Cookie/Authorization values.
+ */
+export function build3ddbDiagnosticsReport({
+  kind = "public",
+  lng,
+  lat,
+  base,
+  credentials = "omit",
+  featuresPath = AIST_DEFAULT_FEATURES_PATH,
+  zipdataPath = AIST_DEFAULT_ZIPDATA_PATH,
+  limit = 100,
+  error = null,
+  extras = null,
+} = {}) {
+  const fromError = error?.diagnostics && typeof error.diagnostics === "object" ? error.diagnostics : {};
+  const resolvedBase = base || fromError.request?.base || null;
+  const resolvedCred = credentials || fromError.request?.credentials || "omit";
+  const resolvedFeatures = featuresPath || fromError.request?.featuresPath || AIST_DEFAULT_FEATURES_PATH;
+  const resolvedZip = zipdataPath || fromError.request?.zipdataPath || AIST_DEFAULT_ZIPDATA_PATH;
+  const resolvedLimit = limit || fromError.request?.limit || 100;
+  const phase = fromError.phase || null;
+  const checks = build3ddbChecks({
+    kind,
+    lng,
+    lat,
+    base: resolvedBase,
+    credentials: resolvedCred,
+    featuresPath: resolvedFeatures,
+    zipdataPath: resolvedZip,
+    limit: resolvedLimit,
+    phase,
+    responseHeaders: fromError.response?.headers || null,
+  });
+  const report = {
+    generated_at_utc: new Date().toISOString(),
+    app: "yuzawa-map-pages",
+    feature: "aist-3ddb-search",
+    kind,
+    point: { lng, lat, wkt: `POINT(${lng} ${lat})` },
+    config: {
+      base: resolvedBase,
+      credentials: resolvedCred,
+      featuresPath: resolvedFeatures,
+      zipdataPath: resolvedZip,
+      limit: resolvedLimit,
+      note: "Secrets (Cookie/Authorization values) are never included.",
+    },
+    // Explicit triage block for the on-screen guidance (base / VPN / CORS / path / 別タブURL).
+    checks,
+    browser: browserContext(),
+    error: {
+      name: error?.name || null,
+      message: error?.message || String(error || ""),
+    },
+    ...fromError,
+    troubleshooting_hints:
+      fromError.troubleshooting_hints ||
+      classifyFailureHint({
+        phase,
+        status: fromError.response?.status,
+        networkErrorName: error?.name,
+        networkErrorMessage: error?.message,
+      }),
+  };
+  // Ensure checks survive even if fromError somehow had a checks key.
+  report.checks = checks;
+  if (extras && typeof extras === "object") {
+    report.extras = extras;
+  }
+  return report;
+}
+
+export function download3ddbDiagnosticsReport(report, filename) {
+  const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+  const name = filename || `aist-3ddb-diagnostics-${report.kind || "unknown"}-${stamp}.json`;
+  const blob = new Blob([JSON.stringify(report, null, 2) + "\n"], {
+    type: "application/json;charset=utf-8",
+  });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = name;
+  a.rel = "noopener";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+  return name;
+}
+
 export async function search3ddbAtPoint(
   lng,
   lat,
@@ -325,18 +603,132 @@ export async function search3ddbAtPoint(
     zipdataPath = AIST_DEFAULT_ZIPDATA_PATH,
   } = {}
 ) {
+  const started = Date.now();
   const cred = normalizeCredentials(credentials, "omit");
-  const url = build3ddbPointSearchUrl(lng, lat, base, limit, featuresPath);
-  const response = await request(url, {
-    headers: { Accept: "application/json" },
+  const root = checkedBase(base);
+  const fpath = normalizeFeaturesPath(featuresPath);
+  const zpath = normalizeZipdataPath(zipdataPath);
+  const url = build3ddbPointSearchUrl(lng, lat, root, limit, fpath);
+  const requestMeta = {
+    method: "GET",
+    url,
+    base: root,
+    featuresPath: fpath,
+    zipdataPath: zpath,
     credentials: cred,
+    limit,
+    headerNames: ["Accept"],
     cache: "no-store",
-  });
-  if (!response.ok) throw new Error(`3DDB検索APIがHTTP ${response.status}を返しました。`);
-  const payload = await response.json();
-  if (!payload || !Array.isArray(payload.features)) {
-    throw new Error("3DDB検索APIの応答形式が想定と異なります。");
+  };
+
+  let response;
+  try {
+    response = await request(url, {
+      headers: { Accept: "application/json" },
+      credentials: cred,
+      cache: "no-store",
+    });
+  } catch (err) {
+    throw new Aist3ddbError(`3DDB検索の通信に失敗しました: ${err?.message || err}`, {
+      phase: "fetch",
+      elapsed_ms: Date.now() - started,
+      request: requestMeta,
+      network_error: {
+        name: err?.name || null,
+        message: String(err?.message || err),
+      },
+      troubleshooting_hints: classifyFailureHint({
+        phase: "fetch",
+        networkErrorName: err?.name,
+        networkErrorMessage: err?.message,
+      }),
+    });
   }
+
+  const headerBag = collectSafeResponseHeaders(response);
+  let bodyText = "";
+  try {
+    bodyText = await response.text();
+  } catch (err) {
+    throw new Aist3ddbError(`3DDB検索の応答本文読み取りに失敗しました: ${err?.message || err}`, {
+      phase: "body",
+      elapsed_ms: Date.now() - started,
+      request: requestMeta,
+      response: {
+        ok: response.ok,
+        status: response.status,
+        statusText: response.statusText || "",
+        type: response.type || null,
+        url: response.url || url,
+        headers: headerBag,
+      },
+      troubleshooting_hints: classifyFailureHint({
+        phase: "body",
+        status: response.status,
+        networkErrorMessage: err?.message,
+      }),
+    });
+  }
+
+  const bodyPreview = previewBodyText(bodyText);
+  if (!response.ok) {
+    throw new Aist3ddbError(`3DDB検索APIがHTTP ${response.status}を返しました。`, {
+      phase: "http",
+      elapsed_ms: Date.now() - started,
+      request: requestMeta,
+      response: {
+        ok: false,
+        status: response.status,
+        statusText: response.statusText || "",
+        type: response.type || null,
+        url: response.url || url,
+        headers: headerBag,
+        body_preview: bodyPreview,
+      },
+      troubleshooting_hints: classifyFailureHint({
+        phase: "http",
+        status: response.status,
+      }),
+    });
+  }
+
+  let payload;
+  try {
+    payload = bodyText ? JSON.parse(bodyText) : null;
+  } catch (err) {
+    throw new Aist3ddbError(`3DDB検索APIのJSON解析に失敗しました: ${err?.message || err}`, {
+      phase: "json",
+      elapsed_ms: Date.now() - started,
+      request: requestMeta,
+      response: {
+        ok: true,
+        status: response.status,
+        statusText: response.statusText || "",
+        type: response.type || null,
+        url: response.url || url,
+        headers: headerBag,
+        body_preview: bodyPreview,
+      },
+      troubleshooting_hints: classifyFailureHint({ phase: "json", status: response.status }),
+    });
+  }
+
+  if (!payload || !Array.isArray(payload.features)) {
+    throw new Aist3ddbError("3DDB検索APIの応答形式が想定と異なります。", {
+      phase: "schema",
+      elapsed_ms: Date.now() - started,
+      request: requestMeta,
+      response: {
+        ok: true,
+        status: response.status,
+        headers: headerBag,
+        body_preview: bodyPreview,
+        top_level_keys: payload && typeof payload === "object" ? Object.keys(payload) : [],
+      },
+      troubleshooting_hints: classifyFailureHint({ phase: "json", status: response.status }),
+    });
+  }
+
   const items = [];
   const seen = new Set();
   for (const feature of payload.features) {
@@ -346,7 +738,7 @@ export async function search3ddbAtPoint(
     if (!Number.isSafeInteger(id) || id < 1 || seen.has(id)) continue;
     seen.add(id);
     const coverage = estimateCoverageMeters(collectFeatureLonLats(feature));
-    const externalLinks = extractExternalLinks(props, base);
+    const externalLinks = extractExternalLinks(props, root);
     items.push({
       regId: id,
       title: String(props.title || "（タイトルなし）"),
@@ -357,7 +749,7 @@ export async function search3ddbAtPoint(
       coverageLabel: formatCoverageLabel(coverage),
       externalLinks,
       // Prefer external_links when present; zipdata is fallback / internal.
-      zipdataUrl: build3ddbZipUrl(id, base, zipdataPath),
+      zipdataUrl: build3ddbZipUrl(id, root, zpath),
     });
   }
   items.sort(compareItems);
@@ -367,8 +759,20 @@ export async function search3ddbAtPoint(
     total: Number.isSafeInteger(total) && total >= 0 ? total : items.length,
     limit,
     searchMode: "POINT",
-    base: checkedBase(base),
+    base: root,
     credentials: cred,
+    diagnostics: {
+      phase: "ok",
+      elapsed_ms: Date.now() - started,
+      request: requestMeta,
+      response: {
+        ok: true,
+        status: response.status,
+        headers: headerBag,
+        feature_count: payload.features.length,
+        api_total: payload.properties?.all ?? null,
+      },
+    },
   };
 }
 

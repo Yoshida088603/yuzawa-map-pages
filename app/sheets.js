@@ -31,6 +31,8 @@ import {
   readInternal3ddbConfig,
   writeInternal3ddbConfig,
   clearInternal3ddbConfig,
+  build3ddbDiagnosticsReport,
+  download3ddbDiagnosticsReport,
 } from "./aist-3ddb.js";
 
 function $(id) {
@@ -482,13 +484,30 @@ export function openActionSheet(lng, lat, memoFeature) {
     panel.scrollIntoView({ block: "nearest", behavior: "smooth" });
     triggerBtn.disabled = true;
 
+    function appendDiagnosticsDownload(report, label) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "aist-3ddb-zip-link";
+      btn.textContent = label || "診断ログJSONをダウンロード";
+      btn.addEventListener("click", () => {
+        try {
+          const name = download3ddbDiagnosticsReport(report);
+          btn.textContent = `保存しました: ${name}`;
+        } catch (err) {
+          alert("診断ログの保存に失敗: " + ((err && err.message) || err));
+        }
+      });
+      panel.appendChild(btn);
+    }
+
     try {
-      const { items, total, limit } = await search3ddbAtPoint(lng, lat, {
+      const result = await search3ddbAtPoint(lng, lat, {
         base,
         credentials,
         featuresPath,
         zipdataPath,
       });
+      const { items, total, limit } = result;
       const notice = document.createElement("p");
       notice.className = "sheet-hint";
       notice.textContent =
@@ -502,6 +521,24 @@ export function openActionSheet(lng, lat, memoFeature) {
         : kind === "internal"
           ? "内部版に該当する登録データは見つかりませんでした。"
           : "公開版に該当する登録データは見つかりませんでした。";
+
+      if (!items.length) {
+        const emptyReport = build3ddbDiagnosticsReport({
+          kind,
+          lng,
+          lat,
+          base,
+          credentials,
+          featuresPath,
+          zipdataPath,
+          extras: {
+            outcome: "empty_result",
+            diagnostics: result.diagnostics || null,
+            tip: "HTTP成功だが0件。地点・内部データの有無・権限フィルタを疑う。",
+          },
+        });
+        appendDiagnosticsDownload(emptyReport, "0件の診断ログJSONをダウンロード");
+      }
 
       if (!items.length && kind === "public") {
         const tip = document.createElement("p");
@@ -618,19 +655,49 @@ export function openActionSheet(lng, lat, memoFeature) {
     } catch (e) {
       status.textContent =
         kind === "internal"
-          ? "内部版の検索に失敗しました。base・VPN/認証・CORS・パスを確認してください。"
-          : "公開版の検索に失敗しました。APIのCORS制限、接続状態、サーバー応答などを確認してください。";
+          ? "内部版の検索に失敗しました。診断ログをダウンロードして原因切り分けに使えます。"
+          : "公開版の検索に失敗しました。診断ログをダウンロードして原因切り分けに使えます。";
       const detail = document.createElement("p");
       detail.className = "sheet-hint";
       detail.textContent = String(e?.message || e);
       panel.appendChild(detail);
+
+      const report = build3ddbDiagnosticsReport({
+        kind,
+        lng,
+        lat,
+        base,
+        credentials,
+        featuresPath,
+        zipdataPath,
+        error: e,
+      });
+      const hints = document.createElement("ul");
+      hints.className = "sheet-hint aist-3ddb-hints";
+      for (const tip of report.troubleshooting_hints || []) {
+        const li = document.createElement("li");
+        li.textContent = tip;
+        hints.appendChild(li);
+      }
+      panel.appendChild(hints);
+      appendDiagnosticsDownload(report, "失敗ログ／診断JSONをダウンロード");
+
+      const inspectUrl =
+        report.checks?.manual_inspect_url ||
+        build3ddbPointSearchUrl(lng, lat, base, 100, featuresPath);
       const inspect = document.createElement("a");
       inspect.className = "aist-3ddb-zip-link";
-      inspect.href = build3ddbPointSearchUrl(lng, lat, base, 100, featuresPath);
+      inspect.href = inspectUrl;
       inspect.target = "_blank";
       inspect.rel = "noopener noreferrer";
       inspect.textContent = "検索APIの応答を別タブで確認（area=POINT）";
       panel.appendChild(inspect);
+      const inspectNote = document.createElement("p");
+      inspectNote.className = "sheet-hint";
+      inspectNote.textContent =
+        "このリンクURLは診断JSONの checks.manual_inspect_url と同じです。" +
+        "Failed to fetch ではCORS詳細は取れないため、別タブ確認結果とJSONをセットで見てください。";
+      panel.appendChild(inspectNote);
     } finally {
       triggerBtn.disabled = false;
     }

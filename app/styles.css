@@ -534,3 +534,16 @@ body {
 .aist-3ddb-probe-fail {
   color: #e8a0a0;
 }
+
+.aist-3ddb-hints {
+  margin: 8px 0;
+  padding-left: 1.2em;
+  color: #e8a0a0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+button.aist-3ddb-zip-link {
+  cursor: pointer;
+  font: inherit;
+}
