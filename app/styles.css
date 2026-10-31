@@ -502,12 +502,78 @@ body {
   opacity: 0.88;
 }
 
+.aist-3ddb-item-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.aist-3ddb-reg-id {
+  flex: 0 0 auto;
+  min-width: 4.2em;
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--accent) 28%, #1a2429);
+  border: 1px solid color-mix(in srgb, var(--accent) 55%, #33444e);
+  color: var(--text);
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-align: center;
+  line-height: 1.3;
+}
+
 .aist-3ddb-item-title {
+  flex: 1 1 auto;
   font-weight: 600;
+  padding-top: 2px;
 }
 
 .aist-3ddb-item-meta {
   margin: 4px 0 0;
+}
+
+.aist-3ddb-paste-box {
+  margin: 8px 0 4px;
+  display: grid;
+  gap: 8px;
+}
+
+.aist-3ddb-paste-ta {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 6.5rem;
+  padding: 10px 12px;
+  border: 1px dashed #556670;
+  border-radius: 10px;
+  background: #12181c;
+  color: var(--text);
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  font-size: 0.75rem;
+  line-height: 1.35;
+  resize: vertical;
+}
+
+.aist-3ddb-paste-ta:focus {
+  outline: 2px solid color-mix(in srgb, var(--accent) 60%, transparent);
+  border-style: solid;
+}
+
+.aist-3ddb-paste-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.aist-3ddb-paste-actions .aist-3ddb-zip-link {
+  margin: 0;
+}
+
+.aist-3ddb-id-summary {
+  margin: 6px 0 2px;
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
 .aist-3ddb-zip-link {

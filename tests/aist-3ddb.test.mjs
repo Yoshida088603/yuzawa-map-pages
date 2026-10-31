@@ -23,6 +23,7 @@ import {
   build3ddbDiagnosticsReport,
   parse3ddbSearchJsonText,
   itemsFrom3ddbPayload,
+  humanize3ddbTitle,
 } from "../app/aist-3ddb.js";
 
 function mockResponse({ ok = true, status = 200, body = "", headers = {} } = {}) {
@@ -100,19 +101,23 @@ assert.throws(
   () => writeInternal3ddbConfig({ base: AIST_PUBLIC_BASE }, fakeStorage),
   /公開版/
 );
-const saved = writeInternal3ddbConfig(
-  { base: "https://internal.example/3ddb", credentials: "include" },
-  fakeStorage
-);
+const saved = writeInternal3ddbConfig({ base: "https://internal.example/3ddb" }, fakeStorage);
 assert.equal(saved.base, "https://internal.example/3ddb");
 assert.equal(saved.credentials, "include");
 assert.equal(saved.featuresPath, AIST_DEFAULT_FEATURES_PATH);
 assert.equal(saved.zipdataPath, AIST_INTERNAL_DEFAULT_ZIPDATA_PATH);
+assert.equal(fakeStorage.getItem("aist3ddb.internal.credentials"), null);
+assert.equal(fakeStorage.getItem("aist3ddb.internal.featuresPath"), null);
+assert.equal(fakeStorage.getItem("aist3ddb.internal.zipdataPath"), null);
 assert.equal(readInternal3ddbConfig(fakeStorage).base, "https://internal.example/3ddb");
 assert.equal(readInternal3ddbConfig(fakeStorage).zipdataPath, AIST_INTERNAL_DEFAULT_ZIPDATA_PATH);
-// Migrate old public zip path stored against /3ddb
+// Stale LS overrides must be ignored (code-fixed paths/credentials)
 fakeStorage.setItem("aist3ddb.internal.zipdataPath", AIST_DEFAULT_ZIPDATA_PATH);
+fakeStorage.setItem("aist3ddb.internal.credentials", "omit");
+fakeStorage.setItem("aist3ddb.internal.featuresPath", "/api/v1/services/OTHER/features");
 assert.equal(readInternal3ddbConfig(fakeStorage).zipdataPath, AIST_INTERNAL_DEFAULT_ZIPDATA_PATH);
+assert.equal(readInternal3ddbConfig(fakeStorage).credentials, "include");
+assert.equal(readInternal3ddbConfig(fakeStorage).featuresPath, AIST_DEFAULT_FEATURES_PATH);
 assert.equal(
   build3ddbZipUrl(141303, "https://gsvrg.ipri.aist.go.jp/3ddb", AIST_INTERNAL_DEFAULT_ZIPDATA_PATH),
   "https://gsvrg.ipri.aist.go.jp/3ddb/api/v1/services/zipdata/141303"
@@ -148,6 +153,11 @@ const pasted = parse3ddbSearchJsonText(
 assert.equal(pasted.items.length, 1);
 assert.equal(pasted.items[0].regId, 99);
 assert.match(pasted.items[0].zipdataUrl, /\/services\/zipdata\/99$/);
+assert.equal(pasted.items[0].shortTitle, "near click");
+assert.match(
+  humanize3ddbTitle("10nd5144_org_R03-_湯沢市湯沢字…|||dup"),
+  /^R03 /
+);
 assert.equal(itemsFrom3ddbPayload({ features: [] }, { base: "https://internal.example/3ddb" }).total, 0);
 
 assert.equal(

@@ -92,6 +92,7 @@ robocopy ..\yuzawa_NInI_henkan\public . /E /XD .git .venv-scripts
 - 取得URLは **検索レスポンスの `external_links` を優先**します（例: 都デジタルツインの S3 ZIP=`archive`、COPC=`copc`）。`reg_id` から自前で推測して作るのではありません。
 - `external_links` が無い場合のみ公式 `…/api/v1/zipdata/{reg_id}` を出し、疎通結果を表示します（公開デモでは 404 が多い）。
 - クリックした点の切り出しではなく **登録データ一式** の取得です。
+- ZIP / COPC を開く直前に、クリック地点の **CloudCompare用CSV**（`Label,X,Y,Z`）も保存します。Zは地理院DEM標高（`dem5a_png`→`dem_png`）。軸順は結果パネルで切替（既定: X東 Y北＝平面直角のY,X／切替: 平面直角 X北 Y東）。Labelは `reg_{id}`。
 - 検索API: `GET https://gsvrg.ipri.aist.go.jp/3ddb_demo/api/v1/services/ALL/features`（公式文書の `gsrt.digiarc.aist.go.jp` は301先。**ブラウザのCORS fetchは別オリジン301を追えない**ため、クライアントは最終ホストを直接指定）
 - 検索件数は初期最大100件（API総件数が多い場合は画面に注意表示）。
 - 検索結果表示後、ZIPエンドポイントへ軽量疎通（HEAD等）を行い、HTTPエラー理由を画面に出します。
@@ -111,26 +112,19 @@ robocopy ..\yuzawa_NInI_henkan\public . /E /XD .git .venv-scripts
 4. ブラウザのNetwork/ConsoleにCORS/401/403等のエラーがないかを記録します。
 5. 公開版ZIP取得の実機確認が完了するまで、内部版の接続先切替は進めません。
 
-### 内部版（差分入力のみ・公開版は残す）
+### 内部版（base のみ・公開版は残す）
 
-公開版ボタン・公開probeはそのまま使えます。内部は **変わりうる値だけ** を実行時入力します（ホスト名・Cookie・トークンはリポジトリに書かない）。
+公開版ボタン・公開probeはそのまま使えます。地図の内部設定は **base URL だけ** を localStorage に保存します（ホスト名・Cookie・トークンはリポジトリに書かない）。API パスと `credentials=include` はコード固定です。
 
-変わりうる入力:
-- `--base` / 地図の localStorage `aist3ddb.internal.base`（必須・公開URLは不可。例: `https://gsvrg.ipri.aist.go.jp/3ddb`）
-- `credentials`（地図: `omit`|`include`。内部でセッションCookieが要るなら `include`）
-- 任意: `--features-path`（既定 `/api/v1/services/ALL/features`）
-- 任意: `--zipdata-path`（**内部既定** `/api/v1/services/zipdata/{id}`。公開デモの `/api/v1/zipdata/{id}` とは違う）
-- 任意: `--cookie-env` / `--token-env` / `--header`（値は環境変数から。レポートに秘密は出さない）
+地図UIの手順:
 
-**CORS 注意:** GitHub Pages から内部 `/3ddb` への `fetch` は Failed to fetch になりがちです。クリック地点のデータを取る手順:
+1. 長押し →「内部版の接続先を設定」で base を入力（例: `https://gsvrg.ipri.aist.go.jp/3ddb`。公開版URLは不可。空でクリア）
+2. 「内部版を検索」
+3. CORS で失敗したらパネルの手順どおり: 別タブで検索JSONを開く → 全文コピー → 貼り付け枠へ → **その地点の候補**から ZIP
 
-1. 地図で地点を長押し →「この地点の検索JSONを別タブで開く」
-2. 別タブで JSON を全文コピー
-3. 「地点JSONを貼り付けて一覧表示」→ **その地点の候補**から ZIP を開く
+ZIPは地点切り出しではなく登録データ一式です。Pages から内部 API への直接 `fetch` は CORS で通らない前提です。
 
-手入力の登録IDは、過去にDLした別地点のZIPになりやすいので補助用途です。ZIPは地点切り出しではなく登録データ一式です。Pages 直叩き検索を通すには API 側 CORS 許可か同一オリジン配備が必要です。
-
-probe（venv）:
+probe（venv・開発用。任意でパス上書き可）:
 
 ```powershell
 .\.venv\Scripts\python.exe .\scripts\probe_aist_3ddb_internal.py `
@@ -140,7 +134,5 @@ probe（venv）:
   --probe-zipdata `
   --out .\artifacts\aist-3ddb-internal-probe.json
 ```
-
-地図UI: 長押しメニュー →「内部版の接続先を設定」で base 等をこのブラウザの localStorage にだけ保存 →「内部版を検索」。クリアは設定プロンプトを空にする。
 
 検索に失敗した場合（および 0 件の場合）は、画面から **診断ログJSONをダウンロード**できます。含まれるのは base・パス・credentials モード・HTTPステータス・安全な応答ヘッダ・本文プレビュー・切り分けヒントなどです。Cookie/Authorization の値は入れません。

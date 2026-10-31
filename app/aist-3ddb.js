@@ -71,7 +71,18 @@ function normalizeZipdataPath(path) {
   return raw;
 }
 
-/** Read internal overrides from localStorage. Missing/invalid base => null. */
+/** Fixed internal API options (not user-configurable in the map UI). */
+function internalFixedOptions() {
+  return {
+    credentials: "include",
+    featuresPath: AIST_DEFAULT_FEATURES_PATH,
+    zipdataPath: AIST_INTERNAL_DEFAULT_ZIPDATA_PATH,
+  };
+}
+
+/** Read internal base from localStorage. Missing/invalid base => null.
+ * credentials / API paths are always the code defaults (stale LS values ignored).
+ */
 export function readInternal3ddbConfig(storage = globalThis.localStorage) {
   if (!storage) return null;
   let baseRaw = "";
@@ -91,53 +102,27 @@ export function readInternal3ddbConfig(storage = globalThis.localStorage) {
     // Public hosts stay on the public button; internal config must be a different base.
     return null;
   }
-  let credentials = "include";
-  let featuresPath = AIST_DEFAULT_FEATURES_PATH;
-  let zipdataPath = AIST_INTERNAL_DEFAULT_ZIPDATA_PATH;
-  try {
-    credentials = normalizeCredentials(
-      storage.getItem(AIST_INTERNAL_LS_KEYS.credentials) || "include",
-      "include"
-    );
-    const fp = storage.getItem(AIST_INTERNAL_LS_KEYS.featuresPath);
-    const zp = storage.getItem(AIST_INTERNAL_LS_KEYS.zipdataPath);
-    if (fp) featuresPath = normalizeFeaturesPath(fp);
-    if (zp) {
-      zipdataPath = normalizeZipdataPath(zp);
-      // Older builds stored the public demo path; migrate for /3ddb hosts.
-      if (
-        zipdataPath === AIST_DEFAULT_ZIPDATA_PATH &&
-        /\/3ddb$/i.test(base) &&
-        !/3ddb_demo/i.test(base)
-      ) {
-        zipdataPath = AIST_INTERNAL_DEFAULT_ZIPDATA_PATH;
-      }
-    }
-  } catch {
-    return null;
-  }
-  return { base, credentials, featuresPath, zipdataPath, kind: "internal" };
+  return { base, ...internalFixedOptions(), kind: "internal" };
 }
 
-/** Persist internal overrides. Does not store tokens. */
+/** Persist internal base only. credentials / paths are code-fixed; does not store tokens. */
 export function writeInternal3ddbConfig(partial, storage = globalThis.localStorage) {
   if (!storage) throw new Error("localStorage が使えません。");
   const base = checkedBase(partial.base);
   if (base === AIST_PUBLIC_BASE || base === AIST_PUBLIC_BASE_DOCUMENTED) {
     throw new Error("公開版URLは内部設定に入れず、公開版ボタンを使ってください。");
   }
-  const credentials = normalizeCredentials(partial.credentials ?? "include", "include");
-  const featuresPath = normalizeFeaturesPath(
-    partial.featuresPath ?? AIST_DEFAULT_FEATURES_PATH
-  );
-  const zipdataPath = normalizeZipdataPath(
-    partial.zipdataPath ?? AIST_INTERNAL_DEFAULT_ZIPDATA_PATH
-  );
+  const fixed = internalFixedOptions();
   storage.setItem(AIST_INTERNAL_LS_KEYS.base, base);
-  storage.setItem(AIST_INTERNAL_LS_KEYS.credentials, credentials);
-  storage.setItem(AIST_INTERNAL_LS_KEYS.featuresPath, featuresPath);
-  storage.setItem(AIST_INTERNAL_LS_KEYS.zipdataPath, zipdataPath);
-  return { base, credentials, featuresPath, zipdataPath, kind: "internal" };
+  // Drop legacy override keys so old browsers do not keep stale path/credentials.
+  try {
+    storage.removeItem(AIST_INTERNAL_LS_KEYS.credentials);
+    storage.removeItem(AIST_INTERNAL_LS_KEYS.featuresPath);
+    storage.removeItem(AIST_INTERNAL_LS_KEYS.zipdataPath);
+  } catch {
+    /* ignore */
+  }
+  return { base, ...fixed, kind: "internal" };
 }
 
 export function clearInternal3ddbConfig(storage = globalThis.localStorage) {
@@ -794,9 +779,11 @@ export function itemsFrom3ddbPayload(
     seen.add(id);
     const coverage = estimateCoverageMeters(collectFeatureLonLats(feature));
     const externalLinks = extractExternalLinks(props, root);
+    const title = String(props.title || "（タイトルなし）");
     items.push({
       regId: id,
-      title: String(props.title || "（タイトルなし）"),
+      title,
+      shortTitle: humanize3ddbTitle(title),
       service: String(props.service_name || ""),
       license: String(props.license || ""),
       downloadable: props.downloadable === true,
@@ -826,6 +813,21 @@ export function parse3ddbSearchJsonText(text, opts = {}) {
     throw new Error("JSONの解析に失敗しました: " + (err?.message || err));
   }
   return itemsFrom3ddbPayload(payload, opts);
+}
+
+/** Short label for humans (drop ||| duplicates, keep tile/year hint). */
+export function humanize3ddbTitle(title) {
+  let t = String(title || "").trim();
+  if (!t) return "（タイトルなし）";
+  if (t.includes("|||")) t = t.split("|||")[0].trim();
+  // 10nd5144_org_R03-_湯沢市... → keep readable JP part when present
+  const jp = t.match(/[\u3040-\u30ff\u3400-\u9fff].*$/);
+  if (jp && jp[0].length >= 4) {
+    const year = t.match(/R0?\d+/i);
+    return year ? `${year[0]} ${jp[0]}` : jp[0];
+  }
+  if (t.length > 80) return `${t.slice(0, 80)}…`;
+  return t;
 }
 
 /**

@@ -35,7 +35,13 @@ import {
   build3ddbDiagnosticsReport,
   download3ddbDiagnosticsReport,
   parse3ddbSearchJsonText,
+  humanize3ddbTitle,
 } from "./aist-3ddb.js";
+import {
+  readAxisMode,
+  writeAxisMode,
+  downloadClickPointCsv,
+} from "./point-csv.js";
 
 function $(id) {
   return document.getElementById(id);
@@ -491,7 +497,60 @@ export function openActionSheet(lng, lat, memoFeature) {
     panel.appendChild(btn);
   }
 
+  function axisModeLabel(mode) {
+    return mode === "plane"
+      ? "座標軸: 平面直角（X北 Y東）— タップで切替"
+      : "座標軸: CloudCompare（X東 Y北）— タップで切替";
+  }
+
+  function appendAxisModeToggle(panel) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "aist-3ddb-zip-link aist-3ddb-secondary-link";
+    btn.dataset.axisMode = readAxisMode();
+    btn.textContent = axisModeLabel(btn.dataset.axisMode);
+    btn.title =
+      "ZIPと一緒に保存する地点CSVの X/Y 順。CloudCompare向き（既定）は平面直角のY,X（東,北）。";
+    btn.addEventListener("click", () => {
+      const next = btn.dataset.axisMode === "plane" ? "cc" : "plane";
+      writeAxisMode(next);
+      btn.dataset.axisMode = next;
+      btn.textContent = axisModeLabel(next);
+    });
+    panel.appendChild(btn);
+    const hint = document.createElement("p");
+    hint.className = "sheet-hint";
+    hint.textContent =
+      "ZIP/COPCを開く直前に、クリック地点の Label,X,Y,Z（地理院DEM標高）CSVも保存します。";
+    panel.appendChild(hint);
+  }
+
+  function bindZipWithPointCsv(link, { regId }) {
+    link.addEventListener("click", async (ev) => {
+      ev.preventDefault();
+      const href = link.href;
+      const label = `reg_${regId}`;
+      try {
+        await downloadClickPointCsv({
+          lng,
+          lat,
+          label,
+          axisMode: readAxisMode(),
+        });
+      } catch (err) {
+        const openZip = window.confirm(
+          "地点CSV（DEM標高）の保存に失敗しました。\n" +
+            ((err && err.message) || err) +
+            "\n\nZIP / 点群だけ開きますか？"
+        );
+        if (!openZip) return;
+      }
+      window.open(href, "_blank", "noopener,noreferrer");
+    });
+  }
+
   function renderAistItemList(panel, items, { kind, base, credentials, zipdataPath }) {
+    appendAxisModeToggle(panel);
     const listEl = document.createElement("div");
     listEl.className = "aist-3ddb-list";
     listEl.setAttribute("role", "list");
@@ -506,14 +565,24 @@ export function openActionSheet(lng, lat, memoFeature) {
         (hasArchive || item.downloadable ? " aist-3ddb-item-ok" : " aist-3ddb-item-blocked");
       wrap.setAttribute("role", "listitem");
 
+      const head = document.createElement("div");
+      head.className = "aist-3ddb-item-head";
+      const idBadge = document.createElement("span");
+      idBadge.className = "aist-3ddb-reg-id";
+      idBadge.textContent = String(item.regId);
+      idBadge.title = "登録ID（reg_id）";
+      head.appendChild(idBadge);
       const title = document.createElement("div");
       title.className = "aist-3ddb-item-title";
-      title.textContent = `[${item.regId}] ${item.title}`;
-      wrap.appendChild(title);
+      title.textContent = item.shortTitle || humanize3ddbTitle(item.title);
+      title.title = item.title || "";
+      head.appendChild(title);
+      wrap.appendChild(head);
 
       const meta = document.createElement("p");
       meta.className = "sheet-hint aist-3ddb-item-meta";
       const bits = [
+        `登録ID ${item.regId}`,
         item.service || "種別不明",
         item.coverageLabel || "被覆範囲不明",
         hasArchive
@@ -539,6 +608,9 @@ export function openActionSheet(lng, lat, memoFeature) {
             : linkInfo.type === "copc"
               ? `COPC点群を開く（ID ${item.regId}）`
               : `${linkInfo.label}（ID ${item.regId}）`;
+        if (linkInfo.type === "archive" || linkInfo.type === "copc") {
+          bindZipWithPointCsv(link, { regId: item.regId });
+        }
         wrap.appendChild(link);
       }
 
@@ -560,6 +632,7 @@ export function openActionSheet(lng, lat, memoFeature) {
         link.target = "_blank";
         link.rel = "noopener noreferrer";
         link.textContent = `この登録のZIPを開く（地点を含む一式・ID ${item.regId}）`;
+        bindZipWithPointCsv(link, { regId: item.regId });
         wrap.appendChild(link);
 
         // Public demo: optional HEAD probe. Internal: skip fetch (same CORS wall).
@@ -597,6 +670,13 @@ export function openActionSheet(lng, lat, memoFeature) {
       ? `この地点の候補 ${parsed.items.length}件（API総件数 ${parsed.total}件・${sourceLabel}）。被覆が小さい順。切り出しではなく登録データ一式です。`
       : `この地点の候補は0件です（${sourceLabel}）。`;
     panel.appendChild(status);
+    if (parsed.items.length) {
+      const idSummary = document.createElement("p");
+      idSummary.className = "aist-3ddb-id-summary";
+      idSummary.textContent =
+        "登録ID: " + parsed.items.map((it) => it.regId).join(" / ");
+      panel.appendChild(idSummary);
+    }
     const notice = document.createElement("p");
     notice.className = "sheet-hint";
     notice.textContent =
@@ -746,6 +826,14 @@ export function openActionSheet(lng, lat, memoFeature) {
     }
   }
 
+  function applyPastedSearchJson(text, cfg) {
+    const parsed = parse3ddbSearchJsonText(text, {
+      base: cfg.base,
+      zipdataPath: cfg.zipdataPath,
+    });
+    showParsedPointResults(cfg.afterEl, parsed, cfg, "貼り付けJSON");
+  }
+
   function appendPointSearchCorsWorkflow(panel, cfg) {
     const openBtn = document.createElement("a");
     openBtn.className = "aist-3ddb-zip-link";
@@ -755,43 +843,74 @@ export function openActionSheet(lng, lat, memoFeature) {
     openBtn.textContent = "① この地点の検索結果JSONを別タブで開く";
     panel.appendChild(openBtn);
 
+    const tip = document.createElement("p");
+    tip.className = "sheet-hint";
+    tip.textContent =
+      "② 別タブで Ctrl+A → Ctrl+C。③ 下の枠に貼り付け（JSONを読む必要はありません。一覧と大きな登録IDが出ます）。";
+    panel.appendChild(tip);
+
+    const pasteBox = document.createElement("div");
+    pasteBox.className = "aist-3ddb-paste-box";
+    const ta = document.createElement("textarea");
+    ta.className = "aist-3ddb-paste-ta";
+    ta.rows = 5;
+    ta.placeholder =
+      "ここに検索JSONを貼り付け（Ctrl+V）。中身を読む必要はありません。";
+    ta.spellcheck = false;
+    pasteBox.appendChild(ta);
+
+    const row = document.createElement("div");
+    row.className = "aist-3ddb-paste-actions";
+
     const pasteBtn = document.createElement("button");
     pasteBtn.type = "button";
     pasteBtn.className = "aist-3ddb-zip-link";
-    pasteBtn.textContent = "③ 別タブのJSONを貼り付けて地点の一覧を表示";
-    pasteBtn.addEventListener("click", async () => {
-      let text = "";
+    pasteBtn.textContent = "貼り付けから一覧を作る";
+    pasteBtn.addEventListener("click", () => {
       try {
-        if (navigator.clipboard?.readText) {
-          text = await navigator.clipboard.readText();
-        }
-      } catch {
-        /* fall through to prompt */
-      }
-      if (!text || !text.trim()) {
-        text = window.prompt(
-          "別タブで開いた検索JSONをすべて貼り付けてください（Ctrl+A → Ctrl+C → ここに貼付）。",
-          ""
-        );
-      }
-      if (text === null || !String(text).trim()) return;
-      try {
-        const parsed = parse3ddbSearchJsonText(text, {
-          base: cfg.base,
-          zipdataPath: cfg.zipdataPath,
-        });
-        showParsedPointResults(cfg.afterEl, parsed, cfg, "貼り付けJSON");
+        applyPastedSearchJson(ta.value, cfg);
       } catch (err) {
         alert("貼り付けJSONの処理に失敗: " + ((err && err.message) || err));
       }
     });
-    panel.appendChild(pasteBtn);
+    row.appendChild(pasteBtn);
 
-    const tip = document.createElement("p");
-    tip.className = "sheet-hint";
-    tip.textContent =
-      "② 別タブで Ctrl+A → Ctrl+C。過去にDLした固定IDではなく、貼り付け一覧のIDを選ぶとクリック地点のデータになります。";
-    panel.appendChild(tip);
+    const clipBtn = document.createElement("button");
+    clipBtn.type = "button";
+    clipBtn.className = "aist-3ddb-zip-link aist-3ddb-secondary-link";
+    clipBtn.textContent = "クリップボードから一覧";
+    clipBtn.addEventListener("click", async () => {
+      try {
+        const text = await navigator.clipboard.readText();
+        if (!text?.trim()) {
+          alert("クリップボードが空です。別タブで JSON をコピーしてから再度押してください。");
+          return;
+        }
+        ta.value = text;
+        applyPastedSearchJson(text, cfg);
+      } catch (err) {
+        alert(
+          "クリップボードを読めませんでした。下の枠に Ctrl+V で貼り付けて「貼り付けから一覧を作る」を押してください。\n" +
+            ((err && err.message) || err)
+        );
+        ta.focus();
+      }
+    });
+    row.appendChild(clipBtn);
+    pasteBox.appendChild(row);
+    panel.appendChild(pasteBox);
+
+    ta.addEventListener("paste", () => {
+      // After paste settles, auto-parse so users need one less click.
+      queueMicrotask(() => {
+        if (!ta.value.trim()) return;
+        try {
+          applyPastedSearchJson(ta.value, cfg);
+        } catch {
+          /* wait for explicit button if incomplete paste */
+        }
+      });
+    });
   }
 
   const aistPublicBtn = addBtn("AIST 3DDB：公開版を検索", async () => {
@@ -830,105 +949,17 @@ export function openActionSheet(lng, lat, memoFeature) {
       alert("内部版設定をクリアしました。シートを開き直してください。");
       return;
     }
-    const credIn = window.prompt(
-      "credentials（omit / include）。内部でCookieが要る場合は include。",
-      cur?.credentials || "include"
-    );
-    if (credIn === null) return;
-    const featuresPath = window.prompt(
-      "features パス（通常はそのまま）",
-      cur?.featuresPath || AIST_DEFAULT_FEATURES_PATH
-    );
-    if (featuresPath === null) return;
-    const zipdataPath = window.prompt(
-      "zipdata パス（{id} 必須。内部は /api/v1/services/zipdata/{id}）",
-      cur?.zipdataPath || AIST_INTERNAL_DEFAULT_ZIPDATA_PATH
-    );
-    if (zipdataPath === null) return;
     try {
-      writeInternal3ddbConfig({
-        base,
-        credentials: credIn,
-        featuresPath,
-        zipdataPath,
-      });
+      writeInternal3ddbConfig({ base });
       alert(
-        "内部版設定を保存しました（このブラウザの localStorage のみ）。\n" +
-          "注意: GitHub Pages からの検索 fetch は CORS で失敗しがちです。" +
-          "「この地点の検索JSONを別タブで開く」→貼り付けで、クリック地点の候補を出してください。\n" +
+        "内部版の base を保存しました（このブラウザの localStorage のみ。APIパスは固定）。\n" +
+          "使い方: 「内部版を検索」→ CORS で失敗したら別タブのJSONをコピーして貼り付け枠へ → 一覧からZIP。\n" +
           "シートを開き直してください。"
       );
     } catch (err) {
       alert("設定に失敗: " + ((err && err.message) || err));
     }
   });
-
-  if (internalCfg) {
-    addBtn("AIST 3DDB：この地点の検索JSONを別タブで開く", () => {
-      const cfg = readInternal3ddbConfig();
-      if (!cfg) {
-        alert("内部版が未設定です。");
-        return;
-      }
-      const href = build3ddbPointSearchUrl(
-        lng,
-        lat,
-        cfg.base,
-        100,
-        cfg.featuresPath || AIST_DEFAULT_FEATURES_PATH
-      );
-      window.open(href, "_blank", "noopener,noreferrer");
-    });
-
-    const pastePointBtn = addBtn("AIST 3DDB：地点JSONを貼り付けて一覧表示", async () => {
-      const cfg = readInternal3ddbConfig();
-      if (!cfg) {
-        alert("内部版が未設定です。");
-        return;
-      }
-      let text = "";
-      try {
-        if (navigator.clipboard?.readText) text = await navigator.clipboard.readText();
-      } catch {
-        /* prompt fallback */
-      }
-      if (!text || !text.trim()) {
-        text = window.prompt(
-          "別タブの検索JSONを貼り付け（このクリック地点の候補一覧になります）。",
-          ""
-        );
-      }
-      if (text === null || !String(text).trim()) return;
-      try {
-        const parsed = parse3ddbSearchJsonText(text, {
-          base: cfg.base,
-          zipdataPath: cfg.zipdataPath,
-        });
-        showParsedPointResults(pastePointBtn, parsed, cfg, "貼り付けJSON");
-      } catch (err) {
-        alert("貼り付けJSONの処理に失敗: " + ((err && err.message) || err));
-      }
-    });
-
-    addBtn("AIST 3DDB：登録IDを手入力してZIPを開く", () => {
-      const cfg = readInternal3ddbConfig();
-      if (!cfg) {
-        alert("内部版が未設定です。");
-        return;
-      }
-      const raw = window.prompt(
-        "登録ID (reg_id)。地点のデータにするなら、先に地点JSON貼り付け一覧からIDを確認してください。空欄のままにしないでください。",
-        ""
-      );
-      if (raw === null || !String(raw).trim()) return;
-      try {
-        const href = build3ddbZipUrl(String(raw).trim(), cfg.base, cfg.zipdataPath);
-        window.open(href, "_blank", "noopener,noreferrer");
-      } catch (err) {
-        alert("ZIP URL の作成に失敗: " + ((err && err.message) || err));
-      }
-    });
-  }
 
   addBtn("座標コピー（緯度,経度）", async () => {
     const text = formatLatLng(lat, lng);
