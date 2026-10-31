@@ -30,7 +30,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 DEFAULT_FEATURES_PATH = "/api/v1/services/ALL/features"
-DEFAULT_ZIPDATA_PATH = "/api/v1/zipdata/{id}"
+# Confirmed on internal /3ddb (not the public demo path /api/v1/zipdata/{id}).
+DEFAULT_ZIPDATA_PATH = "/api/v1/services/zipdata/{id}"
 PUBLIC_BASES = {
     "https://gsvrg.ipri.aist.go.jp/3ddb_demo",
     "https://gsrt.digiarc.aist.go.jp/3ddb_demo",

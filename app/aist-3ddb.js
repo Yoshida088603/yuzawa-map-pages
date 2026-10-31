@@ -31,7 +31,13 @@ export const AIST_INTERNAL_LS_KEYS = {
 };
 
 export const AIST_DEFAULT_FEATURES_PATH = "/api/v1/services/ALL/features";
+/** Public demo zipdata path (often 404; prefer external_links there). */
 export const AIST_DEFAULT_ZIPDATA_PATH = "/api/v1/zipdata/{id}";
+/**
+ * Internal (/3ddb) zipdata path confirmed via browser download:
+ * https://gsvrg.ipri.aist.go.jp/3ddb/api/v1/services/zipdata/{id}
+ */
+export const AIST_INTERNAL_DEFAULT_ZIPDATA_PATH = "/api/v1/services/zipdata/{id}";
 
 function checkedBase(base) {
   const url = new URL(String(base));
@@ -87,7 +93,7 @@ export function readInternal3ddbConfig(storage = globalThis.localStorage) {
   }
   let credentials = "include";
   let featuresPath = AIST_DEFAULT_FEATURES_PATH;
-  let zipdataPath = AIST_DEFAULT_ZIPDATA_PATH;
+  let zipdataPath = AIST_INTERNAL_DEFAULT_ZIPDATA_PATH;
   try {
     credentials = normalizeCredentials(
       storage.getItem(AIST_INTERNAL_LS_KEYS.credentials) || "include",
@@ -96,7 +102,17 @@ export function readInternal3ddbConfig(storage = globalThis.localStorage) {
     const fp = storage.getItem(AIST_INTERNAL_LS_KEYS.featuresPath);
     const zp = storage.getItem(AIST_INTERNAL_LS_KEYS.zipdataPath);
     if (fp) featuresPath = normalizeFeaturesPath(fp);
-    if (zp) zipdataPath = normalizeZipdataPath(zp);
+    if (zp) {
+      zipdataPath = normalizeZipdataPath(zp);
+      // Older builds stored the public demo path; migrate for /3ddb hosts.
+      if (
+        zipdataPath === AIST_DEFAULT_ZIPDATA_PATH &&
+        /\/3ddb$/i.test(base) &&
+        !/3ddb_demo/i.test(base)
+      ) {
+        zipdataPath = AIST_INTERNAL_DEFAULT_ZIPDATA_PATH;
+      }
+    }
   } catch {
     return null;
   }
@@ -111,8 +127,12 @@ export function writeInternal3ddbConfig(partial, storage = globalThis.localStora
     throw new Error("公開版URLは内部設定に入れず、公開版ボタンを使ってください。");
   }
   const credentials = normalizeCredentials(partial.credentials ?? "include", "include");
-  const featuresPath = normalizeFeaturesPath(partial.featuresPath);
-  const zipdataPath = normalizeZipdataPath(partial.zipdataPath);
+  const featuresPath = normalizeFeaturesPath(
+    partial.featuresPath ?? AIST_DEFAULT_FEATURES_PATH
+  );
+  const zipdataPath = normalizeZipdataPath(
+    partial.zipdataPath ?? AIST_INTERNAL_DEFAULT_ZIPDATA_PATH
+  );
   storage.setItem(AIST_INTERNAL_LS_KEYS.base, base);
   storage.setItem(AIST_INTERNAL_LS_KEYS.credentials, credentials);
   storage.setItem(AIST_INTERNAL_LS_KEYS.featuresPath, featuresPath);

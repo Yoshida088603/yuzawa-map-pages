@@ -16,6 +16,8 @@ import {
   writeInternal3ddbConfig,
   clearInternal3ddbConfig,
   AIST_DEFAULT_FEATURES_PATH,
+  AIST_DEFAULT_ZIPDATA_PATH,
+  AIST_INTERNAL_DEFAULT_ZIPDATA_PATH,
   Aist3ddbError,
   previewBodyText,
   build3ddbDiagnosticsReport,
@@ -103,7 +105,16 @@ const saved = writeInternal3ddbConfig(
 assert.equal(saved.base, "https://internal.example/3ddb");
 assert.equal(saved.credentials, "include");
 assert.equal(saved.featuresPath, AIST_DEFAULT_FEATURES_PATH);
+assert.equal(saved.zipdataPath, AIST_INTERNAL_DEFAULT_ZIPDATA_PATH);
 assert.equal(readInternal3ddbConfig(fakeStorage).base, "https://internal.example/3ddb");
+assert.equal(readInternal3ddbConfig(fakeStorage).zipdataPath, AIST_INTERNAL_DEFAULT_ZIPDATA_PATH);
+// Migrate old public zip path stored against /3ddb
+fakeStorage.setItem("aist3ddb.internal.zipdataPath", AIST_DEFAULT_ZIPDATA_PATH);
+assert.equal(readInternal3ddbConfig(fakeStorage).zipdataPath, AIST_INTERNAL_DEFAULT_ZIPDATA_PATH);
+assert.equal(
+  build3ddbZipUrl(141303, "https://gsvrg.ipri.aist.go.jp/3ddb", AIST_INTERNAL_DEFAULT_ZIPDATA_PATH),
+  "https://gsvrg.ipri.aist.go.jp/3ddb/api/v1/services/zipdata/141303"
+);
 clearInternal3ddbConfig(fakeStorage);
 assert.equal(readInternal3ddbConfig(fakeStorage), null);
 

@@ -116,10 +116,13 @@ robocopy ..\yuzawa_NInI_henkan\public . /E /XD .git .venv-scripts
 公開版ボタン・公開probeはそのまま使えます。内部は **変わりうる値だけ** を実行時入力します（ホスト名・Cookie・トークンはリポジトリに書かない）。
 
 変わりうる入力:
-- `--base` / 地図の localStorage `aist3ddb.internal.base`（必須・公開URLは不可）
+- `--base` / 地図の localStorage `aist3ddb.internal.base`（必須・公開URLは不可。例: `https://gsvrg.ipri.aist.go.jp/3ddb`）
 - `credentials`（地図: `omit`|`include`。内部でセッションCookieが要るなら `include`）
-- 任意: `--features-path` / `--zipdata-path`（既定は公開と同じ `/api/v1/...`）
+- 任意: `--features-path`（既定 `/api/v1/services/ALL/features`）
+- 任意: `--zipdata-path`（**内部既定** `/api/v1/services/zipdata/{id}`。公開デモの `/api/v1/zipdata/{id}` とは違う）
 - 任意: `--cookie-env` / `--token-env` / `--header`（値は環境変数から。レポートに秘密は出さない）
+
+**CORS 注意:** GitHub Pages（`https://yoshida088603.github.io`）から内部 `/3ddb` への `fetch` は、サーバが Origin を許可していないと Failed to fetch になります（別タブの通常遷移や ZIP リンクは成功し得る）。地図では「登録IDのZIPを開く（リンク遷移）」で CORS を回避して取得できます。検索一覧の Pages 直叩きを通すには、API側の CORS 許可か同一オリジン配備が必要です。
 
 probe（venv）:
 

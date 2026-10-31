@@ -27,7 +27,7 @@ import {
   AIST_PUBLIC_TEST_POINT,
   AIST_PUBLIC_BASE,
   AIST_DEFAULT_FEATURES_PATH,
-  AIST_DEFAULT_ZIPDATA_PATH,
+  AIST_INTERNAL_DEFAULT_ZIPDATA_PATH,
   readInternal3ddbConfig,
   writeInternal3ddbConfig,
   clearInternal3ddbConfig,
@@ -682,6 +682,18 @@ export function openActionSheet(lng, lat, memoFeature) {
       panel.appendChild(hints);
       appendDiagnosticsDownload(report, "失敗ログ／診断JSONをダウンロード");
 
+      if (kind === "internal" && e?.diagnostics?.phase === "fetch") {
+        const corsNote = document.createElement("p");
+        corsNote.className = "sheet-hint aist-3ddb-hints";
+        corsNote.textContent =
+          "Pages（" +
+          (report.checks?.page_origin || "このサイト") +
+          "）から内部APIへの fetch は CORS 未許可の可能性が高いです。" +
+          "検索は別タブ、ZIPは下の「登録IDのZIPを開く」か公式ビューアで取得してください。" +
+          " zipdata パスは /api/v1/services/zipdata/{id} を使います。";
+        panel.appendChild(corsNote);
+      }
+
       const inspectUrl =
         report.checks?.manual_inspect_url ||
         build3ddbPointSearchUrl(lng, lat, base, 100, featuresPath);
@@ -698,9 +710,35 @@ export function openActionSheet(lng, lat, memoFeature) {
         "このリンクURLは診断JSONの checks.manual_inspect_url と同じです。" +
         "Failed to fetch ではCORS詳細は取れないため、別タブ確認結果とJSONをセットで見てください。";
       panel.appendChild(inspectNote);
+
+      if (kind === "internal") {
+        appendOpenZipByRegId(panel, { base, zipdataPath });
+      }
     } finally {
       triggerBtn.disabled = false;
     }
+  }
+
+  function appendOpenZipByRegId(parent, cfg) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "aist-3ddb-zip-link";
+    btn.textContent = "登録IDのZIPを開く（リンク遷移・CORS回避）";
+    btn.addEventListener("click", () => {
+      const raw = window.prompt(
+        "登録ID (reg_id)。例: 141303\n" +
+          "内部ZIPは別タブ遷移のため CORS の影響を受けません。",
+        ""
+      );
+      if (raw === null || !String(raw).trim()) return;
+      try {
+        const href = build3ddbZipUrl(String(raw).trim(), cfg.base, cfg.zipdataPath);
+        window.open(href, "_blank", "noopener,noreferrer");
+      } catch (err) {
+        alert("ZIP URL の作成に失敗: " + ((err && err.message) || err));
+      }
+    });
+    parent.appendChild(btn);
   }
 
   const aistPublicBtn = addBtn("AIST 3DDB：公開版を検索", async () => {
@@ -730,7 +768,7 @@ export function openActionSheet(lng, lat, memoFeature) {
   addBtn("AIST 3DDB：内部版の接続先を設定", () => {
     const cur = readInternal3ddbConfig();
     const base = window.prompt(
-      "内部版の base URL（例: https://host.example/3ddb）。公開版URLは不可。空でクリア。",
+      "内部版の base URL（例: https://gsvrg.ipri.aist.go.jp/3ddb）。公開版URLは不可。空でクリア。",
       cur?.base || ""
     );
     if (base === null) return;
@@ -750,8 +788,8 @@ export function openActionSheet(lng, lat, memoFeature) {
     );
     if (featuresPath === null) return;
     const zipdataPath = window.prompt(
-      "zipdata パス（{id} 必須。通常はそのまま）",
-      cur?.zipdataPath || AIST_DEFAULT_ZIPDATA_PATH
+      "zipdata パス（{id} 必須。内部は /api/v1/services/zipdata/{id}）",
+      cur?.zipdataPath || AIST_INTERNAL_DEFAULT_ZIPDATA_PATH
     );
     if (zipdataPath === null) return;
     try {
@@ -761,11 +799,37 @@ export function openActionSheet(lng, lat, memoFeature) {
         featuresPath,
         zipdataPath,
       });
-      alert("内部版設定を保存しました（このブラウザの localStorage のみ）。シートを開き直して内部版検索を使ってください。");
+      alert(
+        "内部版設定を保存しました（このブラウザの localStorage のみ）。\n" +
+          "注意: GitHub Pages から内部APIへの検索 fetch は CORS で失敗することがあります。" +
+          "その場合は別タブ検索＋「登録IDのZIPを開く」を使ってください。\n" +
+          "シートを開き直してください。"
+      );
     } catch (err) {
       alert("設定に失敗: " + ((err && err.message) || err));
     }
   });
+
+  if (internalCfg) {
+    addBtn("AIST 3DDB：登録IDのZIPを開く（内部）", () => {
+      const cfg = readInternal3ddbConfig();
+      if (!cfg) {
+        alert("内部版が未設定です。");
+        return;
+      }
+      const raw = window.prompt(
+        "登録ID (reg_id)。例: 141303\nリンク遷移のため CORS の影響を受けません。",
+        "141303"
+      );
+      if (raw === null || !String(raw).trim()) return;
+      try {
+        const href = build3ddbZipUrl(String(raw).trim(), cfg.base, cfg.zipdataPath);
+        window.open(href, "_blank", "noopener,noreferrer");
+      } catch (err) {
+        alert("ZIP URL の作成に失敗: " + ((err && err.message) || err));
+      }
+    });
+  }
 
   addBtn("座標コピー（緯度,経度）", async () => {
     const text = formatLatLng(lat, lng);
