@@ -19,6 +19,7 @@ import { bringOverlaysFront } from "./layer-order.js";
 import { addPhotoToMemo, photoObjectUrl } from "./photos.js";
 import { exportLocalBundle, pendingSummary } from "./sync-export.js";
 import { prefetchParcelsForOffline } from "./offline.js";
+import { search3ddbAtPoint, build3ddbPointSearchUrl, build3ddbZipUrl } from "./aist-3ddb.js";
 
 function $(id) {
   return document.getElementById(id);
@@ -421,6 +422,7 @@ export function openActionSheet(lng, lat, memoFeature) {
       await onClick();
     });
     list.appendChild(btn);
+    return btn;
   }
 
   if (memoFeature) {
@@ -444,6 +446,78 @@ export function openActionSheet(lng, lat, memoFeature) {
   addBtn("ルート検索", () => {
     openRoute(lat, lng);
     closeAllSheets();
+  });
+
+  // 公開版のみ。ZIPはCORS越しにfetchせず、ユーザー操作による通常のリンク遷移で取得する。
+  const aistBtn = addBtn("AIST 3DDB：元データZIPを探す（公開版）", async () => {
+    const previous = $("aist-3ddb-results");
+    if (previous) previous.remove();
+
+    const panel = document.createElement("div");
+    panel.id = "aist-3ddb-results";
+    const status = document.createElement("p");
+    status.className = "sheet-hint";
+    status.textContent = "3DDB公開版を検索しています…";
+    panel.appendChild(status);
+    list.appendChild(panel);
+    aistBtn.disabled = true;
+
+    try {
+      const { items, total } = await search3ddbAtPoint(lng, lat);
+      status.textContent = items.length
+        ? `位置に該当する登録データ：${items.length}件（API上の総件数 ${total}件）。ダウンロード可能なものだけZIPを取得できます。`
+        : "公開版に該当する登録データは見つかりませんでした。";
+      if (total > items.length) {
+        const hint = document.createElement("p");
+        hint.className = "sheet-hint";
+        hint.textContent = "検索結果の一部のみ表示しています（最大100件）。";
+        panel.appendChild(hint);
+      }
+      for (const item of items) {
+        const wrap = document.createElement("div");
+        wrap.className = "aist-3ddb-item";
+        const title = document.createElement("div");
+        title.textContent = `[${item.regId}] ${item.title}（${item.service || "種別不明"}）`;
+        wrap.appendChild(title);
+        if (item.license) {
+          const license = document.createElement("p");
+          license.className = "sheet-hint";
+          license.textContent = `ライセンス：${item.license}`;
+          wrap.appendChild(license);
+        }
+        if (item.downloadable) {
+          const link = document.createElement("a");
+          link.className = "aist-3ddb-zip-link";
+          link.href = build3ddbZipUrl(item.regId);
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+          link.textContent = `元データZIPを取得（ID ${item.regId}）`;
+          wrap.appendChild(link);
+        } else {
+          const disabled = document.createElement("p");
+          disabled.className = "sheet-hint";
+          disabled.textContent = "元データZIPのダウンロード不可（3DDB側の設定）";
+          wrap.appendChild(disabled);
+        }
+        panel.appendChild(wrap);
+      }
+    } catch (e) {
+      status.textContent = "公開版の検索に失敗しました。APIのCORS制限、接続状態、サーバー応答などを確認してください。";
+      const detail = document.createElement("p");
+      detail.className = "sheet-hint";
+      detail.textContent = String(e?.message || e);
+      panel.appendChild(detail);
+      // 直接開くとCORS制限を受けずにHTTP応答の確認ができる（検索結果の自動解析は不可）。
+      const inspect = document.createElement("a");
+      inspect.className = "aist-3ddb-zip-link";
+      inspect.href = build3ddbPointSearchUrl(lng, lat);
+      inspect.target = "_blank";
+      inspect.rel = "noopener noreferrer";
+      inspect.textContent = "検索APIの応答を別タブで確認";
+      panel.appendChild(inspect);
+    } finally {
+      aistBtn.disabled = false;
+    }
   });
 
   addBtn("座標コピー（緯度,経度）", async () => {
