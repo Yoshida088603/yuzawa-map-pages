@@ -749,6 +749,41 @@ export async function search3ddbAtPoint(
     });
   }
 
+  const parsed = itemsFrom3ddbPayload(payload, { base: root, zipdataPath: zpath });
+  return {
+    ...parsed,
+    limit,
+    searchMode: "POINT",
+    base: root,
+    credentials: cred,
+    diagnostics: {
+      phase: "ok",
+      elapsed_ms: Date.now() - started,
+      request: requestMeta,
+      response: {
+        ok: true,
+        status: response.status,
+        headers: headerBag,
+        feature_count: payload.features.length,
+        api_total: payload.properties?.all ?? null,
+      },
+    },
+  };
+}
+
+/**
+ * Parse a features GeoJSON-like payload (e.g. pasted from a CORS-safe browser tab)
+ * into the same item list used by search3ddbAtPoint.
+ */
+export function itemsFrom3ddbPayload(
+  payload,
+  { base = AIST_PUBLIC_BASE, zipdataPath = AIST_DEFAULT_ZIPDATA_PATH } = {}
+) {
+  if (!payload || !Array.isArray(payload.features)) {
+    throw new Error("3DDB検索JSONの形式が想定と異なります（features 配列が必要）。");
+  }
+  const root = checkedBase(base);
+  const zpath = normalizeZipdataPath(zipdataPath);
   const items = [];
   const seen = new Set();
   for (const feature of payload.features) {
@@ -768,7 +803,6 @@ export async function search3ddbAtPoint(
       coverage,
       coverageLabel: formatCoverageLabel(coverage),
       externalLinks,
-      // Prefer external_links when present; zipdata is fallback / internal.
       zipdataUrl: build3ddbZipUrl(id, root, zpath),
     });
   }
@@ -777,23 +811,21 @@ export async function search3ddbAtPoint(
   return {
     items,
     total: Number.isSafeInteger(total) && total >= 0 ? total : items.length,
-    limit,
-    searchMode: "POINT",
-    base: root,
-    credentials: cred,
-    diagnostics: {
-      phase: "ok",
-      elapsed_ms: Date.now() - started,
-      request: requestMeta,
-      response: {
-        ok: true,
-        status: response.status,
-        headers: headerBag,
-        feature_count: payload.features.length,
-        api_total: payload.properties?.all ?? null,
-      },
-    },
+    featureCount: payload.features.length,
   };
+}
+
+/** Accept object or JSON text copied from a 3DDB features response tab. */
+export function parse3ddbSearchJsonText(text, opts = {}) {
+  const raw = String(text ?? "").trim();
+  if (!raw) throw new Error("JSONが空です。");
+  let payload;
+  try {
+    payload = JSON.parse(raw);
+  } catch (err) {
+    throw new Error("JSONの解析に失敗しました: " + (err?.message || err));
+  }
+  return itemsFrom3ddbPayload(payload, opts);
 }
 
 /**

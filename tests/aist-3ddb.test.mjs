@@ -21,6 +21,8 @@ import {
   Aist3ddbError,
   previewBodyText,
   build3ddbDiagnosticsReport,
+  parse3ddbSearchJsonText,
+  itemsFrom3ddbPayload,
 } from "../app/aist-3ddb.js";
 
 function mockResponse({ ok = true, status = 200, body = "", headers = {} } = {}) {
@@ -117,6 +119,36 @@ assert.equal(
 );
 clearInternal3ddbConfig(fakeStorage);
 assert.equal(readInternal3ddbConfig(fakeStorage), null);
+
+const pasted = parse3ddbSearchJsonText(
+  JSON.stringify({
+    properties: { all: 1 },
+    features: [
+      {
+        properties: {
+          reg_id: 99,
+          title: "near click",
+          service_name: "LAS",
+          downloadable: true,
+        },
+        geometries: [
+          {
+            type: "Polygon",
+            coordinates: [[[140.5, 39.1], [140.51, 39.1], [140.51, 39.11], [140.5, 39.11], [140.5, 39.1]]],
+          },
+        ],
+      },
+    ],
+  }),
+  {
+    base: "https://gsvrg.ipri.aist.go.jp/3ddb",
+    zipdataPath: AIST_INTERNAL_DEFAULT_ZIPDATA_PATH,
+  }
+);
+assert.equal(pasted.items.length, 1);
+assert.equal(pasted.items[0].regId, 99);
+assert.match(pasted.items[0].zipdataUrl, /\/services\/zipdata\/99$/);
+assert.equal(itemsFrom3ddbPayload({ features: [] }, { base: "https://internal.example/3ddb" }).total, 0);
 
 assert.equal(
   build3ddbPointSearchUrl(140.1, 36, "https://internal.example/3ddb", 10, "/api/v1/services/ALL/features"),

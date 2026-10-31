@@ -33,6 +33,7 @@ import {
   clearInternal3ddbConfig,
   build3ddbDiagnosticsReport,
   download3ddbDiagnosticsReport,
+  parse3ddbSearchJsonText,
 } from "./aist-3ddb.js";
 
 function $(id) {
@@ -463,42 +464,167 @@ export function openActionSheet(lng, lat, memoFeature) {
   });
 
   // 公開版は固定。内部版は localStorage の差分設定のみ（ホスト等はリポに埋め込まない）。
-  async function runAistSearch(triggerBtn, opts) {
+  function ensureAistResultsPanel(afterEl) {
     const previous = $("aist-3ddb-results");
     if (previous) previous.remove();
+    const panel = document.createElement("div");
+    panel.id = "aist-3ddb-results";
+    afterEl.insertAdjacentElement("afterend", panel);
+    panel.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    return panel;
+  }
 
+  function appendDiagnosticsDownload(panel, report, label) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "aist-3ddb-zip-link";
+    btn.textContent = label || "診断ログJSONをダウンロード";
+    btn.addEventListener("click", () => {
+      try {
+        const name = download3ddbDiagnosticsReport(report);
+        btn.textContent = `保存しました: ${name}`;
+      } catch (err) {
+        alert("診断ログの保存に失敗: " + ((err && err.message) || err));
+      }
+    });
+    panel.appendChild(btn);
+  }
+
+  function renderAistItemList(panel, items, { kind, base, credentials, zipdataPath }) {
+    const listEl = document.createElement("div");
+    listEl.className = "aist-3ddb-list";
+    listEl.setAttribute("role", "list");
+    panel.appendChild(listEl);
+
+    for (const item of items) {
+      const ext = item.externalLinks || [];
+      const hasArchive = ext.some((l) => l.type === "archive" || l.type === "copc");
+      const wrap = document.createElement("div");
+      wrap.className =
+        "aist-3ddb-item" +
+        (hasArchive || item.downloadable ? " aist-3ddb-item-ok" : " aist-3ddb-item-blocked");
+      wrap.setAttribute("role", "listitem");
+
+      const title = document.createElement("div");
+      title.className = "aist-3ddb-item-title";
+      title.textContent = `[${item.regId}] ${item.title}`;
+      wrap.appendChild(title);
+
+      const meta = document.createElement("p");
+      meta.className = "sheet-hint aist-3ddb-item-meta";
+      const bits = [
+        item.service || "種別不明",
+        item.coverageLabel || "被覆範囲不明",
+        hasArchive
+          ? "リストに取得URLあり"
+          : item.downloadable
+            ? "zipdataあり（リンク遷移）"
+            : "取得URLなし",
+      ];
+      if (item.license) bits.push(item.license);
+      meta.textContent = bits.join(" · ");
+      wrap.appendChild(meta);
+
+      for (const linkInfo of ext) {
+        if (linkInfo.type === "3dtiles") continue;
+        const link = document.createElement("a");
+        link.className = "aist-3ddb-zip-link";
+        link.href = linkInfo.url;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.textContent =
+          linkInfo.type === "archive"
+            ? `元データZIPを開く（外部・ID ${item.regId}）`
+            : linkInfo.type === "copc"
+              ? `COPC点群を開く（ID ${item.regId}）`
+              : `${linkInfo.label}（ID ${item.regId}）`;
+        wrap.appendChild(link);
+      }
+
+      const tiles = ext.find((l) => l.type === "3dtiles");
+      if (tiles) {
+        const tilesLink = document.createElement("a");
+        tilesLink.className = "aist-3ddb-zip-link aist-3ddb-secondary-link";
+        tilesLink.href = tiles.url;
+        tilesLink.target = "_blank";
+        tilesLink.rel = "noopener noreferrer";
+        tilesLink.textContent = "3D Tiles（表示用・tileset.json）";
+        wrap.appendChild(tilesLink);
+      }
+
+      if (item.downloadable && !hasArchive) {
+        const link = document.createElement("a");
+        link.className = "aist-3ddb-zip-link";
+        link.href = build3ddbZipUrl(item.regId, base, zipdataPath);
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.textContent = `この登録のZIPを開く（地点を含む一式・ID ${item.regId}）`;
+        wrap.appendChild(link);
+
+        // Public demo: optional HEAD probe. Internal: skip fetch (same CORS wall).
+        if (kind !== "internal") {
+          const probeStatus = document.createElement("p");
+          probeStatus.className = "sheet-hint aist-3ddb-probe";
+          probeStatus.textContent = "3DDB zipdata を確認しています…";
+          wrap.appendChild(probeStatus);
+          probe3ddbZip(item.regId, { base, credentials, zipdataPath })
+            .then((probe) => {
+              if (probe.ok) {
+                probeStatus.textContent = `zipdata疎通: HTTP ${probe.status}`;
+              } else {
+                probeStatus.textContent = probe.reason;
+                probeStatus.classList.add("aist-3ddb-probe-fail");
+                link.classList.add("aist-3ddb-zip-link-warn");
+              }
+            })
+            .catch((err) => {
+              probeStatus.textContent =
+                "zipdata疎通確認に失敗: " + String(err?.message || err);
+              probeStatus.classList.add("aist-3ddb-probe-fail");
+            });
+        }
+      }
+      listEl.appendChild(wrap);
+    }
+  }
+
+  function showParsedPointResults(afterEl, parsed, cfg, sourceLabel) {
+    const panel = ensureAistResultsPanel(afterEl);
+    const status = document.createElement("p");
+    status.className = "sheet-hint";
+    status.textContent = parsed.items.length
+      ? `この地点の候補 ${parsed.items.length}件（API総件数 ${parsed.total}件・${sourceLabel}）。被覆が小さい順。切り出しではなく登録データ一式です。`
+      : `この地点の候補は0件です（${sourceLabel}）。`;
+    panel.appendChild(status);
+    const notice = document.createElement("p");
+    notice.className = "sheet-hint";
+    notice.textContent =
+      `クリック地点 POINT(${lng}, ${lat}) を含む登録です。欲しいのは「過去に開いたID」ではなく、下の一覧から選んだIDのZIPです。`;
+    panel.appendChild(notice);
+    renderAistItemList(panel, parsed.items, {
+      kind: "internal",
+      base: cfg.base,
+      credentials: cfg.credentials,
+      zipdataPath: cfg.zipdataPath,
+    });
+  }
+
+  async function runAistSearch(triggerBtn, opts) {
     const kind = opts.kind || "public";
     const base = opts.base || AIST_PUBLIC_BASE;
     const credentials = opts.credentials || "omit";
     const featuresPath = opts.featuresPath || AIST_DEFAULT_FEATURES_PATH;
-    const zipdataPath = opts.zipdataPath || AIST_DEFAULT_ZIPDATA_PATH;
+    const zipdataPath =
+      opts.zipdataPath ||
+      (kind === "internal" ? AIST_INTERNAL_DEFAULT_ZIPDATA_PATH : AIST_DEFAULT_ZIPDATA_PATH);
 
-    const panel = document.createElement("div");
-    panel.id = "aist-3ddb-results";
+    const panel = ensureAistResultsPanel(triggerBtn);
     const status = document.createElement("p");
     status.className = "sheet-hint";
     status.textContent =
       kind === "internal" ? "3DDB内部版を検索しています…" : "3DDB公開版を検索しています…";
     panel.appendChild(status);
-    triggerBtn.insertAdjacentElement("afterend", panel);
-    panel.scrollIntoView({ block: "nearest", behavior: "smooth" });
     triggerBtn.disabled = true;
-
-    function appendDiagnosticsDownload(report, label) {
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "aist-3ddb-zip-link";
-      btn.textContent = label || "診断ログJSONをダウンロード";
-      btn.addEventListener("click", () => {
-        try {
-          const name = download3ddbDiagnosticsReport(report);
-          btn.textContent = `保存しました: ${name}`;
-        } catch (err) {
-          alert("診断ログの保存に失敗: " + ((err && err.message) || err));
-        }
-      });
-      panel.appendChild(btn);
-    }
 
     try {
       const result = await search3ddbAtPoint(lng, lat, {
@@ -512,8 +638,7 @@ export function openActionSheet(lng, lat, memoFeature) {
       notice.className = "sheet-hint";
       notice.textContent =
         (kind === "internal" ? `内部base: ${base}（credentials=${credentials}）。` : "公開版API。") +
-        "検索は地図のバウンディングボックスではなく、クリック地点の POINT 交差です。" +
-        "下の全件から選んでください（切り出しではありません）。";
+        "クリック地点の POINT 交差です。下の全件から選んでください（切り出しではありません）。";
       panel.appendChild(notice);
 
       status.textContent = items.length
@@ -537,7 +662,7 @@ export function openActionSheet(lng, lat, memoFeature) {
             tip: "HTTP成功だが0件。地点・内部データの有無・権限フィルタを疑う。",
           },
         });
-        appendDiagnosticsDownload(emptyReport, "0件の診断ログJSONをダウンロード");
+        appendDiagnosticsDownload(panel, emptyReport, "0件の診断ログJSONをダウンロード");
       }
 
       if (!items.length && kind === "public") {
@@ -556,106 +681,11 @@ export function openActionSheet(lng, lat, memoFeature) {
         panel.appendChild(hint);
       }
 
-      const listEl = document.createElement("div");
-      listEl.className = "aist-3ddb-list";
-      listEl.setAttribute("role", "list");
-      panel.appendChild(listEl);
-
-      for (const item of items) {
-        const ext = item.externalLinks || [];
-        const hasArchive = ext.some((l) => l.type === "archive" || l.type === "copc");
-        const wrap = document.createElement("div");
-        wrap.className =
-          "aist-3ddb-item" +
-          (hasArchive || item.downloadable ? " aist-3ddb-item-ok" : " aist-3ddb-item-blocked");
-        wrap.setAttribute("role", "listitem");
-
-        const title = document.createElement("div");
-        title.className = "aist-3ddb-item-title";
-        title.textContent = `[${item.regId}] ${item.title}`;
-        wrap.appendChild(title);
-
-        const meta = document.createElement("p");
-        meta.className = "sheet-hint aist-3ddb-item-meta";
-        const bits = [
-          item.service || "種別不明",
-          item.coverageLabel || "被覆範囲不明",
-          hasArchive
-            ? "リストに取得URLあり"
-            : item.downloadable
-              ? "zipdataのみ（疎通要確認）"
-              : "取得URLなし",
-        ];
-        if (item.license) bits.push(item.license);
-        meta.textContent = bits.join(" · ");
-        wrap.appendChild(meta);
-
-        for (const linkInfo of ext) {
-          if (linkInfo.type === "3dtiles") continue;
-          const link = document.createElement("a");
-          link.className = "aist-3ddb-zip-link";
-          link.href = linkInfo.url;
-          link.target = "_blank";
-          link.rel = "noopener noreferrer";
-          link.textContent =
-            linkInfo.type === "archive"
-              ? `元データZIPを開く（外部・ID ${item.regId}）`
-              : linkInfo.type === "copc"
-                ? `COPC点群を開く（ID ${item.regId}）`
-                : `${linkInfo.label}（ID ${item.regId}）`;
-          wrap.appendChild(link);
-        }
-
-        const tiles = ext.find((l) => l.type === "3dtiles");
-        if (tiles) {
-          const tilesLink = document.createElement("a");
-          tilesLink.className = "aist-3ddb-zip-link aist-3ddb-secondary-link";
-          tilesLink.href = tiles.url;
-          tilesLink.target = "_blank";
-          tilesLink.rel = "noopener noreferrer";
-          tilesLink.textContent = "3D Tiles（表示用・tileset.json）";
-          wrap.appendChild(tilesLink);
-        }
-
-        if (item.downloadable && !hasArchive) {
-          const probeStatus = document.createElement("p");
-          probeStatus.className = "sheet-hint aist-3ddb-probe";
-          probeStatus.textContent = "3DDB zipdata を確認しています…";
-          wrap.appendChild(probeStatus);
-
-          const link = document.createElement("a");
-          link.className = "aist-3ddb-zip-link";
-          link.href = build3ddbZipUrl(item.regId, base, zipdataPath);
-          link.target = "_blank";
-          link.rel = "noopener noreferrer";
-          link.textContent = `zipdata を開く（ID ${item.regId}）`;
-          wrap.appendChild(link);
-
-          probe3ddbZip(item.regId, { base, credentials, zipdataPath })
-            .then((probe) => {
-              if (probe.ok) {
-                probeStatus.textContent = `zipdata疎通: HTTP ${probe.status}`;
-              } else {
-                probeStatus.textContent =
-                  probe.reason +
-                  " リストに external_links が無い登録です。ZIP未提供の可能性が高いです。";
-                probeStatus.classList.add("aist-3ddb-probe-fail");
-                link.textContent = `zipdata（現在 HTTP ${probe.status}）`;
-                link.classList.add("aist-3ddb-zip-link-warn");
-              }
-            })
-            .catch((err) => {
-              probeStatus.textContent =
-                "zipdata疎通確認に失敗: " + String(err?.message || err);
-              probeStatus.classList.add("aist-3ddb-probe-fail");
-            });
-        }
-        listEl.appendChild(wrap);
-      }
+      renderAistItemList(panel, items, { kind, base, credentials, zipdataPath });
     } catch (e) {
       status.textContent =
         kind === "internal"
-          ? "内部版の検索に失敗しました。診断ログをダウンロードして原因切り分けに使えます。"
+          ? "内部版の検索に失敗しました。この地点の候補は「別タブ検索→JSON貼り付け」で取得できます。"
           : "公開版の検索に失敗しました。診断ログをダウンロードして原因切り分けに使えます。";
       const detail = document.createElement("p");
       detail.className = "sheet-hint";
@@ -680,65 +710,87 @@ export function openActionSheet(lng, lat, memoFeature) {
         hints.appendChild(li);
       }
       panel.appendChild(hints);
-      appendDiagnosticsDownload(report, "失敗ログ／診断JSONをダウンロード");
+      appendDiagnosticsDownload(panel, report, "失敗ログ／診断JSONをダウンロード");
+
+      const inspectUrl =
+        report.checks?.manual_inspect_url ||
+        build3ddbPointSearchUrl(lng, lat, base, 100, featuresPath);
 
       if (kind === "internal" && e?.diagnostics?.phase === "fetch") {
         const corsNote = document.createElement("p");
         corsNote.className = "sheet-hint aist-3ddb-hints";
         corsNote.textContent =
-          "Pages（" +
-          (report.checks?.page_origin || "このサイト") +
-          "）から内部APIへの fetch は CORS 未許可の可能性が高いです。" +
-          "検索は別タブ、ZIPは下の「登録IDのZIPを開く」か公式ビューアで取得してください。" +
-          " zipdata パスは /api/v1/services/zipdata/{id} を使います。";
+          "CORSで地図からの検索ができません。下の手順で「クリック地点」の候補一覧を作れます。" +
+          "①別タブで検索JSONを開く → ②全文コピー → ③JSONを貼り付け。";
         panel.appendChild(corsNote);
-      }
-
-      const inspectUrl =
-        report.checks?.manual_inspect_url ||
-        build3ddbPointSearchUrl(lng, lat, base, 100, featuresPath);
-      const inspect = document.createElement("a");
-      inspect.className = "aist-3ddb-zip-link";
-      inspect.href = inspectUrl;
-      inspect.target = "_blank";
-      inspect.rel = "noopener noreferrer";
-      inspect.textContent = "検索APIの応答を別タブで確認（area=POINT）";
-      panel.appendChild(inspect);
-      const inspectNote = document.createElement("p");
-      inspectNote.className = "sheet-hint";
-      inspectNote.textContent =
-        "このリンクURLは診断JSONの checks.manual_inspect_url と同じです。" +
-        "Failed to fetch ではCORS詳細は取れないため、別タブ確認結果とJSONをセットで見てください。";
-      panel.appendChild(inspectNote);
-
-      if (kind === "internal") {
-        appendOpenZipByRegId(panel, { base, zipdataPath });
+        appendPointSearchCorsWorkflow(panel, {
+          base,
+          featuresPath,
+          zipdataPath,
+          credentials,
+          inspectUrl,
+          afterEl: triggerBtn,
+        });
+      } else {
+        const inspect = document.createElement("a");
+        inspect.className = "aist-3ddb-zip-link";
+        inspect.href = inspectUrl;
+        inspect.target = "_blank";
+        inspect.rel = "noopener noreferrer";
+        inspect.textContent = "検索APIの応答を別タブで確認（area=POINT）";
+        panel.appendChild(inspect);
       }
     } finally {
       triggerBtn.disabled = false;
     }
   }
 
-  function appendOpenZipByRegId(parent, cfg) {
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "aist-3ddb-zip-link";
-    btn.textContent = "登録IDのZIPを開く（リンク遷移・CORS回避）";
-    btn.addEventListener("click", () => {
-      const raw = window.prompt(
-        "登録ID (reg_id)。例: 141303\n" +
-          "内部ZIPは別タブ遷移のため CORS の影響を受けません。",
-        ""
-      );
-      if (raw === null || !String(raw).trim()) return;
+  function appendPointSearchCorsWorkflow(panel, cfg) {
+    const openBtn = document.createElement("a");
+    openBtn.className = "aist-3ddb-zip-link";
+    openBtn.href = cfg.inspectUrl;
+    openBtn.target = "_blank";
+    openBtn.rel = "noopener noreferrer";
+    openBtn.textContent = "① この地点の検索結果JSONを別タブで開く";
+    panel.appendChild(openBtn);
+
+    const pasteBtn = document.createElement("button");
+    pasteBtn.type = "button";
+    pasteBtn.className = "aist-3ddb-zip-link";
+    pasteBtn.textContent = "③ 別タブのJSONを貼り付けて地点の一覧を表示";
+    pasteBtn.addEventListener("click", async () => {
+      let text = "";
       try {
-        const href = build3ddbZipUrl(String(raw).trim(), cfg.base, cfg.zipdataPath);
-        window.open(href, "_blank", "noopener,noreferrer");
+        if (navigator.clipboard?.readText) {
+          text = await navigator.clipboard.readText();
+        }
+      } catch {
+        /* fall through to prompt */
+      }
+      if (!text || !text.trim()) {
+        text = window.prompt(
+          "別タブで開いた検索JSONをすべて貼り付けてください（Ctrl+A → Ctrl+C → ここに貼付）。",
+          ""
+        );
+      }
+      if (text === null || !String(text).trim()) return;
+      try {
+        const parsed = parse3ddbSearchJsonText(text, {
+          base: cfg.base,
+          zipdataPath: cfg.zipdataPath,
+        });
+        showParsedPointResults(cfg.afterEl, parsed, cfg, "貼り付けJSON");
       } catch (err) {
-        alert("ZIP URL の作成に失敗: " + ((err && err.message) || err));
+        alert("貼り付けJSONの処理に失敗: " + ((err && err.message) || err));
       }
     });
-    parent.appendChild(btn);
+    panel.appendChild(pasteBtn);
+
+    const tip = document.createElement("p");
+    tip.className = "sheet-hint";
+    tip.textContent =
+      "② 別タブで Ctrl+A → Ctrl+C。過去にDLした固定IDではなく、貼り付け一覧のIDを選ぶとクリック地点のデータになります。";
+    panel.appendChild(tip);
   }
 
   const aistPublicBtn = addBtn("AIST 3DDB：公開版を検索", async () => {
@@ -801,8 +853,8 @@ export function openActionSheet(lng, lat, memoFeature) {
       });
       alert(
         "内部版設定を保存しました（このブラウザの localStorage のみ）。\n" +
-          "注意: GitHub Pages から内部APIへの検索 fetch は CORS で失敗することがあります。" +
-          "その場合は別タブ検索＋「登録IDのZIPを開く」を使ってください。\n" +
+          "注意: GitHub Pages からの検索 fetch は CORS で失敗しがちです。" +
+          "「この地点の検索JSONを別タブで開く」→貼り付けで、クリック地点の候補を出してください。\n" +
           "シートを開き直してください。"
       );
     } catch (err) {
@@ -811,15 +863,61 @@ export function openActionSheet(lng, lat, memoFeature) {
   });
 
   if (internalCfg) {
-    addBtn("AIST 3DDB：登録IDのZIPを開く（内部）", () => {
+    addBtn("AIST 3DDB：この地点の検索JSONを別タブで開く", () => {
+      const cfg = readInternal3ddbConfig();
+      if (!cfg) {
+        alert("内部版が未設定です。");
+        return;
+      }
+      const href = build3ddbPointSearchUrl(
+        lng,
+        lat,
+        cfg.base,
+        100,
+        cfg.featuresPath || AIST_DEFAULT_FEATURES_PATH
+      );
+      window.open(href, "_blank", "noopener,noreferrer");
+    });
+
+    const pastePointBtn = addBtn("AIST 3DDB：地点JSONを貼り付けて一覧表示", async () => {
+      const cfg = readInternal3ddbConfig();
+      if (!cfg) {
+        alert("内部版が未設定です。");
+        return;
+      }
+      let text = "";
+      try {
+        if (navigator.clipboard?.readText) text = await navigator.clipboard.readText();
+      } catch {
+        /* prompt fallback */
+      }
+      if (!text || !text.trim()) {
+        text = window.prompt(
+          "別タブの検索JSONを貼り付け（このクリック地点の候補一覧になります）。",
+          ""
+        );
+      }
+      if (text === null || !String(text).trim()) return;
+      try {
+        const parsed = parse3ddbSearchJsonText(text, {
+          base: cfg.base,
+          zipdataPath: cfg.zipdataPath,
+        });
+        showParsedPointResults(pastePointBtn, parsed, cfg, "貼り付けJSON");
+      } catch (err) {
+        alert("貼り付けJSONの処理に失敗: " + ((err && err.message) || err));
+      }
+    });
+
+    addBtn("AIST 3DDB：登録IDを手入力してZIPを開く", () => {
       const cfg = readInternal3ddbConfig();
       if (!cfg) {
         alert("内部版が未設定です。");
         return;
       }
       const raw = window.prompt(
-        "登録ID (reg_id)。例: 141303\nリンク遷移のため CORS の影響を受けません。",
-        "141303"
+        "登録ID (reg_id)。地点のデータにするなら、先に地点JSON貼り付け一覧からIDを確認してください。空欄のままにしないでください。",
+        ""
       );
       if (raw === null || !String(raw).trim()) return;
       try {
