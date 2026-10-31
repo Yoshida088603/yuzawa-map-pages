@@ -2,7 +2,8 @@
  * JGD2011 / Japan Plane Rectangular CS X (EPSG:6678) — 第10系.
  * Returns { x, y } where X = northing (m), Y = easting (m) from zone origin.
  *
- * Zone 10 origin: lat 40°N, lon 140°40′E, k0=0.9999, GRS80.
+ * Zone 10 origin: lat 40°N, lon 140°50′E, k0=0.9999, GRS80.
+ * (平成14年国土交通省告示第9号 / EPSG:6678)
  */
 
 const A = 6378137.0;
@@ -12,7 +13,8 @@ const E2 = (A * A - B * B) / (A * A);
 const E_P2 = E2 / (1 - E2);
 const K0 = 0.9999;
 const PHI0 = (40 * Math.PI) / 180;
-const LAM0 = ((140 + 40 / 60) * Math.PI) / 180;
+/** 第10系原点経度 140°50′E（誤って 140°40′ にすると Y が約14kmずれる） */
+const LAM0 = ((140 + 50 / 60) * Math.PI) / 180;
 
 function meridionalDistance(phi) {
   // Series for GRS80 / Bessel-style meridian arc (meters from equator)

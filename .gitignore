@@ -2,6 +2,7 @@
 Thumbs.db
 *.swp
 .venv/
+.venv-*/
 .venv-scripts/
 node_modules/
 inbox/
