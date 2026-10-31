@@ -472,3 +472,24 @@ body {
   gap: 10px;
 }
 
+
+/* AIST 3DDB raw ZIP search results in the position action sheet */
+.aist-3ddb-item {
+  padding: 10px 0;
+  border-top: 1px solid #33444e;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.aist-3ddb-zip-link {
+  display: inline-block;
+  padding: 8px 10px;
+  margin: 6px 0;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  color: var(--text);
+  background: var(--panel-2);
+  font-size: 0.83rem;
+  text-decoration: none;
+}
