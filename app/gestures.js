@@ -12,7 +12,6 @@ export function bindGestures(map) {
   });
 
   map.on("click", (e) => {
-    // Empty-map tap closes sheets (memo layer click already handled).
     const hits = map.queryRenderedFeatures(e.point, {
       layers: [Memos.MEMO_CIRCLE_LAYER].filter((id) => map.getLayer(id)),
     });
@@ -77,7 +76,6 @@ export function bindGestures(map) {
   canvas.addEventListener("touchend", () => clearTimer(), { passive: true });
   canvas.addEventListener("touchcancel", () => clearTimer(), { passive: true });
 
-  // Desktop / verification
   map.getCanvas().addEventListener("contextmenu", (ev) => {
     ev.preventDefault();
   });

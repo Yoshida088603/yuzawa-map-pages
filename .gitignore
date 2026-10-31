@@ -2,4 +2,7 @@
 Thumbs.db
 *.swp
 .venv/
+.venv-scripts/
 node_modules/
+inbox/
+data/memo-photos/

@@ -6,18 +6,24 @@ import {
 } from "./basemap.js";
 import { registerPmtilesProtocol } from "./pmtiles-protocol.js";
 import { createMap } from "./map-shell.js";
-import { bindHud, hudPadding } from "./hud.js";
+import { bindHud, setGpsHudStatus, hudPadding } from "./hud.js";
 import { loadLaser, addLaserLayers, fitInitialYear } from "./laser.js";
 import { loadShinrin, addShinrinLayers } from "./shinrin.js";
 import { loadMemos, addMemoLayers, getMemoById } from "./memos.js";
+import { loadBoundaries, addBoundariesLayers } from "./boundaries.js";
 import {
   bindSheetChrome,
   bindLayersSheet,
+  bindMemoEditForm,
   openMemoDetail,
   closeAllSheets,
+  updateHudSyncBadge,
 } from "./sheets.js";
 import { bindGestures } from "./gestures.js";
 import { bringOverlaysFront } from "./layer-order.js";
+import { initStore } from "./store.js";
+import { addGpsLayers, bindGpsButton } from "./gps.js";
+import { registerServiceWorker } from "./offline.js";
 
 const statusEl = document.getElementById("boot-status");
 
@@ -35,6 +41,12 @@ function parseMemoQuery() {
 
 async function main() {
   status("地図を準備しています…");
+  try {
+    await initStore();
+  } catch (e) {
+    console.warn("IndexedDB init failed", e);
+  }
+
   try {
     registerPmtilesProtocol();
   } catch (e) {
@@ -64,24 +76,28 @@ async function main() {
   applyInitialBasemap(map, INITIAL_BASEMAP);
   bindHud(map);
   bindSheetChrome();
+  bindMemoEditForm(map);
 
   status("データを読み込んでいます…");
   try {
-    await Promise.all([loadLaser(), loadShinrin(), loadMemos()]);
+    await Promise.all([loadLaser(), loadShinrin(), loadMemos(), loadBoundaries()]);
   } catch (e) {
     status("データ読込失敗: " + (e.message || e));
     return;
   }
 
+  addBoundariesLayers(map);
   addShinrinLayers(map);
   addLaserLayers(map);
   addMemoLayers(map);
+  addGpsLayers(map);
   bringOverlaysFront(map);
 
   fitInitialYear(map, hudPadding());
   bindGestures(map);
+  bindGpsButton(map, setGpsHudStatus);
+  updateHudSyncBadge();
 
-  // OSM is optional; inject after overlays so boot is not blocked.
   status("OSM 背景を準備しています…");
   await injectOsmLayers(map);
   bringOverlaysFront(map);
@@ -96,6 +112,8 @@ async function main() {
       openMemoDetail(feat);
     }
   }
+
+  registerServiceWorker().catch(() => {});
 
   if (statusEl) {
     statusEl.textContent = "";

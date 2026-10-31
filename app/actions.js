@@ -1,4 +1,5 @@
 import { PLANE_CRS } from "./config.js";
+import { lngLatToPlane10, formatPlaneXy } from "./plane.js";
 
 /**
  * External link builders. Each kind returns an ordered URL list;
@@ -57,9 +58,13 @@ export function formatLngLat(lat, lng) {
   return `${Number(lng).toFixed(6)}, ${Number(lat).toFixed(6)}`;
 }
 
-/** Stub for plane rectangular coords (EPSG:6678). Returns null until wired. */
-export function planeXy(_lng, _lat) {
-  return null;
+/** Plane rectangular coords (EPSG:6678 / 第10系). X=northing, Y=easting (m). */
+export function planeXy(lng, lat) {
+  return lngLatToPlane10(lng, lat);
+}
+
+export function planeXyText(lng, lat) {
+  return formatPlaneXy(planeXy(lng, lat), 3);
 }
 
 export function planeCrs() {

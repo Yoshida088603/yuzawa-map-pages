@@ -60,6 +60,28 @@ body {
   cursor: pointer;
 }
 
+#btn-gps {
+  position: absolute;
+  right: calc(12px + var(--sat-r));
+  bottom: calc(var(--hud-h) + var(--sat-b) + 28px);
+  z-index: 5;
+  width: var(--touch);
+  height: var(--touch);
+  border: none;
+  border-radius: 50%;
+  background: var(--panel);
+  color: var(--text);
+  box-shadow: 0 2px 10px #0008;
+  font-size: 1.15rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+#btn-gps.following {
+  background: var(--accent);
+  color: #04120f;
+}
+
 #hud {
   position: absolute;
   left: 0;
@@ -69,7 +91,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 8px;
   min-height: var(--hud-h);
   padding: 8px 12px calc(8px + var(--sat-b));
   padding-left: calc(12px + var(--sat-l));
@@ -83,15 +105,44 @@ body {
 #hud-zoom {
   font-weight: 600;
   color: var(--accent);
+  flex: 0 0 auto;
 }
 
 #hud-coords {
   color: var(--text);
   letter-spacing: 0.02em;
+  flex: 1 1 auto;
+  text-align: right;
+}
+
+.hud-sync {
+  flex: 0 0 auto;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--panel-2);
+  color: var(--muted);
+  font-size: 0.7rem;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.hud-sync.warn {
+  color: #f5d0a0;
+  background: #3a2e1c;
+}
+
+.hud-gps-status {
+  flex: 0 1 auto;
+  color: #f5d0a0;
+  font-size: 0.72rem;
+  max-width: 40vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .maplibregl-ctrl-bottom-right {
-  bottom: calc(var(--hud-h) + var(--sat-b) + 4px);
+  bottom: calc(var(--hud-h) + var(--sat-b) + 52px);
   right: calc(4px + var(--sat-r));
 }
 
@@ -347,3 +398,69 @@ body {
   color: var(--muted);
   text-align: center;
 }
+
+.memo-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 10px;
+}
+
+.action-btn.primary {
+  background: var(--accent);
+  color: #04120f;
+}
+
+.action-btn.danger {
+  color: #f0b4b4;
+}
+
+.memo-photos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.photo-thumb-wrap {
+  width: 96px;
+  height: 96px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #0b1216;
+}
+
+.photo-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 10px 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  border: 1px solid #33444e;
+  border-radius: 8px;
+  background: #0b1216;
+  color: var(--text);
+  font-size: 1rem;
+  padding: 10px 12px;
+  font-family: inherit;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+

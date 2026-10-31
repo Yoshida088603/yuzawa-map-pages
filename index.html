@@ -16,9 +16,12 @@
     <div id="map" role="application" aria-label="湯沢市地図"></div>
 
     <button id="btn-layers" type="button" aria-label="レイヤ">☰</button>
+    <button id="btn-gps" type="button" aria-label="現在地">◎</button>
 
     <div id="hud" aria-live="polite">
+      <span id="hud-sync" class="hud-sync" hidden></span>
       <span id="hud-zoom">Z —</span>
+      <span id="hud-gps-status" class="hud-gps-status" hidden></span>
       <span id="hud-coords">—, —</span>
     </div>
 
@@ -53,6 +56,22 @@
       </p>
       <div id="layer-shinrin"></div>
 
+      <div class="sheet-section">境界（既定OFF）</div>
+      <label class="sheet-row">
+        <input id="layer-boundaries" type="checkbox" />
+        <span>字・町丁界（簡略）</span>
+      </label>
+
+      <div class="sheet-section">データ / オフライン</div>
+      <p id="layer-sync-status" class="sheet-hint">—</p>
+      <button type="button" id="btn-export-bundle" class="action-btn">
+        ローカル変更を書き出し
+      </button>
+      <button type="button" id="btn-prefetch-parcels" class="action-btn">
+        筆界を Wi‑Fi で保存（任意）
+      </button>
+      <p id="layer-sync-msg" class="sheet-hint"></p>
+
       <div class="sheet-section">出典</div>
       <ul id="layer-attributions"></ul>
 
@@ -86,7 +105,51 @@
         </button>
       </div>
       <div id="memo-detail-body"></div>
+      <div id="memo-detail-photos" class="memo-photos"></div>
+      <div class="memo-actions">
+        <button type="button" id="btn-memo-edit" class="action-btn">編集</button>
+        <button type="button" id="btn-memo-photo" class="action-btn">写真を追加</button>
+        <button type="button" id="btn-memo-delete" class="action-btn danger">削除</button>
+      </div>
       <a id="memo-detail-more" hidden>さらに詳細へ</a>
+      <input id="memo-photo-input" type="file" accept="image/*" capture="environment" hidden />
+    </section>
+
+    <section id="sheet-memo-edit" class="sheet" hidden aria-label="メモ編集">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header">
+        <h2 id="memo-edit-title">メモを編集</h2>
+        <button type="button" class="sheet-close" data-close-sheet aria-label="閉じる">
+          ×
+        </button>
+      </div>
+      <p id="memo-edit-move-hint" class="sheet-hint"></p>
+      <form id="memo-edit-form">
+        <input type="hidden" id="memo-edit-id" />
+        <label class="field">
+          <span>本文</span>
+          <textarea id="memo-edit-text" rows="3" maxlength="500" required></textarea>
+        </label>
+        <label class="field">
+          <span>レーザタグ</span>
+          <input id="memo-edit-laser" type="text" maxlength="32" placeholder="LP21 など" />
+        </label>
+        <label class="field">
+          <span>森林タグ</span>
+          <input id="memo-edit-shinrin" type="text" maxlength="32" placeholder="想定図 など" />
+        </label>
+        <div class="field-row">
+          <label class="field">
+            <span>経度</span>
+            <input id="memo-edit-lng" type="number" step="any" required />
+          </label>
+          <label class="field">
+            <span>緯度</span>
+            <input id="memo-edit-lat" type="number" step="any" required />
+          </label>
+        </div>
+        <button type="submit" class="action-btn primary">保存</button>
+      </form>
     </section>
 
     <section id="sheet-action" class="sheet" hidden aria-label="位置アクション">
