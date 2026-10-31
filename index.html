@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>湯沢 Web 地図 — 試験公開準備中</title>
+    <style>
+      :root {
+        --bg: #1a1f24;
+        --panel: #243038;
+        --text: #e8eef2;
+        --muted: #9aadb8;
+        --accent: #3d9a8b;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        font-family: "Segoe UI", "Hiragino Sans", Meiryo, sans-serif;
+        background: radial-gradient(1200px 600px at 20% 0%, #2a3a42, var(--bg));
+        color: var(--text);
+        padding: 24px;
+      }
+      main {
+        max-width: 560px;
+        background: var(--panel);
+        border: 1px solid #33444e;
+        border-radius: 12px;
+        padding: 28px 24px;
+      }
+      h1 {
+        margin: 0 0 8px;
+        font-size: 1.25rem;
+        font-weight: 600;
+      }
+      p {
+        margin: 0 0 12px;
+        color: var(--muted);
+        line-height: 1.6;
+        font-size: 0.95rem;
+      }
+      code {
+        font-size: 0.85em;
+        color: #cfe8e2;
+      }
+      a {
+        color: var(--accent);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>湯沢 Web 地図 — 試験公開準備中</h1>
+      <p>
+        このサイトは GitHub Pages 用の公開リポジトリです。地図 UI
+        と公開データは、private 開発リポジトリから公開範囲を確認したうえで後から載せます。
+      </p>
+      <p>
+        開発本体:
+        <a href="https://github.com/Yoshida088603/yuzawa-NInI-henkan"
+          >yuzawa-NInI-henkan</a
+        >
+        （private）
+      </p>
+      <p><code>yuzawa-map-pages</code> / placeholder</p>
+    </main>
+  </body>
+</html>
