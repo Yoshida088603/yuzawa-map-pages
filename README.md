@@ -84,23 +84,30 @@ robocopy ..\yuzawa_NInI_henkan\public . /E /XD .git .venv-scripts
 
 ## AIST 3DDB公開版から元データZIPを検索する
 
-地図上の地点を **右クリック**（タッチ端末では長押し）→「AIST 3DDB：元データZIPを探す（公開版）」を選択します。
+地図上の地点を **右クリック**（タッチ端末では長押し）→「AIST 3DDB：元データZIPを検索」を選択します。
 経度・緯度（WGS84）を3DDB公開APIの `area=POINT(lon lat)` に渡し、該当する登録データを表示します。
 
 - `downloadable: true` の登録データだけ、ユーザーが「元データZIPを取得」を押してダウンロードページを開けます。クリックした点だけを切り出すのではなく **登録データ一式** のZIPです。
-- 検索API: `GET https://gsrt.digiarc.aist.go.jp/3ddb_demo/api/v1/services/ALL/features`
-- ZIP API: `GET https://gsrt.digiarc.aist.go.jp/3ddb_demo/api/v1/zipdata/{reg_id}`
-- 検索件数は初期最大100件（それを超える場合は画面に注意表示）。
-- **公開版APIのCORS許可は未検証**。GitHub Pagesからの検索がブロックされた場合はエラーと検索URL確認リンクを表示します。通常のZIPリンク遷移はCORSの応答読み取り制限とは別です。
+- 検索API: `GET https://gsvrg.ipri.aist.go.jp/3ddb_demo/api/v1/services/ALL/features`（公式文書の `gsrt.digiarc.aist.go.jp` は301先。**ブラウザのCORS fetchは別オリジン301を追えない**ため、クライアントは最終ホストを直接指定）
+- ZIP API: `GET …/api/v1/zipdata/{reg_id}`（リンク遷移。本体は `fetch` しない）
+- 検索件数は初期最大100件（API総件数が多い場合は画面に注意表示）。
+- 検索結果表示後、ZIPエンドポイントへ軽量疎通（HEAD等）を行い、HTTPエラー理由を画面に出します。
+- 公開版検索のCORSは `Access-Control-Allow-Origin: *` を実測済み（2026-10-31）。失敗時はエラーと検索URL確認リンクを表示します。
 - 公開版のテストと内部版の切替は別段階です。内部版の認証方式・CORS・APIパス・配信権限が確認できるまでは内部URLを設定しません。
 - 静的地図には認証Cookie、APIトークン、内部版のホスト名を埋め込まないでください。
 
 公開API仕様: https://github.com/aistairc/aist_3ddb_client#3ddb-api
 
+実APIスモーク（venv）: `python3 -m venv .venv && .venv/bin/pip install -r scripts/requirements-aist-probe.txt && .venv/bin/python scripts/probe_aist_3ddb_public.py`
+
 ### 手動受入確認
 
 1. 地図から右クリック→AIST 3DDB検索を開き、検索結果・ZIP取得可否の表示を確認します。
-2. 湯沢市の対象地点で公開データが0件なら、3DDB公開版の既知のデータ範囲（例: 産総研つくばセンター付近）でも同様に確認します。
-3. ZIPを選択してファイルが正常にダウンロードされ、ZIPとして開けることを確認します。
+2. 湯沢市の対象地点で公開データが0件なら、産総研つくばセンター付近（経度 140.135, 緯度 36.062）でも同様に確認します。
+3. ZIP疎通が成功した場合のみ、リンクからファイルを取得し、ZIPとして開けること・エントリ一覧を確認します。疎通が HTTP 404 のときはサーバ側ブロッカーとして記録し、合格扱いにしません。
 4. ブラウザのNetwork/ConsoleにCORS/401/403等のエラーがないかを記録します。
 5. 公開版ZIP取得の実機確認が完了するまで、内部版の接続先切替は進めません。
+
+### 内部版（将来・別PR）
+
+公開版で検索と実ZIP取得が証拠付きで通るまで着手しません。内部版URL・Cookie・トークンは本リポジトリに入れません。接続方式は「Pages直叩き / 同一オリジン配備 / 組織承認済み認証」を比較し、認証の迂回は行いません。

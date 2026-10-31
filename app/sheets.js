@@ -19,7 +19,13 @@ import { bringOverlaysFront } from "./layer-order.js";
 import { addPhotoToMemo, photoObjectUrl } from "./photos.js";
 import { exportLocalBundle, pendingSummary } from "./sync-export.js";
 import { prefetchParcelsForOffline } from "./offline.js";
-import { search3ddbAtPoint, build3ddbPointSearchUrl, build3ddbZipUrl } from "./aist-3ddb.js";
+import {
+  search3ddbAtPoint,
+  build3ddbPointSearchUrl,
+  build3ddbZipUrl,
+  probe3ddbZip,
+  AIST_PUBLIC_TEST_POINT,
+} from "./aist-3ddb.js";
 
 function $(id) {
   return document.getElementById(id);
@@ -448,8 +454,8 @@ export function openActionSheet(lng, lat, memoFeature) {
     closeAllSheets();
   });
 
-  // 公開版のみ。ZIPはCORS越しにfetchせず、ユーザー操作による通常のリンク遷移で取得する。
-  const aistBtn = addBtn("AIST 3DDB：元データZIPを探す（公開版）", async () => {
+  // 公開版のみ。ZIP本体はCORS越しにfetchせず、ユーザー操作による通常のリンク遷移で取得する。
+  const aistBtn = addBtn("AIST 3DDB：元データZIPを検索", async () => {
     const previous = $("aist-3ddb-results");
     if (previous) previous.remove();
 
@@ -463,16 +469,33 @@ export function openActionSheet(lng, lat, memoFeature) {
     aistBtn.disabled = true;
 
     try {
-      const { items, total } = await search3ddbAtPoint(lng, lat);
+      const { items, total, limit } = await search3ddbAtPoint(lng, lat);
+      const notice = document.createElement("p");
+      notice.className = "sheet-hint";
+      notice.textContent =
+        "公開版API。取得できるのは登録データ一式の元ZIPであり、右クリック地点の切り出しではありません。";
+      panel.appendChild(notice);
+
       status.textContent = items.length
-        ? `位置に該当する登録データ：${items.length}件（API上の総件数 ${total}件）。ダウンロード可能なものだけZIPを取得できます。`
+        ? `位置に該当する登録データ：${items.length}件（API上の総件数 ${total}件）。downloadable=true のものだけZIP取得を試せます。`
         : "公開版に該当する登録データは見つかりませんでした。";
+
+      if (!items.length) {
+        const tip = document.createElement("p");
+        tip.className = "sheet-hint";
+        tip.textContent =
+          `湯沢市付近は公開版にデータが無いことがあります。試験用: ${AIST_PUBLIC_TEST_POINT.label}` +
+          `（経度 ${AIST_PUBLIC_TEST_POINT.lng}, 緯度 ${AIST_PUBLIC_TEST_POINT.lat}）で再検索してください。`;
+        panel.appendChild(tip);
+      }
+
       if (total > items.length) {
         const hint = document.createElement("p");
         hint.className = "sheet-hint";
-        hint.textContent = "検索結果の一部のみ表示しています（最大100件）。";
+        hint.textContent = `検索結果の一部のみ表示しています（表示上限 ${limit}件 / API総件数 ${total}件）。`;
         panel.appendChild(hint);
       }
+
       for (const item of items) {
         const wrap = document.createElement("div");
         wrap.className = "aist-3ddb-item";
@@ -485,7 +508,19 @@ export function openActionSheet(lng, lat, memoFeature) {
           license.textContent = `ライセンス：${item.license}`;
           wrap.appendChild(license);
         }
+        const avail = document.createElement("p");
+        avail.className = "sheet-hint";
+        avail.textContent = item.downloadable
+          ? "取得可否：ダウンロード可（3DDB downloadable=true）"
+          : "取得可否：ダウンロード不可（3DDB側の設定）";
+        wrap.appendChild(avail);
+
         if (item.downloadable) {
+          const probeStatus = document.createElement("p");
+          probeStatus.className = "sheet-hint aist-3ddb-probe";
+          probeStatus.textContent = "ZIPエンドポイントを確認しています…";
+          wrap.appendChild(probeStatus);
+
           const link = document.createElement("a");
           link.className = "aist-3ddb-zip-link";
           link.href = build3ddbZipUrl(item.regId);
@@ -493,16 +528,31 @@ export function openActionSheet(lng, lat, memoFeature) {
           link.rel = "noopener noreferrer";
           link.textContent = `元データZIPを取得（ID ${item.regId}）`;
           wrap.appendChild(link);
-        } else {
-          const disabled = document.createElement("p");
-          disabled.className = "sheet-hint";
-          disabled.textContent = "元データZIPのダウンロード不可（3DDB側の設定）";
-          wrap.appendChild(disabled);
+
+          // Lightweight probe only; never download the archive body via fetch.
+          probe3ddbZip(item.regId)
+            .then((probe) => {
+              if (probe.ok) {
+                probeStatus.textContent = `ZIP疎通: HTTP ${probe.status}（リンクから取得できます）`;
+              } else {
+                probeStatus.textContent = probe.reason;
+                probeStatus.classList.add("aist-3ddb-probe-fail");
+                link.textContent = `ZIPリンクを開く（現在 HTTP ${probe.status}）`;
+                link.classList.add("aist-3ddb-zip-link-warn");
+              }
+            })
+            .catch((err) => {
+              probeStatus.textContent =
+                "ZIP疎通確認に失敗しました（ネットワーク/CORS等）: " +
+                String(err?.message || err);
+              probeStatus.classList.add("aist-3ddb-probe-fail");
+            });
         }
         panel.appendChild(wrap);
       }
     } catch (e) {
-      status.textContent = "公開版の検索に失敗しました。APIのCORS制限、接続状態、サーバー応答などを確認してください。";
+      status.textContent =
+        "公開版の検索に失敗しました。APIのCORS制限、接続状態、サーバー応答などを確認してください。";
       const detail = document.createElement("p");
       detail.className = "sheet-hint";
       detail.textContent = String(e?.message || e);

@@ -493,3 +493,11 @@ body {
   font-size: 0.83rem;
   text-decoration: none;
 }
+
+.aist-3ddb-zip-link-warn {
+  border-color: var(--danger);
+}
+
+.aist-3ddb-probe-fail {
+  color: #e8a0a0;
+}

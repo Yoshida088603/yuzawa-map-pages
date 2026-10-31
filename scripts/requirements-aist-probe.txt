@@ -1,0 +1,2 @@
+# probe_aist_3ddb_public.py uses the Python standard library only.
+# Keep this file so the documented venv install path stays stable.
