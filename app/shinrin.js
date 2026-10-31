@@ -1,7 +1,7 @@
 import { loadDataFile, getVersionedUrl } from "./load.js";
 import { LAYER_IDS, SOURCE_IDS, bringOverlaysFront } from "./layer-order.js";
 
-/** Display minzoom for parcel lines (tiles themselves are 10–16). */
+/** Parcel lines from this zoom; dissolve outline only below. */
 export const PARCELS_LINE_MINZOOM = 13;
 
 const state = {
@@ -36,13 +36,11 @@ function filterExpr() {
 function applyLegendVisibility(map) {
   const vis = state.enabled.size ? "visible" : "none";
   const filt = filterExpr();
-  if (map.getLayer(LAYER_IDS.shinrinFill)) {
-    map.setFilter(LAYER_IDS.shinrinFill, filt);
-    map.setLayoutProperty(LAYER_IDS.shinrinFill, "visibility", vis);
-  }
-  if (map.getLayer(LAYER_IDS.shinrinParcelsLine)) {
-    map.setFilter(LAYER_IDS.shinrinParcelsLine, filt);
-    map.setLayoutProperty(LAYER_IDS.shinrinParcelsLine, "visibility", vis);
+  for (const id of [LAYER_IDS.shinrinOutline, LAYER_IDS.shinrinParcelsLine]) {
+    if (map.getLayer(id)) {
+      map.setFilter(id, filt);
+      map.setLayoutProperty(id, "visibility", vis);
+    }
   }
 }
 
@@ -50,17 +48,39 @@ export function addShinrinLayers(map) {
   if (!state.data) throw new Error("shinrin not loaded");
   if (!state.parcelsUrl) throw new Error("shinrin parcels URL not loaded");
 
+  // Remove legacy fill if an older session/cache still has it.
+  if (map.getLayer("yuzawa-shinrin-fill")) {
+    try {
+      map.removeLayer("yuzawa-shinrin-fill");
+    } catch (_) {}
+  }
+
   if (!map.getSource(SOURCE_IDS.shinrin)) {
     map.addSource(SOURCE_IDS.shinrin, { type: "geojson", data: state.data });
   }
-  if (!map.getLayer(LAYER_IDS.shinrinFill)) {
+  if (!map.getLayer(LAYER_IDS.shinrinOutline)) {
     map.addLayer({
-      id: LAYER_IDS.shinrinFill,
-      type: "fill",
+      id: LAYER_IDS.shinrinOutline,
+      type: "line",
       source: SOURCE_IDS.shinrin,
+      maxzoom: PARCELS_LINE_MINZOOM,
+      layout: {
+        "line-cap": "round",
+        "line-join": "round",
+        visibility: state.enabled.size ? "visible" : "none",
+      },
       paint: {
-        "fill-color": ["coalesce", ["get", "color"], "#0000ff"],
-        "fill-opacity": 0.35,
+        "line-color": ["coalesce", ["get", "color"], "#0000ff"],
+        "line-opacity": 0.85,
+        "line-width": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          8,
+          1.2,
+          12,
+          2.0,
+        ],
       },
       filter: filterExpr(),
     });

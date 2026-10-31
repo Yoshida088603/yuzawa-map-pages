@@ -43,7 +43,7 @@ robocopy ..\yuzawa_NInI_henkan\public . /E /XD .git
 | `data/manifest.json` | バージョンとファイル一覧（`?v=` 用） |
 | `data/memos.geojson` | 地点メモ FeatureCollection（安定 id） |
 | `data/laser/` | 航空レーザ計測範囲（年度色分け） |
-| `data/shinrin/shinrin.geojson` | 森林区分（区分 dissolve、約 1.6MB） |
+| `data/shinrin/shinrin.geojson` | 森林区分（区分 dissolve・広域の輪郭線用、約 1.6MB） |
 | `data/shinrin/shinrin-parcels.pmtiles` | 筆界ベクトルタイル（約 10.4 MiB、z10–16） |
 | `data/shinrin/pmtiles-index.json` | 筆界 PMTiles メタ |
 | `vendor/pmtiles/` | PMTiles クライアント（CDN 非依存） |

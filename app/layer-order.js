@@ -1,10 +1,10 @@
 /**
  * Overlay stack (bottom → top):
- * basemap → [future boundaries] → shinrin(fill) → shinrin(parcels line) → laser → memos → [future GPS]
+ * basemap → [future boundaries] → shinrin(outline) → shinrin(parcels line) → laser → memos → [future GPS]
  */
 
 export const LAYER_IDS = {
-  shinrinFill: "yuzawa-shinrin-fill",
+  shinrinOutline: "yuzawa-shinrin-outline",
   shinrinParcelsLine: "yuzawa-shinrin-parcels-line",
   laserFill: "yuzawa-laser-fill",
   memosHalo: "yuzawa-memos-halo",
@@ -22,7 +22,7 @@ export const SOURCE_IDS = {
 /** Keep overlays above basemap layers in declared order. */
 export function bringOverlaysFront(map) {
   const order = [
-    LAYER_IDS.shinrinFill,
+    LAYER_IDS.shinrinOutline,
     LAYER_IDS.shinrinParcelsLine,
     LAYER_IDS.laserFill,
     LAYER_IDS.memosHalo,
