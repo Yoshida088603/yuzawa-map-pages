@@ -4,6 +4,7 @@ import {
   applyInitialBasemap,
   injectOsmLayers,
 } from "./basemap.js";
+import { registerPmtilesProtocol } from "./pmtiles-protocol.js";
 import { createMap } from "./map-shell.js";
 import { bindHud, hudPadding } from "./hud.js";
 import { loadLaser, addLaserLayers, fitInitialYear } from "./laser.js";
@@ -34,6 +35,12 @@ function parseMemoQuery() {
 
 async function main() {
   status("地図を準備しています…");
+  try {
+    registerPmtilesProtocol();
+  } catch (e) {
+    status("PMTiles 初期化失敗: " + ((e && e.message) || e));
+    return;
+  }
   const style = buildInitialStyle();
 
   let map;

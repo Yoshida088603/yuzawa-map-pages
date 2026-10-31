@@ -10,12 +10,15 @@
 
 ## ローカル確認（Windows）
 
+PMTiles は HTTP Range が必要なため、`python -m http.server` ではなく同梱の `serve.py` を使う。
+
 ```powershell
 cd yuzawa_NInI_henkan\public
-python -m http.server 8787
+python .\serve.py --port 8787
 ```
 
 ブラウザで `http://127.0.0.1:8787/` を開く（iPhone 実機は同一 LAN の PC IP でも可）。
+GitHub Pages は Range 対応済み。
 
 ## 同期例（PowerShell）
 
@@ -28,7 +31,8 @@ robocopy ..\yuzawa_NInI_henkan\public . /E /XD .git
 
 ## 公開前チェック
 
-- [ ] `data/shinrin/`（湯沢市森林区分図の dissolve）を Pages に載せてよいか確認した
+- [ ] `data/shinrin/`（dissolve および筆界 PMTiles）を Pages に載せてよいか確認した
+- [ ] tippecanoe 再生成は公開リポでは行っていない（成果物コピーのみ）
 - [ ] `data/laser/`（測技協レーザポータルの範囲）の出典表記がシートにある
 - [ ] 地点メモ `data/memos.geojson` の内容を公開して問題ない
 
@@ -39,7 +43,10 @@ robocopy ..\yuzawa_NInI_henkan\public . /E /XD .git
 | `data/manifest.json` | バージョンとファイル一覧（`?v=` 用） |
 | `data/memos.geojson` | 地点メモ FeatureCollection（安定 id） |
 | `data/laser/` | 航空レーザ計測範囲（年度色分け） |
-| `data/shinrin/` | 森林区分（区分 dissolve、約 1.7MB） |
+| `data/shinrin/shinrin.geojson` | 森林区分（区分 dissolve、約 1.6MB） |
+| `data/shinrin/shinrin-parcels.pmtiles` | 筆界ベクトルタイル（約 10.4 MiB、z10–16） |
+| `data/shinrin/pmtiles-index.json` | 筆界 PMTiles メタ |
+| `vendor/pmtiles/` | PMTiles クライアント（CDN 非依存） |
 
 ## ライセンス
 

@@ -192,6 +192,13 @@ body {
   letter-spacing: 0.02em;
 }
 
+.sheet-hint {
+  margin: 0 0 6px;
+  font-size: 0.75rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
 .sheet-row {
   display: flex;
   align-items: center;

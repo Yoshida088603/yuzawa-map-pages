@@ -1,9 +1,14 @@
-import { loadDataFile } from "./load.js";
+import { loadDataFile, getVersionedUrl } from "./load.js";
 import { LAYER_IDS, SOURCE_IDS, bringOverlaysFront } from "./layer-order.js";
+
+/** Display minzoom for parcel lines (tiles themselves are 10–16). */
+export const PARCELS_LINE_MINZOOM = 13;
 
 const state = {
   data: null,
   index: null,
+  parcelsIndex: null,
+  parcelsUrl: null,
   enabled: new Set(),
 };
 
@@ -15,6 +20,10 @@ export async function loadShinrin() {
       if (lg.default_on) state.enabled.add(lg.id);
     }
   }
+  if (!state.parcelsUrl) {
+    state.parcelsIndex = await loadDataFile("shinrinParcelsIndex");
+    state.parcelsUrl = await getVersionedUrl("shinrinParcels");
+  }
   return state;
 }
 
@@ -24,8 +33,23 @@ function filterExpr() {
   return ["match", ["get", "layer_id"], ids, true, false];
 }
 
+function applyLegendVisibility(map) {
+  const vis = state.enabled.size ? "visible" : "none";
+  const filt = filterExpr();
+  if (map.getLayer(LAYER_IDS.shinrinFill)) {
+    map.setFilter(LAYER_IDS.shinrinFill, filt);
+    map.setLayoutProperty(LAYER_IDS.shinrinFill, "visibility", vis);
+  }
+  if (map.getLayer(LAYER_IDS.shinrinParcelsLine)) {
+    map.setFilter(LAYER_IDS.shinrinParcelsLine, filt);
+    map.setLayoutProperty(LAYER_IDS.shinrinParcelsLine, "visibility", vis);
+  }
+}
+
 export function addShinrinLayers(map) {
   if (!state.data) throw new Error("shinrin not loaded");
+  if (!state.parcelsUrl) throw new Error("shinrin parcels URL not loaded");
+
   if (!map.getSource(SOURCE_IDS.shinrin)) {
     map.addSource(SOURCE_IDS.shinrin, { type: "geojson", data: state.data });
   }
@@ -41,20 +65,52 @@ export function addShinrinLayers(map) {
       filter: filterExpr(),
     });
   }
+
+  if (!map.getSource(SOURCE_IDS.shinrinParcels)) {
+    const meta = state.parcelsIndex || {};
+    map.addSource(SOURCE_IDS.shinrinParcels, {
+      type: "vector",
+      url: "pmtiles://" + state.parcelsUrl,
+      minzoom: typeof meta.minzoom === "number" ? meta.minzoom : 10,
+      maxzoom: typeof meta.maxzoom === "number" ? meta.maxzoom : 16,
+    });
+  }
+  if (!map.getLayer(LAYER_IDS.shinrinParcelsLine)) {
+    map.addLayer({
+      id: LAYER_IDS.shinrinParcelsLine,
+      type: "line",
+      source: SOURCE_IDS.shinrinParcels,
+      "source-layer": "shinrin",
+      minzoom: PARCELS_LINE_MINZOOM,
+      layout: {
+        "line-cap": "round",
+        "line-join": "round",
+        visibility: state.enabled.size ? "visible" : "none",
+      },
+      paint: {
+        "line-color": ["coalesce", ["get", "color"], "#0000ff"],
+        "line-opacity": 0.75,
+        "line-width": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          13,
+          0.8,
+          16,
+          1.6,
+        ],
+      },
+      filter: filterExpr(),
+    });
+  }
+
   bringOverlaysFront(map);
 }
 
 export function setShinrinLegend(map, layerId, on) {
   if (on) state.enabled.add(layerId);
   else state.enabled.delete(layerId);
-  if (map.getLayer(LAYER_IDS.shinrinFill)) {
-    map.setFilter(LAYER_IDS.shinrinFill, filterExpr());
-    map.setLayoutProperty(
-      LAYER_IDS.shinrinFill,
-      "visibility",
-      state.enabled.size ? "visible" : "none"
-    );
-  }
+  applyLegendVisibility(map);
 }
 
 export function legends() {

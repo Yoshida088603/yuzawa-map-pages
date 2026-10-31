@@ -1,10 +1,12 @@
 {
-  "version": "20261031-1",
+  "version": "20261031-2",
   "files": {
     "memos": "data/memos.geojson",
     "laser": "data/laser/laser.geojson",
     "laserIndex": "data/laser/index.json",
     "shinrin": "data/shinrin/shinrin.geojson",
-    "shinrinIndex": "data/shinrin/index.json"
+    "shinrinIndex": "data/shinrin/index.json",
+    "shinrinParcels": "data/shinrin/shinrin-parcels.pmtiles",
+    "shinrinParcelsIndex": "data/shinrin/pmtiles-index.json"
   }
 }

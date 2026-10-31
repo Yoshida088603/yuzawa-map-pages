@@ -1,0 +1,23 @@
+{
+  "generated_by": "tippecanoe",
+  "file": "shinrin-parcels.pmtiles",
+  "layer": "shinrin",
+  "source": "temp/data/shinrin/shinrin.geojson",
+  "crs": "EPSG:4326",
+  "minzoom": 10,
+  "maxzoom": 16,
+  "bytes": 10947327,
+  "feature_count": 35862,
+  "bbox": [
+    140.3291561572307,
+    38.92547755155831,
+    140.6884580883866,
+    39.20530269331277
+  ],
+  "legends": [
+    {"id": "kokucho", "name": "国調", "color": "#0000ff"},
+    {"id": "mikokucho", "name": "未国調", "color": "#ff0000"},
+    {"id": "sotei", "name": "市森林地番図（想定図）", "color": "#00ff00"}
+  ],
+  "note": "筆単位。現行公開の dissolve GeoJSON とは別系統。"
+}

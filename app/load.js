@@ -10,6 +10,18 @@ export async function loadManifest() {
   return manifestCache;
 }
 
+/** Absolute URL with ?v= from manifest (does not fetch the body). */
+export async function getVersionedUrl(key) {
+  const manifest = await loadManifest();
+  const path = manifest.files && manifest.files[key];
+  if (!path) throw new Error(`manifest に ${key} がありません`);
+  const v = manifest.version || "0";
+  const rel = "./" + String(path).replace(/^\.\//, "");
+  const url = new URL(rel, window.location.href);
+  url.searchParams.set("v", v);
+  return url.href;
+}
+
 export async function loadJson(path) {
   const manifest = await loadManifest();
   const v = manifest.version || "0";
