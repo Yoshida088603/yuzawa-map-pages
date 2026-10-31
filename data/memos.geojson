@@ -1,0 +1,131 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "mmvuyvidzowe1f",
+      "properties": {
+        "id": "mmvuyvidzowe1f",
+        "text": "雄勝屋内温水プール",
+        "laser_tag": "LP21",
+        "shinrin_tag": "想定図",
+        "color": "#0d9488",
+        "created_at": "2026-10-30T12:47:04.918Z",
+        "updated_at": "2026-10-30T12:47:04.918Z",
+        "name": "[LP21/想定図] 雄勝屋内温水プール"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.54001952945873,
+          38.95647506142754
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mmvvo9dkah2nfm",
+      "properties": {
+        "id": "mmvvo9dkah2nfm",
+        "text": "緑の家（食料品店）",
+        "laser_tag": "LP21",
+        "shinrin_tag": "想定図",
+        "color": "#0d9488",
+        "created_at": "2026-10-31T00:37:42.250Z",
+        "updated_at": "2026-10-31T00:37:42.250Z",
+        "name": "[LP21/想定図] 緑の家（食料品店）"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49747793730705,
+          38.97857099503793
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mmvvoeic9zbxy7",
+      "properties": {
+        "id": "mmvvoeic9zbxy7",
+        "text": "赤い屋根の民家",
+        "laser_tag": "LP21",
+        "shinrin_tag": "想定図",
+        "color": "#0d9488",
+        "created_at": "2026-10-31T00:41:41.721Z",
+        "updated_at": "2026-10-31T00:41:41.721Z",
+        "name": "[LP21/想定図] 赤い屋根の民家"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4753623364707,
+          38.9686665713422
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mmvvolhc1okh8i",
+      "properties": {
+        "id": "mmvvolhc1okh8i",
+        "text": "小町の里会（館？）",
+        "laser_tag": "LP21",
+        "shinrin_tag": "未国調",
+        "color": "#0d9488",
+        "created_at": "2026-10-31T00:47:07.009Z",
+        "updated_at": "2026-10-31T00:47:07.009Z",
+        "name": "[LP21/未国調] 小町の里会（館？）"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.46226343214704,
+          39.056106666096724
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mmvvopukvrc56k",
+      "properties": {
+        "id": "mmvvopukvrc56k",
+        "text": "ストリートビューのない家屋（",
+        "laser_tag": "LP21",
+        "shinrin_tag": "未国調",
+        "color": "#0d9488",
+        "created_at": "2026-10-31T00:50:30.799Z",
+        "updated_at": "2026-10-31T00:50:30.799Z",
+        "name": "[LP21/未国調] ストリートビューのない家屋（"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.43521321393553,
+          39.04091314858002
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mmvvouc1qem1uh",
+      "properties": {
+        "id": "mmvvouc1qem1uh",
+        "text": "消防団建物",
+        "laser_tag": "LP21",
+        "shinrin_tag": "想定図",
+        "color": "#0d9488",
+        "created_at": "2026-10-31T00:54:00.062Z",
+        "updated_at": "2026-10-31T00:54:00.062Z",
+        "name": "[LP21/想定図] 消防団建物"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49491157748417,
+          39.06618300076022
+        ]
+      }
+    }
+  ]
+}

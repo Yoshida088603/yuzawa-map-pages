@@ -1,0 +1,43 @@
+{
+  "generated_by": "dissolve_by_layer for public",
+  "source": "temp/data/shinrin/shinrin.geojson (from 10_input/湯沢市森林区分図)",
+  "note": "区分ごとに dissolve。筆界は含めない。青=国調、赤=未国調、緑=市森林地番図。",
+  "crs": "EPSG:4326",
+  "count": 3,
+  "file": "shinrin.geojson",
+  "bbox": [
+    140.329179,
+    38.925478,
+    140.688458,
+    39.205303
+  ],
+  "raw_feature_count": 35862,
+  "raw_bytes": 26560204,
+  "simplified_bytes": 1650576,
+  "legends": [
+    {
+      "id": "kokucho",
+      "name": "国調",
+      "color": "#0000ff",
+      "count": 1,
+      "source_count": 6880,
+      "default_on": true
+    },
+    {
+      "id": "mikokucho",
+      "name": "未国調",
+      "color": "#ff0000",
+      "count": 1,
+      "source_count": 21030,
+      "default_on": true
+    },
+    {
+      "id": "sotei",
+      "name": "市森林地番図（想定図）",
+      "color": "#00ff00",
+      "count": 1,
+      "source_count": 7952,
+      "default_on": true
+    }
+  ]
+}
