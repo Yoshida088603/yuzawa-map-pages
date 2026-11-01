@@ -121,6 +121,11 @@ body {
   letter-spacing: 0.02em;
   flex: 1 1 auto;
   text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  font-size: 0.75rem;
 }
 
 .hud-sync {
