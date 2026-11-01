@@ -1,5 +1,5 @@
 {
-  "version": "20261031-4",
+  "version": "20261031-4+merge20261101-1043",
   "files": {
     "memos": "data/memos.geojson",
     "laser": "data/laser/laser.geojson",
