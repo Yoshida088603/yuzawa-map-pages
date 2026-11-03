@@ -1,6 +1,6 @@
 /**
  * Overlay stack (bottom → top):
- * basemap → boundaries → shinrin(outline) → shinrin(parcels line) → laser → memos → gps
+ * basemap → boundaries → shinrin(outline) → shinrin(parcels line) → laser → memos → place-search → gps
  */
 
 export const LAYER_IDS = {
@@ -13,6 +13,7 @@ export const LAYER_IDS = {
   memosHalo: "yuzawa-memos-halo",
   memosCircle: "yuzawa-memos-circle",
   memosLabel: "yuzawa-memos-label",
+  placeSearchDot: "yuzawa-place-search-dot",
   gpsAccuracy: "yuzawa-gps-accuracy",
   gpsDot: "yuzawa-gps-dot",
 };
@@ -39,6 +40,7 @@ export function bringOverlaysFront(map) {
     LAYER_IDS.memosHalo,
     LAYER_IDS.memosCircle,
     LAYER_IDS.memosLabel,
+    LAYER_IDS.placeSearchDot,
     LAYER_IDS.gpsAccuracy,
     LAYER_IDS.gpsDot,
   ];

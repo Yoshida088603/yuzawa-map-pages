@@ -1,5 +1,5 @@
 /* yuzawa-map-pages Service Worker — L1 offline: shell + memos + laser + shinrin outline */
-const SHELL_CACHE = "yuzawa-shell-v4";
+const SHELL_CACHE = "yuzawa-shell-v5";
 const DATA_CACHE = "yuzawa-data-v1";
 const PARCEL_CACHE = "yuzawa-parcels-v1";
 
@@ -20,6 +20,8 @@ const SHELL_URLS = [
   "./app/gestures.js",
   "./app/actions.js",
   "./app/aist-3ddb.js",
+  "./app/gsi-geocode.js",
+  "./app/place-search.js",
   "./app/attributions.js",
   "./app/layer-order.js",
   "./app/pmtiles-protocol.js",
@@ -29,6 +31,7 @@ const SHELL_URLS = [
   "./app/sync-export.js",
   "./app/gps.js",
   "./app/plane.js",
+  "./app/point-csv.js",
   "./app/boundaries.js",
   "./app/offline.js",
   "./app/qr-public.png",

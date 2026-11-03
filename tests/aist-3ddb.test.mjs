@@ -24,6 +24,14 @@ import {
   parse3ddbSearchJsonText,
   itemsFrom3ddbPayload,
   humanize3ddbTitle,
+  itemHasCopc,
+  filterCopcItems,
+  coverageCentroid,
+  distanceMeters,
+  sortCopcByDistance,
+  buildPotreeCopcViewerUrl,
+  POTREE_COPC_VIEWER_BASE,
+  POTREE_COPC_MAX_IDS,
 } from "../app/aist-3ddb.js";
 
 function mockResponse({ ok = true, status = 200, body = "", headers = {} } = {}) {
@@ -336,5 +344,66 @@ const zipHead405 = await probe3ddbZip(12, {
 });
 assert.equal(zipHead405.ok, true);
 assert.equal(zipHead405.status, 206);
+
+// --- COPC / Potree helpers ---
+assert.equal(POTREE_COPC_MAX_IDS, 4);
+assert.match(POTREE_COPC_VIEWER_BASE, /potree-copc-viewer/);
+
+const copcItem = {
+  regId: 10,
+  title: "near",
+  coverage: { minLon: 140.0, minLat: 39.0, maxLon: 140.02, maxLat: 39.02 },
+  externalLinks: [{ type: "copc", url: "https://example.test/a.copc.laz" }],
+};
+const zipOnly = {
+  regId: 11,
+  title: "zip",
+  coverage: { minLon: 140.0, minLat: 39.0, maxLon: 140.01, maxLat: 39.01 },
+  externalLinks: [{ type: "archive", url: "https://example.test/a.zip" }],
+};
+const farCopc = {
+  regId: 12,
+  title: "far",
+  coverage: { minLon: 141.0, minLat: 40.0, maxLon: 141.02, maxLat: 40.02 },
+  externalLinks: [{ type: "copc", url: "https://example.test/b.copc.laz" }],
+};
+const midCopc = {
+  regId: 13,
+  title: "mid",
+  coverage: { minLon: 140.1, minLat: 39.1, maxLon: 140.12, maxLat: 39.12 },
+  externalLinks: [{ type: "copc", url: "https://example.test/c.copc.laz" }],
+};
+
+assert.equal(itemHasCopc(copcItem), true);
+assert.equal(itemHasCopc(zipOnly), false);
+assert.deepEqual(
+  filterCopcItems([copcItem, zipOnly, farCopc]).map((i) => i.regId),
+  [10, 12]
+);
+
+const centroid = coverageCentroid(copcItem.coverage);
+assert.ok(Math.abs(centroid[0] - 140.01) < 1e-9);
+assert.ok(Math.abs(centroid[1] - 39.01) < 1e-9);
+assert.equal(coverageCentroid(null), null);
+
+const dNear = distanceMeters(140.01, 39.01, copcItem);
+const dFar = distanceMeters(140.01, 39.01, farCopc);
+assert.ok(dNear < 50);
+assert.ok(dFar > dNear);
+
+const sorted = sortCopcByDistance([farCopc, zipOnly, midCopc, copcItem], 140.01, 39.01);
+assert.deepEqual(
+  sorted.map((i) => i.regId),
+  [10, 13, 12]
+);
+
+const potreeHref = buildPotreeCopcViewerUrl([10, 13, 12, 99]);
+assert.match(potreeHref, /^https:\/\/yoshida088603\.github\.io\/potree-copc-viewer\/\?r=/);
+const potreeUrl = new URL(potreeHref);
+assert.equal(potreeUrl.searchParams.get("r"), "10,13,12,99");
+assert.throws(() => buildPotreeCopcViewerUrl([]), /1件以上/);
+assert.throws(() => buildPotreeCopcViewerUrl([1, 2, 3, 4, 5]), /最大4/);
+assert.throws(() => buildPotreeCopcViewerUrl(["12.5"]), /登録ID/);
+assert.throws(() => buildPotreeCopcViewerUrl(["abc"]), /登録ID/);
 
 console.log("3DDB URL and mock API tests passed");

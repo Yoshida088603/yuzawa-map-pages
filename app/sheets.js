@@ -29,6 +29,7 @@ import {
   AIST_DEFAULT_FEATURES_PATH,
   AIST_DEFAULT_ZIPDATA_PATH,
   AIST_INTERNAL_DEFAULT_ZIPDATA_PATH,
+  POTREE_COPC_MAX_IDS,
   readInternal3ddbConfig,
   writeInternal3ddbConfig,
   clearInternal3ddbConfig,
@@ -36,6 +37,9 @@ import {
   download3ddbDiagnosticsReport,
   parse3ddbSearchJsonText,
   humanize3ddbTitle,
+  sortCopcByDistance,
+  buildPotreeCopcViewerUrl,
+  distanceMeters,
 } from "./aist-3ddb.js";
 import {
   readAxisMode,
@@ -919,6 +923,149 @@ export function openActionSheet(lng, lat, memoFeature) {
       base: AIST_PUBLIC_BASE,
       credentials: "omit",
     });
+  });
+
+  function renderCopcPotreePicker(panel, copcItems) {
+    const hint = document.createElement("p");
+    hint.className = "sheet-hint";
+    hint.textContent =
+      `公開COPC ${copcItems.length}件（被覆中心が近い順）。最大${POTREE_COPC_MAX_IDS}件まで選択して Potree で開けます。`;
+    panel.appendChild(hint);
+
+    const listEl = document.createElement("div");
+    listEl.className = "aist-3ddb-list potree-copc-list";
+    listEl.setAttribute("role", "list");
+    panel.appendChild(listEl);
+
+    const checks = [];
+    for (let i = 0; i < copcItems.length; i++) {
+      const item = copcItems[i];
+      const row = document.createElement("label");
+      row.className = "aist-3ddb-item aist-3ddb-item-ok potree-copc-row";
+      row.setAttribute("role", "listitem");
+
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.value = String(item.regId);
+      cb.checked = i < POTREE_COPC_MAX_IDS;
+      checks.push(cb);
+
+      const body = document.createElement("div");
+      body.className = "potree-copc-row-body";
+      const title = document.createElement("div");
+      title.className = "aist-3ddb-item-title";
+      title.textContent = item.shortTitle || humanize3ddbTitle(item.title);
+      title.title = item.title || "";
+      body.appendChild(title);
+      const meta = document.createElement("p");
+      meta.className = "sheet-hint aist-3ddb-item-meta";
+      const dist = distanceMeters(lng, lat, item);
+      const distLabel = Number.isFinite(dist)
+        ? dist >= 1000
+          ? `約${(dist / 1000).toFixed(1)}km`
+          : `約${Math.round(dist)}m`
+        : "距離不明";
+      meta.textContent = `登録ID ${item.regId} · ${distLabel} · ${item.coverageLabel || "被覆範囲不明"}`;
+      body.appendChild(meta);
+
+      row.appendChild(cb);
+      row.appendChild(body);
+      listEl.appendChild(row);
+    }
+
+    function selectedIds() {
+      return checks.filter((c) => c.checked).map((c) => Number(c.value));
+    }
+
+    function syncChecks(changed) {
+      const selected = checks.filter((c) => c.checked);
+      if (selected.length > POTREE_COPC_MAX_IDS && changed?.checked) {
+        changed.checked = false;
+        alert(`Potree表示は最大${POTREE_COPC_MAX_IDS}件までです。`);
+      }
+      openBtn.disabled = selectedIds().length === 0;
+    }
+
+    for (const cb of checks) {
+      cb.addEventListener("change", () => syncChecks(cb));
+    }
+
+    const openBtn = document.createElement("button");
+    openBtn.type = "button";
+    openBtn.className = "aist-3ddb-zip-link";
+    openBtn.textContent = "Potreeで開く";
+    openBtn.disabled = selectedIds().length === 0;
+    openBtn.addEventListener("click", () => {
+      const ids = selectedIds();
+      if (!ids.length) {
+        alert("1件以上選んでください。");
+        return;
+      }
+      try {
+        const url = buildPotreeCopcViewerUrl(ids);
+        window.open(url, "_blank", "noopener");
+      } catch (err) {
+        alert((err && err.message) || String(err));
+      }
+    });
+    panel.appendChild(openBtn);
+  }
+
+  async function runPublicCopcPotree(triggerBtn) {
+    const panel = ensureAistResultsPanel(triggerBtn);
+    const status = document.createElement("p");
+    status.className = "sheet-hint";
+    status.textContent = "公開COPCを検索しています…";
+    panel.appendChild(status);
+    triggerBtn.disabled = true;
+
+    try {
+      const result = await search3ddbAtPoint(lng, lat, {
+        base: AIST_PUBLIC_BASE,
+        credentials: "omit",
+      });
+      const copcItems = sortCopcByDistance(result.items, lng, lat);
+      if (!copcItems.length) {
+        await runAistSearch(triggerBtn, {
+          kind: "public",
+          base: AIST_PUBLIC_BASE,
+          credentials: "omit",
+        });
+        const results = $("aist-3ddb-results");
+        if (results) {
+          const msg = document.createElement("p");
+          msg.className = "sheet-hint";
+          msg.textContent =
+            "この地点の公開COPCは見つかりませんでした。公開版の検索結果を表示します。";
+          results.insertBefore(msg, results.firstChild);
+        }
+        return;
+      }
+      status.textContent = "";
+      status.hidden = true;
+      renderCopcPotreePicker(panel, copcItems);
+    } catch (e) {
+      await runAistSearch(triggerBtn, {
+        kind: "public",
+        base: AIST_PUBLIC_BASE,
+        credentials: "omit",
+      });
+      const results = $("aist-3ddb-results");
+      if (results) {
+        const msg = document.createElement("p");
+        msg.className = "sheet-hint";
+        msg.textContent =
+          "公開COPCの検索に失敗したため、公開版の検索結果を表示します。" +
+          (e?.message ? `（${e.message}）` : "");
+        results.insertBefore(msg, results.firstChild);
+      }
+    } finally {
+      triggerBtn.disabled = false;
+    }
+  }
+
+  const potreeCopcBtn = addBtn("COPCをPotree表示", async () => {
+    await runPublicCopcPotree(potreeCopcBtn);
   });
 
   const internalCfg = readInternal3ddbConfig();
