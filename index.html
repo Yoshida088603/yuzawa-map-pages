@@ -16,6 +16,21 @@
     <div id="map" role="application" aria-label="湯沢市地図"></div>
 
     <button id="btn-layers" type="button" aria-label="レイヤ">☰</button>
+    <div id="place-search">
+      <form id="place-search-form" autocomplete="off">
+        <input
+          id="place-search-input"
+          type="search"
+          name="q"
+          enterkeyhint="search"
+          placeholder="地名・住所"
+          aria-label="地名・住所を検索"
+        />
+        <button type="submit" aria-label="検索">検索</button>
+      </form>
+      <p id="place-search-status" class="place-search-status" hidden></p>
+      <div id="place-search-results" class="place-search-results" hidden></div>
+    </div>
     <button id="btn-home" type="button" aria-label="初期位置へ">⌂</button>
     <button id="btn-gps" type="button" aria-label="現在地">◎</button>
 

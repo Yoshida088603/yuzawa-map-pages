@@ -20,6 +20,7 @@ import {
   updateHudSyncBadge,
 } from "./sheets.js";
 import { bindGestures } from "./gestures.js";
+import { bindPlaceSearch } from "./place-search.js";
 import { bringOverlaysFront } from "./layer-order.js";
 import { initStore } from "./store.js";
 import { addGpsLayers, bindGpsButton, stopFollow } from "./gps.js";
@@ -105,6 +106,7 @@ async function main() {
 
   fitInitialYear(map, hudPadding());
   bindGestures(map);
+  bindPlaceSearch(map);
   bindGpsButton(map, setGpsHudStatus);
   bindHomeButton(map);
   updateHudSyncBadge();

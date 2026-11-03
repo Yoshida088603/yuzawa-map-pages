@@ -15,6 +15,11 @@ export const AIST_PUBLIC_BASE = "https://gsvrg.ipri.aist.go.jp/3ddb_demo";
 /** Documented (pre-redirect) host — kept for probe scripts / docs comparison only. */
 export const AIST_PUBLIC_BASE_DOCUMENTED = "https://gsrt.digiarc.aist.go.jp/3ddb_demo";
 
+/** Public COPC Potree viewer (GitHub Pages). Pass up to 4 reg_id values via ?r=. */
+export const POTREE_COPC_VIEWER_BASE =
+  "https://yoshida088603.github.io/potree-copc-viewer/";
+export const POTREE_COPC_MAX_IDS = 4;
+
 /** Known public coverage for acceptance when Yuzawa has no hits. */
 export const AIST_PUBLIC_TEST_POINT = {
   lng: 140.135,
@@ -197,6 +202,78 @@ export function formatCoverageLabel(coverage) {
   if (!coverage) return "被覆範囲不明";
   const fmt = (m) => (m >= 1000 ? `${(m / 1000).toFixed(m >= 10000 ? 0 : 1)}km` : `${Math.round(m)}m`);
   return `被覆 約${fmt(coverage.widthM)} × ${fmt(coverage.heightM)}`;
+}
+
+/** True when the item advertises at least one COPC external link. */
+export function itemHasCopc(item) {
+  return (item?.externalLinks || []).some((l) => l.type === "copc");
+}
+
+export function filterCopcItems(items) {
+  if (!Array.isArray(items)) return [];
+  return items.filter(itemHasCopc);
+}
+
+/** Coverage bbox center as [lng, lat], or null. */
+export function coverageCentroid(coverage) {
+  if (!coverage) return null;
+  const { minLon, minLat, maxLon, maxLat } = coverage;
+  if (
+    ![minLon, minLat, maxLon, maxLat].every((n) => Number.isFinite(n))
+  ) {
+    return null;
+  }
+  return [(minLon + maxLon) / 2, (minLat + maxLat) / 2];
+}
+
+/** Approximate great-circle distance in meters (equirectangular). */
+export function distanceMeters(lng, lat, item) {
+  const c = coverageCentroid(item?.coverage);
+  if (!c) return Number.POSITIVE_INFINITY;
+  const [clng, clat] = c;
+  const midLat = ((lat + clat) / 2) * (Math.PI / 180);
+  const dx = (clng - lng) * 111320 * Math.cos(midLat);
+  const dy = (clat - lat) * 110540;
+  return Math.hypot(dx, dy);
+}
+
+/** COPC items sorted by distance from click point to coverage centroid (nearest first). */
+export function sortCopcByDistance(items, lng, lat) {
+  return filterCopcItems(items)
+    .map((item) => ({ item, dist: distanceMeters(lng, lat, item) }))
+    .sort((a, b) => {
+      if (a.dist !== b.dist) return a.dist - b.dist;
+      return a.item.regId - b.item.regId;
+    })
+    .map((row) => row.item);
+}
+
+/**
+ * Build Potree COPC viewer URL: ?r=id1,id2,... (max POTREE_COPC_MAX_IDS).
+ * @param {Array<number|string>} regIds
+ */
+export function buildPotreeCopcViewerUrl(regIds) {
+  if (!Array.isArray(regIds) || !regIds.length) {
+    throw new Error("表示する登録IDを1件以上選んでください。");
+  }
+  if (regIds.length > POTREE_COPC_MAX_IDS) {
+    throw new Error(`Potree表示は最大${POTREE_COPC_MAX_IDS}件までです。`);
+  }
+  const ids = [];
+  const seen = new Set();
+  for (const raw of regIds) {
+    const id = Number(raw);
+    if (!Number.isSafeInteger(id) || id < 1 || String(raw).trim() !== String(id)) {
+      throw new Error("登録IDが不正です。");
+    }
+    if (seen.has(id)) continue;
+    seen.add(id);
+    ids.push(id);
+  }
+  if (!ids.length) throw new Error("表示する登録IDを1件以上選んでください。");
+  const url = new URL(POTREE_COPC_VIEWER_BASE);
+  url.searchParams.set("r", ids.join(","));
+  return url.href;
 }
 
 function isHttpsUrl(value) {

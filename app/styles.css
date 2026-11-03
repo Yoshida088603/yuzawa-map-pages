@@ -60,6 +60,127 @@ body {
   cursor: pointer;
 }
 
+#place-search {
+  position: absolute;
+  top: calc(12px + var(--sat-t));
+  left: calc(12px + var(--sat-l) + var(--touch) + 8px);
+  z-index: 6;
+  width: min(42vw, 168px);
+  max-width: calc(100vw - var(--sat-l) - var(--sat-r) - var(--touch) - 40px);
+  transition: width 0.18s ease;
+}
+
+#place-search.expanded {
+  width: min(72vw, 320px);
+}
+
+#place-search-form {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  height: var(--touch);
+  border-radius: 22px;
+  overflow: hidden;
+  background: var(--panel);
+  box-shadow: 0 2px 10px #0008;
+}
+
+#place-search-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.9rem;
+  padding: 0 12px;
+  outline: none;
+}
+
+#place-search-input::placeholder {
+  color: var(--muted);
+}
+
+#place-search-form > button[type="submit"] {
+  flex: 0 0 auto;
+  border: none;
+  background: color-mix(in srgb, var(--accent) 35%, var(--panel));
+  color: var(--text);
+  font: inherit;
+  font-size: 0.82rem;
+  padding: 0 12px;
+  cursor: pointer;
+}
+
+#place-search-form > button[type="submit"]:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.place-search-status {
+  margin: 6px 0 0;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: var(--panel);
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  box-shadow: 0 2px 10px #0008;
+}
+
+.place-search-results {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(var(--touch) + 6px);
+  max-height: min(50dvh, 320px);
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 12px;
+  background: var(--panel);
+  box-shadow: 0 4px 18px #000a;
+}
+
+.place-search-result {
+  display: block;
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #2a3840;
+  background: transparent;
+  color: var(--text);
+  text-align: left;
+  font: inherit;
+  font-size: 0.86rem;
+  line-height: 1.35;
+  padding: 10px 12px;
+  cursor: pointer;
+}
+
+.place-search-result:last-child {
+  border-bottom: none;
+}
+
+.place-search-result:hover,
+.place-search-result:focus-visible {
+  background: var(--panel-2);
+  outline: none;
+}
+
+@media (max-width: 420px) {
+  #place-search {
+    width: min(38vw, 132px);
+  }
+
+  #place-search.expanded {
+    width: min(78vw, 280px);
+  }
+
+  #place-search-form > button[type="submit"] {
+    padding: 0 8px;
+    font-size: 0.75rem;
+  }
+}
+
 #btn-home,
 #btn-gps {
   position: absolute;
@@ -612,6 +733,26 @@ body {
   color: #e8a0a0;
   font-size: 0.82rem;
   line-height: 1.45;
+}
+
+.potree-copc-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.potree-copc-row input[type="checkbox"] {
+  flex: 0 0 auto;
+  width: 1.15rem;
+  height: 1.15rem;
+  margin-top: 4px;
+  accent-color: var(--accent);
+}
+
+.potree-copc-row-body {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 button.aist-3ddb-zip-link {
