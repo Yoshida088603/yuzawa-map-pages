@@ -63,6 +63,20 @@
         <span>地点メモ</span>
       </label>
 
+      <div class="sheet-section">LP21A DSM（屋根サンプル）</div>
+      <p class="sheet-hint">0.5 m プレビュー。ズーム 21 付近まで拡大可。</p>
+      <label class="sheet-row">
+        <input id="layer-roof-dsm" type="checkbox" checked />
+        <span>DSM プレビュー</span>
+      </label>
+      <label class="sheet-row">
+        <input id="layer-roof-rmse" type="checkbox" checked />
+        <span>RMSE 点（黄=測量 / 青=LAZ）</span>
+      </label>
+      <button type="button" id="btn-fit-roof-dsm" class="action-btn">
+        DSM へズーム（Z21）
+      </button>
+
       <div class="sheet-section">航空レーザ計測範囲</div>
       <div id="layer-laser"></div>
 

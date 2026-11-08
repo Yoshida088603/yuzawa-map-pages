@@ -19,6 +19,8 @@ import { bringOverlaysFront } from "./layer-order.js";
 import { addPhotoToMemo, photoObjectUrl } from "./photos.js";
 import { exportLocalBundle, pendingSummary } from "./sync-export.js";
 import { prefetchParcelsForOffline } from "./offline.js";
+import * as RoofDsm from "./roof-dsm.js";
+import { hudPadding } from "./hud.js";
 import {
   search3ddbAtPoint,
   build3ddbPointSearchUrl,
@@ -145,6 +147,28 @@ export function bindLayersSheet(map) {
   memoToggle.addEventListener("change", () => {
     Memos.setMemosVisible(map, memoToggle.checked);
   });
+
+  const roofDsmToggle = $("layer-roof-dsm");
+  if (roofDsmToggle) {
+    roofDsmToggle.checked = RoofDsm.isRoofDsmVisible();
+    roofDsmToggle.addEventListener("change", () => {
+      RoofDsm.setRoofDsmVisible(map, roofDsmToggle.checked);
+    });
+  }
+  const roofRmseToggle = $("layer-roof-rmse");
+  if (roofRmseToggle) {
+    roofRmseToggle.checked = RoofDsm.isRoofPointsVisible();
+    roofRmseToggle.addEventListener("change", () => {
+      RoofDsm.setRoofPointsVisible(map, roofRmseToggle.checked);
+    });
+  }
+  const fitRoofBtn = $("btn-fit-roof-dsm");
+  if (fitRoofBtn) {
+    fitRoofBtn.addEventListener("click", () => {
+      RoofDsm.fitRoofDsm(map, { zoom: 21, padding: hudPadding() });
+      closeAllSheets();
+    });
+  }
 
   const laserBox = $("layer-laser");
   laserBox.innerHTML = "";

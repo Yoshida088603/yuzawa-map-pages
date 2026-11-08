@@ -1,5 +1,5 @@
 /* yuzawa-map-pages Service Worker — L1 offline: shell + memos + laser + shinrin outline */
-const SHELL_CACHE = "yuzawa-shell-v5";
+const SHELL_CACHE = "yuzawa-shell-v6";
 const DATA_CACHE = "yuzawa-data-v1";
 const PARCEL_CACHE = "yuzawa-parcels-v1";
 
@@ -22,6 +22,7 @@ const SHELL_URLS = [
   "./app/aist-3ddb.js",
   "./app/gsi-geocode.js",
   "./app/place-search.js",
+  "./app/roof-dsm.js",
   "./app/attributions.js",
   "./app/layer-order.js",
   "./app/pmtiles-protocol.js",
@@ -39,6 +40,9 @@ const SHELL_URLS = [
   "./vendor/maplibre-gl/maplibre-gl.css",
   "./vendor/pmtiles/pmtiles.js",
   "./data/manifest.json",
+  "./data/roof/overlay-meta.json",
+  "./data/roof/rmse_points.geojson",
+  "./data/roof/LP21A_dsm_0p5m_preview.png",
 ];
 
 self.addEventListener("install", (event) => {

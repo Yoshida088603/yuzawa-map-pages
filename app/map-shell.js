@@ -16,7 +16,7 @@ export function createMap(containerId, style) {
     style,
     center: [140.55, 39.16],
     zoom: 10,
-    maxZoom: 18,
+    maxZoom: 22,
     attributionControl: false,
     dragRotate: false,
     pitchWithRotate: false,

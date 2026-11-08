@@ -1,5 +1,5 @@
 {
-  "version": "20261031-4+merge20261101-1043",
+  "version": "20261109-1",
   "files": {
     "memos": "data/memos.geojson",
     "laser": "data/laser/laser.geojson",
@@ -8,6 +8,9 @@
     "shinrinIndex": "data/shinrin/index.json",
     "shinrinParcels": "data/shinrin/shinrin-parcels.pmtiles",
     "shinrinParcelsIndex": "data/shinrin/pmtiles-index.json",
-    "boundaries": "data/boundaries/boundaries.geojson"
+    "boundaries": "data/boundaries/boundaries.geojson",
+    "roofDsmPreview": "data/roof/LP21A_dsm_0p5m_preview.png",
+    "roofRmsePoints": "data/roof/rmse_points.geojson",
+    "roofOverlayMeta": "data/roof/overlay-meta.json"
   }
 }
