@@ -92,22 +92,31 @@ async function main() {
 
   status("データを読み込んでいます…");
   try {
-    await Promise.all([
-      loadLaser(),
-      loadShinrin(),
-      loadMemos(),
-      loadBoundaries(),
-      loadRoofDsm(),
-    ]);
+    await Promise.all([loadLaser(), loadShinrin(), loadMemos(), loadBoundaries()]);
   } catch (e) {
     status("データ読込失敗: " + (e.message || e));
     return;
   }
 
+  let roofReady = false;
+  try {
+    await loadRoofDsm();
+    roofReady = true;
+  } catch (e) {
+    console.warn("LP21A DSM overlay skipped:", e);
+  }
+
   addBoundariesLayers(map);
   addShinrinLayers(map);
   addLaserLayers(map);
-  await addRoofDsmLayers(map);
+  if (roofReady) {
+    try {
+      await addRoofDsmLayers(map);
+    } catch (e) {
+      console.warn("LP21A DSM layers skipped:", e);
+      roofReady = false;
+    }
+  }
   addMemoLayers(map);
   addGpsLayers(map);
   bringOverlaysFront(map);
@@ -133,7 +142,7 @@ async function main() {
       map.flyTo({ center: c, zoom: Math.max(map.getZoom(), 15), duration: 800 });
       openMemoDetail(feat);
     }
-  } else if (wantRoof) {
+  } else if (wantRoof && roofReady) {
     fitRoofDsm(map, { zoom: 21, padding: hudPadding() });
   }
 

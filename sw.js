@@ -1,6 +1,6 @@
 /* yuzawa-map-pages Service Worker — L1 offline: shell + memos + laser + shinrin outline */
-const SHELL_CACHE = "yuzawa-shell-v6";
-const DATA_CACHE = "yuzawa-data-v1";
+const SHELL_CACHE = "yuzawa-shell-v7";
+const DATA_CACHE = "yuzawa-data-v2";
 const PARCEL_CACHE = "yuzawa-parcels-v1";
 
 const SHELL_URLS = [
@@ -40,6 +40,11 @@ const SHELL_URLS = [
   "./vendor/maplibre-gl/maplibre-gl.css",
   "./vendor/pmtiles/pmtiles.js",
   "./data/manifest.json",
+];
+
+/** Served via /data/ fetch path — keep in DATA_CACHE (and shell for cold start). */
+const DATA_PRECACHE_URLS = [
+  "./data/manifest.json",
   "./data/roof/overlay-meta.json",
   "./data/roof/rmse_points.geojson",
   "./data/roof/LP21A_dsm_0p5m_preview.png",
@@ -48,8 +53,10 @@ const SHELL_URLS = [
 self.addEventListener("install", (event) => {
   event.waitUntil(
     (async () => {
-      const cache = await caches.open(SHELL_CACHE);
-      await cache.addAll(SHELL_URLS);
+      const shell = await caches.open(SHELL_CACHE);
+      await shell.addAll(SHELL_URLS.concat(DATA_PRECACHE_URLS));
+      const data = await caches.open(DATA_CACHE);
+      await data.addAll(DATA_PRECACHE_URLS);
       self.skipWaiting();
     })()
   );
@@ -143,8 +150,16 @@ async function networkFirstData(req) {
     if (res && res.ok) cache.put(req, res.clone());
     return res;
   } catch (_) {
-    const hit = await cache.match(req) || (await cache.match(req, { ignoreSearch: true }));
+    const hit =
+      (await cache.match(req)) ||
+      (await cache.match(req, { ignoreSearch: true }));
     if (hit) return hit;
+    // Roof/manifest may also live in the shell precache from install.
+    const shell = await caches.open(SHELL_CACHE);
+    const shellHit =
+      (await shell.match(req)) ||
+      (await shell.match(req, { ignoreSearch: true }));
+    if (shellHit) return shellHit;
     throw new Error("offline data");
   }
 }
