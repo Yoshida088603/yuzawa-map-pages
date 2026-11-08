@@ -82,6 +82,75 @@ export function lngLatToPlane10(lng, lat) {
   return { x, y };
 }
 
+/**
+ * Inverse of lngLatToPlane10 — EPSG:6678 (X northing, Y easting metres) → WGS84.
+ * @param {number} x northing (m)
+ * @param {number} y easting (m)
+ * @returns {{ lng: number, lat: number } | null}
+ */
+export function plane10ToLngLat(x, y) {
+  if (x == null || y == null || !Number.isFinite(+x) || !Number.isFinite(+y)) {
+    return null;
+  }
+  const xx = +x;
+  const yy = +y;
+
+  const e1 = (1 - Math.sqrt(1 - E2)) / (1 + Math.sqrt(1 - E2));
+  const M = meridionalDistance(PHI0) + xx / K0;
+  const mu =
+    M /
+    (A *
+      (1 -
+        E2 / 4 -
+        (3 * E2 * E2) / 64 -
+        (5 * E2 * E2 * E2) / 256 -
+        (175 * E2 * E2 * E2 * E2) / 16384));
+
+  const e1_2 = e1 * e1;
+  const e1_3 = e1_2 * e1;
+  const e1_4 = e1_2 * e1_2;
+  const phi1 =
+    mu +
+    ((3 * e1) / 2 - (27 * e1_3) / 32) * Math.sin(2 * mu) +
+    ((21 * e1_2) / 16 - (55 * e1_4) / 32) * Math.sin(4 * mu) +
+    ((151 * e1_3) / 96) * Math.sin(6 * mu) +
+    ((1097 * e1_4) / 512) * Math.sin(8 * mu);
+
+  const sinPhi1 = Math.sin(phi1);
+  const cosPhi1 = Math.cos(phi1);
+  const tanPhi1 = Math.tan(phi1);
+  const N1 = A / Math.sqrt(1 - E2 * sinPhi1 * sinPhi1);
+  const R1 = (A * (1 - E2)) / Math.pow(1 - E2 * sinPhi1 * sinPhi1, 1.5);
+  const T1 = tanPhi1 * tanPhi1;
+  const C1 = E_P2 * cosPhi1 * cosPhi1;
+  const D = yy / (N1 * K0);
+  const D2 = D * D;
+  const D3 = D2 * D;
+  const D4 = D2 * D2;
+  const D5 = D4 * D;
+  const D6 = D3 * D3;
+
+  const phi =
+    phi1 -
+    ((N1 * tanPhi1) / R1) *
+      (D2 / 2 -
+        (D4 / 24) * (5 + 3 * T1 + 10 * C1 - 4 * C1 * C1 - 9 * E_P2) +
+        (D6 / 720) *
+          (61 + 90 * T1 + 298 * C1 + 45 * T1 * T1 - 252 * E_P2 - 3 * C1 * C1));
+
+  const lam =
+    LAM0 +
+    (D -
+      (D3 / 6) * (1 + 2 * T1 + C1) +
+      (D5 / 120) * (5 - 2 * C1 + 28 * T1 - 3 * C1 * C1 + 8 * E_P2 + 24 * T1 * T1)) /
+      cosPhi1;
+
+  return {
+    lng: (lam * 180) / Math.PI,
+    lat: (phi * 180) / Math.PI,
+  };
+}
+
 export function formatPlaneXy(xy, digits) {
   if (!xy) return null;
   const d = digits != null ? digits : 3;

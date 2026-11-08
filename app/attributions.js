@@ -12,5 +12,7 @@ export const DETAIL_LINES = [
   "森林区分輪郭 — 湯沢市森林区分図（区分 dissolve の線。公開範囲は都度確認）",
   "森林筆界 — 湯沢市森林区分図（筆単位 PMTiles・線。公開範囲は都度確認）",
   "字・町丁界 — 総務省統計局 令和2年国勢調査 小地域境界（簡略線。公開範囲は都度確認）",
+  "測量ポイント — A-SurveyAdB SIMA（平面直角第10系。公開範囲は都度確認）",
+  "GeoTIFF/オルソ — data/raster/ の JPEG 画像オーバーレイ（geotiff_processor 成果。未配置可）",
   "地図エンジン — MapLibre GL JS",
 ];

@@ -38,7 +38,15 @@ export async function listL1CacheUrls() {
   const manifest = await loadManifest();
   const files = manifest.files || {};
   const v = manifest.version || "0";
-  const keys = ["memos", "laser", "laserIndex", "shinrin", "shinrinIndex"];
+  const keys = [
+    "memos",
+    "laser",
+    "laserIndex",
+    "shinrin",
+    "shinrinIndex",
+    "surveyPoints",
+    "rasterIndex",
+  ];
   const urls = ["./", "./index.html", "./data/manifest.json"];
   for (const k of keys) {
     if (files[k]) urls.push(`./${files[k]}?v=${encodeURIComponent(v)}`);

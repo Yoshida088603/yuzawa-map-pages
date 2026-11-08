@@ -78,6 +78,18 @@
         <span>字・町丁界（簡略）</span>
       </label>
 
+      <div class="sheet-section">測量（既定OFF）</div>
+      <label class="sheet-row">
+        <input id="layer-survey-points" type="checkbox" />
+        <span>測量ポイント（SIMA）</span>
+      </label>
+      <p class="sheet-hint" id="layer-survey-hint">A-SurveyAdB の座標点。公開範囲は都度確認。</p>
+      <div class="sheet-section">GeoTIFF / オルソ</div>
+      <p class="sheet-hint" id="layer-raster-hint">
+        geotiff_processor で JPEG 化した画像を data/raster/ に配置
+      </p>
+      <div id="layer-raster"></div>
+
       <div class="sheet-section">データ / オフライン</div>
       <p id="layer-sync-status" class="sheet-hint">—</p>
       <button type="button" id="btn-export-bundle" class="action-btn">
