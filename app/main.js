@@ -11,6 +11,8 @@ import { loadLaser, addLaserLayers, fitInitialYear } from "./laser.js";
 import { loadShinrin, addShinrinLayers } from "./shinrin.js";
 import { loadMemos, addMemoLayers, getMemoById } from "./memos.js";
 import { loadBoundaries, addBoundariesLayers } from "./boundaries.js";
+import { loadSurveyPoints, addSurveyPointLayers } from "./survey-points.js";
+import { loadRaster, addRasterLayers } from "./raster.js";
 import {
   bindSheetChrome,
   bindLayersSheet,
@@ -91,15 +93,24 @@ async function main() {
 
   status("データを読み込んでいます…");
   try {
-    await Promise.all([loadLaser(), loadShinrin(), loadMemos(), loadBoundaries()]);
+    await Promise.all([
+      loadLaser(),
+      loadShinrin(),
+      loadMemos(),
+      loadBoundaries(),
+      loadSurveyPoints(),
+      loadRaster(),
+    ]);
   } catch (e) {
     status("データ読込失敗: " + (e.message || e));
     return;
   }
 
+  await addRasterLayers(map);
   addBoundariesLayers(map);
   addShinrinLayers(map);
   addLaserLayers(map);
+  addSurveyPointLayers(map);
   addMemoLayers(map);
   addGpsLayers(map);
   bringOverlaysFront(map);

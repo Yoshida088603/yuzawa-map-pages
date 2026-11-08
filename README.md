@@ -25,6 +25,8 @@ python .\serve.py --port 8787
 - 地点メモの端末ローカル編集・写真・書き出し（Pages には直接書けない）
 - Service Worker による L1 オフライン（殻・メモ・レーザ・森林輪郭。背景タイルはオンライン必須）
 - 字・町丁界レイヤ（既定 OFF）
+- 測量ポイント（SIMA→WGS84、既定 OFF）
+- GeoTIFF/オルソ JPEG オーバーレイ（`data/raster/`、未配置可）
 - 平面直角第10系（EPSG:6678）座標コピー
 
 詳細な同期・ガードは [SYNC.md](./SYNC.md) / [ACCESS.md](./ACCESS.md)。
@@ -53,6 +55,8 @@ cd yuzawa-map-pages
 - [ ] 地点メモ `data/memos.geojson` の内容を公開して問題ない
 - [ ] 現地写真・詳細メモを載せるなら Access 配下か、端末のみか確認した（[ACCESS.md](./ACCESS.md)）
 - [ ] `data/boundaries/` の出典・公開可否を確認した
+- [ ] `data/survey/` の測量ポイント公開可否を確認した（精密座標。Access 推奨）
+- [ ] `data/raster/` に載せる GeoTIFF 由来 JPEG の公開可否を確認した
 
 ## データ
 
@@ -64,6 +68,8 @@ cd yuzawa-map-pages
 | `data/shinrin/shinrin.geojson` | 森林区分輪郭 |
 | `data/shinrin/shinrin-parcels.pmtiles` | 筆界ベクトルタイル |
 | `data/boundaries/boundaries.geojson` | 字・町丁界（簡略線＋ラベル） |
+| `data/survey/points.geojson` | 測量ポイント（A-SurveyAdB SIMA→WGS84。既定OFF） |
+| `data/raster/index.json` | GeoTIFF由来 JPEG オーバーレイ一覧（未配置可） |
 | `data/memo-photos/` | マージ後の写真（任意・ガード推奨） |
 | `sw.js` | L1 オフライン用 Service Worker |
 | `vendor/pmtiles/` | PMTiles クライアント |

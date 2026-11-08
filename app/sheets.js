@@ -4,6 +4,8 @@ import * as Laser from "./laser.js";
 import * as Shinrin from "./shinrin.js";
 import * as Memos from "./memos.js";
 import * as Boundaries from "./boundaries.js";
+import * as SurveyPoints from "./survey-points.js";
+import * as Raster from "./raster.js";
 import { DETAIL_LINES } from "./attributions.js";
 import {
   openMaps,
@@ -200,6 +202,57 @@ export function bindLayersSheet(map) {
       boundToggle.addEventListener("change", () => {
         Boundaries.setBoundariesVisible(map, boundToggle.checked);
       });
+    }
+  }
+
+  const surveyToggle = $("layer-survey-points");
+  const surveyHint = $("layer-survey-hint");
+  if (surveyToggle) {
+    if (!SurveyPoints.isSurveyPointsAvailable()) {
+      surveyToggle.disabled = true;
+      surveyToggle.checked = false;
+      const span = surveyToggle.parentElement && surveyToggle.parentElement.querySelector("span");
+      if (span) span.textContent = "測量ポイント（データなし）";
+      if (surveyHint) surveyHint.textContent = "data/survey/points.geojson がありません";
+    } else {
+      surveyToggle.checked = SurveyPoints.isSurveyPointsVisible();
+      if (surveyHint) {
+        surveyHint.textContent = `A-SurveyAdB 座標点 ${SurveyPoints.surveyPointCount()} 件（第10系→WGS84）。公開範囲は都度確認。`;
+      }
+      surveyToggle.addEventListener("change", () => {
+        SurveyPoints.setSurveyPointsVisible(map, surveyToggle.checked);
+      });
+    }
+  }
+
+  const rasterBox = $("layer-raster");
+  const rasterHint = $("layer-raster-hint");
+  if (rasterBox) {
+    rasterBox.innerHTML = "";
+    if (!Raster.isRasterAvailable()) {
+      if (rasterHint) {
+        rasterHint.textContent =
+          "未配置。geotiff_processor の JPEG + 四隅を data/raster/index.json に追加してください。";
+      }
+    } else {
+      if (rasterHint) {
+        rasterHint.textContent = "GeoTIFF 由来の画像オーバーレイ（JPEG）。既定は OFF。";
+      }
+      const enabled = new Set(Raster.enabledRasterIds());
+      for (const lg of Raster.rasterLegends()) {
+        const label = document.createElement("label");
+        label.className = "sheet-row";
+        const cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.checked = enabled.has(lg.id);
+        cb.addEventListener("change", () => {
+          Raster.setRasterLegend(map, lg.id, cb.checked);
+        });
+        const span = document.createElement("span");
+        span.textContent = lg.name;
+        label.append(cb, span);
+        rasterBox.appendChild(label);
+      }
     }
   }
 

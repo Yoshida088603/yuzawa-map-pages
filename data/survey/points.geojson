@@ -1,0 +1,4190 @@
+{
+  "type": "FeatureCollection",
+  "properties": {
+    "crs": "EPSG:4326",
+    "plane_crs": "EPSG:6678",
+    "source": "20261107_yuzawa.sim",
+    "count": 199
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "id": "sv-1",
+      "properties": {
+        "id": "sv-1",
+        "name": "LP21A01",
+        "sima_id": 1,
+        "x": -105335.992,
+        "y": -35089.898,
+        "z": 170.03,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4279338801756,
+          39.050445911702056
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-2",
+      "properties": {
+        "id": "sv-2",
+        "name": "LP21A02",
+        "sima_id": 2,
+        "x": -105344.531,
+        "y": -35086.77,
+        "z": 169.95,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4279704573518,
+          39.050369115009914
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-3",
+      "properties": {
+        "id": "sv-3",
+        "name": "LP21A03",
+        "sima_id": 3,
+        "x": -105342.422,
+        "y": -35080.789,
+        "z": 169.93,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.42803944657246,
+          39.05038835375316
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-4",
+      "properties": {
+        "id": "sv-4",
+        "name": "LP21A04",
+        "sima_id": 4,
+        "x": -105334.023,
+        "y": -35083.852,
+        "z": 169.89,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.42800362760786,
+          39.05046389190784
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-5",
+      "properties": {
+        "id": "sv-5",
+        "name": "LP21A05",
+        "sima_id": 5,
+        "x": -105315.594,
+        "y": -35138.77,
+        "z": 169.83,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4273682150558,
+          39.05062770009868
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-6",
+      "properties": {
+        "id": "sv-6",
+        "name": "LP21A06",
+        "sima_id": 6,
+        "x": -105318.312,
+        "y": -35134.469,
+        "z": 169.77,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.42741804434536,
+          39.05060338835182
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-7",
+      "properties": {
+        "id": "sv-7",
+        "name": "LP21A07",
+        "sima_id": 7,
+        "x": -105324.477,
+        "y": -35139.121,
+        "z": 169.79,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.427364618093,
+          39.05054766482391
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-8",
+      "properties": {
+        "id": "sv-8",
+        "name": "LP21A08",
+        "sima_id": 8,
+        "x": -105329.047,
+        "y": -35084.109,
+        "z": 170.06,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.42800040229318,
+          39.05050870713597
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-9",
+      "properties": {
+        "id": "sv-9",
+        "name": "LP21A09",
+        "sima_id": 9,
+        "x": -105326.828,
+        "y": -35077.359,
+        "z": 170.24,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.42807827018305,
+          39.05052896765003
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-10",
+      "properties": {
+        "id": "sv-10",
+        "name": "LP21A10",
+        "sima_id": 10,
+        "x": -105331.211,
+        "y": -35075.809,
+        "z": 170.71,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.42809640282715,
+          39.05048954627354
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-11",
+      "properties": {
+        "id": "sv-11",
+        "name": "LP21A11",
+        "sima_id": 11,
+        "x": -105334.172,
+        "y": -35082.238,
+        "z": 170.25,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.42802228166073,
+          39.05046261446387
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-12",
+      "properties": {
+        "id": "sv-12",
+        "name": "LP21B01",
+        "sima_id": 12,
+        "x": -105355.312,
+        "y": -35074.738,
+        "z": 170.1,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4281100166352,
+          39.05027247902758
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-13",
+      "properties": {
+        "id": "sv-13",
+        "name": "LP21B02",
+        "sima_id": 13,
+        "x": -105361.727,
+        "y": -35074.461,
+        "z": 168.45,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.42811354700007,
+          39.0502147015814
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-14",
+      "properties": {
+        "id": "sv-14",
+        "name": "LP21B03",
+        "sima_id": 14,
+        "x": -105361.953,
+        "y": -35081.871,
+        "z": 168.52,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.42802795194535,
+          39.05021236823607
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-15",
+      "properties": {
+        "id": "sv-15",
+        "name": "LP21B04",
+        "sima_id": 15,
+        "x": -105355.578,
+        "y": -35081.801,
+        "z": 170.14,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.42802843241583,
+          39.050269799276414
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-16",
+      "properties": {
+        "id": "sv-16",
+        "name": "LP21C01",
+        "sima_id": 16,
+        "x": -103591.883,
+        "y": -29273.141,
+        "z": 166.89,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4950596831984,
+          39.06637177506936
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-17",
+      "properties": {
+        "id": "sv-17",
+        "name": "LP21C02",
+        "sima_id": 17,
+        "x": -103595.398,
+        "y": -29263.98,
+        "z": 166.78,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4951656949617,
+          39.06634041758517
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-18",
+      "properties": {
+        "id": "sv-18",
+        "name": "LP21C03",
+        "sima_id": 18,
+        "x": -103603.867,
+        "y": -29267.67,
+        "z": 165.86,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4951234189561,
+          39.06626400184636
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-19",
+      "properties": {
+        "id": "sv-19",
+        "name": "LP21C04",
+        "sima_id": 19,
+        "x": -103600.719,
+        "y": -29276.42,
+        "z": 166.0,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49502217240905,
+          39.06629206699044
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-20",
+      "properties": {
+        "id": "sv-20",
+        "name": "LP21D01",
+        "sima_id": 20,
+        "x": -103591.883,
+        "y": -29273.141,
+        "z": 166.89,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4950596831984,
+          39.06637177506936
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-21",
+      "properties": {
+        "id": "sv-21",
+        "name": "LP21D02",
+        "sima_id": 21,
+        "x": -103595.398,
+        "y": -29263.98,
+        "z": 166.78,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4951656949617,
+          39.06634041758517
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-22",
+      "properties": {
+        "id": "sv-22",
+        "name": "LP21D03",
+        "sima_id": 22,
+        "x": -103603.867,
+        "y": -29267.67,
+        "z": 165.86,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4951234189561,
+          39.06626400184636
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-23",
+      "properties": {
+        "id": "sv-23",
+        "name": "LP21D04",
+        "sima_id": 23,
+        "x": -103600.719,
+        "y": -29276.42,
+        "z": 166.0,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49502217240905,
+          39.06629206699044
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-24",
+      "properties": {
+        "id": "sv-24",
+        "name": "LP21D05",
+        "sima_id": 24,
+        "x": -103608.656,
+        "y": -29268.68,
+        "z": 165.87,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4951119537154,
+          39.066220826801015
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-25",
+      "properties": {
+        "id": "sv-25",
+        "name": "LP21D06",
+        "sima_id": 25,
+        "x": -103610.648,
+        "y": -29265.16,
+        "z": 164.87,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4951527148992,
+          39.0662030000417
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-26",
+      "properties": {
+        "id": "sv-26",
+        "name": "LP21D07",
+        "sima_id": 26,
+        "x": -103613.789,
+        "y": -29266.75,
+        "z": 164.98,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49513447659095,
+          39.06617465139526
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-27",
+      "properties": {
+        "id": "sv-27",
+        "name": "LP21D08",
+        "sima_id": 27,
+        "x": -103611.961,
+        "y": -29270.58,
+        "z": 165.89,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49509014024875,
+          39.06619099038194
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-28",
+      "properties": {
+        "id": "sv-28",
+        "name": "LP21E01",
+        "sima_id": 28,
+        "x": -114498.328,
+        "y": -31057.039,
+        "z": 307.91,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4749420396636,
+          38.968059993982244
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-29",
+      "properties": {
+        "id": "sv-29",
+        "name": "LP21E02",
+        "sima_id": 29,
+        "x": -114498.742,
+        "y": -31048.32,
+        "z": 307.94,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.47504267193062,
+          38.96805657339124
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-30",
+      "properties": {
+        "id": "sv-30",
+        "name": "LP21E03",
+        "sima_id": 30,
+        "x": -114504.891,
+        "y": -31048.551,
+        "z": 307.93,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.47504028534462,
+          38.96800117177796
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-31",
+      "properties": {
+        "id": "sv-31",
+        "name": "LP21E04",
+        "sima_id": 31,
+        "x": -114504.633,
+        "y": -31056.85,
+        "z": 307.92,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.47494450685147,
+          38.96800320192105
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-32",
+      "properties": {
+        "id": "sv-32",
+        "name": "LP21E05",
+        "sima_id": 32,
+        "x": -114416.18,
+        "y": -31062.721,
+        "z": 303.33,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.47487274203513,
+          38.96879982497617
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-33",
+      "properties": {
+        "id": "sv-33",
+        "name": "LP21E06",
+        "sima_id": 33,
+        "x": -114414.977,
+        "y": -31056.609,
+        "z": 303.4,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.47494321798683,
+          38.9688108788519
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-34",
+      "properties": {
+        "id": "sv-34",
+        "name": "LP21E07",
+        "sima_id": 34,
+        "x": -114425.25,
+        "y": -31053.9,
+        "z": 303.18,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.47497494530825,
+          38.96871843026968
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-35",
+      "properties": {
+        "id": "sv-35",
+        "name": "LP21E08",
+        "sima_id": 35,
+        "x": -114426.867,
+        "y": -31059.891,
+        "z": 303.53,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4749058845388,
+          38.96870365117233
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-36",
+      "properties": {
+        "id": "sv-36",
+        "name": "LP21E09",
+        "sima_id": 36,
+        "x": -114011.703,
+        "y": -31068.381,
+        "z": 291.58,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.47478905736045,
+          38.972443364388596
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-37",
+      "properties": {
+        "id": "sv-37",
+        "name": "LP21E10",
+        "sima_id": 37,
+        "x": -114021.148,
+        "y": -31068.84,
+        "z": 291.65,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4747841893791,
+          38.97235826264763
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-38",
+      "properties": {
+        "id": "sv-38",
+        "name": "LP21E11",
+        "sima_id": 38,
+        "x": -114021.008,
+        "y": -31076.08,
+        "z": 290.17,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.47470063151133,
+          38.972359267104046
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-39",
+      "properties": {
+        "id": "sv-39",
+        "name": "LP21E12",
+        "sima_id": 39,
+        "x": -114011.07,
+        "y": -31075.52,
+        "z": 290.23,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.47470664256306,
+          38.97244881362995
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-40",
+      "properties": {
+        "id": "sv-40",
+        "name": "LP21F01",
+        "sima_id": 40,
+        "x": -113330.391,
+        "y": -29102.91,
+        "z": 281.7,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49744218359203,
+          38.978648472254854
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-41",
+      "properties": {
+        "id": "sv-41",
+        "name": "LP21F02",
+        "sima_id": 41,
+        "x": -113336.219,
+        "y": -29102.609,
+        "z": 281.52,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49744590556742,
+          38.97859598053268
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-42",
+      "properties": {
+        "id": "sv-42",
+        "name": "LP21F03",
+        "sima_id": 42,
+        "x": -113335.219,
+        "y": -29094.41,
+        "z": 281.79,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49754049016875,
+          38.97860526139787
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-43",
+      "properties": {
+        "id": "sv-43",
+        "name": "LP21F04",
+        "sima_id": 43,
+        "x": -113329.828,
+        "y": -29094.84,
+        "z": 281.89,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49753529802697,
+          38.978653812110764
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-44",
+      "properties": {
+        "id": "sv-44",
+        "name": "LP21F05",
+        "sima_id": 44,
+        "x": -113309.859,
+        "y": -29123.119,
+        "z": 284.27,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49720807075246,
+          38.97883276382793
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-45",
+      "properties": {
+        "id": "sv-45",
+        "name": "LP21F06",
+        "sima_id": 45,
+        "x": -113313.109,
+        "y": -29119.43,
+        "z": 284.25,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49725078516428,
+          38.978803608730914
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-46",
+      "properties": {
+        "id": "sv-46",
+        "name": "LP21F07",
+        "sima_id": 46,
+        "x": -113308.922,
+        "y": -29115.359,
+        "z": 284.11,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49729759166883,
+          38.97884146275929
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-47",
+      "properties": {
+        "id": "sv-47",
+        "name": "LP21F08",
+        "sima_id": 47,
+        "x": -113305.508,
+        "y": -29118.82,
+        "z": 284.35,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49725750169674,
+          38.97887210285083
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-48",
+      "properties": {
+        "id": "sv-48",
+        "name": "LP21F09",
+        "sima_id": 48,
+        "x": -113307.688,
+        "y": -29131.561,
+        "z": 287.23,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49711054625448,
+          38.978852040663256
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-49",
+      "properties": {
+        "id": "sv-49",
+        "name": "LP21F10",
+        "sima_id": 49,
+        "x": -113303.477,
+        "y": -29127.039,
+        "z": 287.46,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49716255684268,
+          38.97889012594726
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-50",
+      "properties": {
+        "id": "sv-50",
+        "name": "LP21F11",
+        "sima_id": 50,
+        "x": -113296.758,
+        "y": -29135.109,
+        "z": 287.3,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49706913185497,
+          38.97895038591331
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-51",
+      "properties": {
+        "id": "sv-51",
+        "name": "LP21F12",
+        "sima_id": 51,
+        "x": -113301.383,
+        "y": -29139.221,
+        "z": 287.08,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49702187087095,
+          38.97890858469406
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-52",
+      "properties": {
+        "id": "sv-52",
+        "name": "LP21G01",
+        "sima_id": 52,
+        "x": -104729.656,
+        "y": -32113.551,
+        "z": 163.35,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.46229082909255,
+          39.05602246916048
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-53",
+      "properties": {
+        "id": "sv-53",
+        "name": "LP21G02",
+        "sima_id": 53,
+        "x": -104740.891,
+        "y": -32115.34,
+        "z": 163.35,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.46227068894464,
+          39.05592119427774
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-54",
+      "properties": {
+        "id": "sv-54",
+        "name": "LP21G03",
+        "sima_id": 54,
+        "x": -104738.617,
+        "y": -32126.08,
+        "z": 163.47,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.46214649349528,
+          39.05594128446278
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-55",
+      "properties": {
+        "id": "sv-55",
+        "name": "LP21G04",
+        "sima_id": 55,
+        "x": -104728.102,
+        "y": -32124.83,
+        "z": 163.24,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.46216043989858,
+          39.05603605351489
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-56",
+      "properties": {
+        "id": "sv-56",
+        "name": "LP21G05",
+        "sima_id": 56,
+        "x": -104741.75,
+        "y": -32018.811,
+        "z": 164.31,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4633860096946,
+          39.05591699912567
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-57",
+      "properties": {
+        "id": "sv-57",
+        "name": "LP21G06",
+        "sima_id": 57,
+        "x": -104743.328,
+        "y": -32015.859,
+        "z": 164.85,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4634201907891,
+          39.055902892087474
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-58",
+      "properties": {
+        "id": "sv-58",
+        "name": "LP21G07",
+        "sima_id": 58,
+        "x": -104747.398,
+        "y": -32017.41,
+        "z": 164.91,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.46340246209294,
+          39.05586617114676
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-59",
+      "properties": {
+        "id": "sv-59",
+        "name": "LP21G08",
+        "sima_id": 59,
+        "x": -104746.148,
+        "y": -32020.34,
+        "z": 164.9,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.46336855061534,
+          39.05587732423801
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-60",
+      "properties": {
+        "id": "sv-60",
+        "name": "LP21G09",
+        "sima_id": 60,
+        "x": -104740.461,
+        "y": -32007.211,
+        "z": 164.57,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.46351997363976,
+          39.05592903597989
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-61",
+      "properties": {
+        "id": "sv-61",
+        "name": "LP21G10",
+        "sima_id": 61,
+        "x": -104744.078,
+        "y": -32008.66,
+        "z": 163.55,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.46350340208983,
+          39.0558963995869
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-62",
+      "properties": {
+        "id": "sv-62",
+        "name": "LP21G11",
+        "sima_id": 62,
+        "x": -104746.328,
+        "y": -32003.85,
+        "z": 163.64,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.46355908174326,
+          39.05587630694773
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-63",
+      "properties": {
+        "id": "sv-63",
+        "name": "LP21G12",
+        "sima_id": 63,
+        "x": -104743.406,
+        "y": -32001.971,
+        "z": 164.62,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.46358065411505,
+          39.05590269826064
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-64",
+      "properties": {
+        "id": "sv-64",
+        "name": "LP21H01",
+        "sima_id": 64,
+        "x": -115879.133,
+        "y": -25430.85,
+        "z": 391.47,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.5399174331963,
+          38.955802203615264
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-65",
+      "properties": {
+        "id": "sv-65",
+        "name": "LP21H02",
+        "sima_id": 65,
+        "x": -115876.453,
+        "y": -25418.65,
+        "z": 393.55,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.54005809305036,
+          38.9558267004551
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-66",
+      "properties": {
+        "id": "sv-66",
+        "name": "LP21H03",
+        "sima_id": 66,
+        "x": -115891.617,
+        "y": -25412.369,
+        "z": 393.64,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.54013112398079,
+          38.95569027606052
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-67",
+      "properties": {
+        "id": "sv-67",
+        "name": "LP21H04",
+        "sima_id": 67,
+        "x": -115896.758,
+        "y": -25424.109,
+        "z": 391.39,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.53999586307782,
+          38.95564362247399
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-68",
+      "properties": {
+        "id": "sv-68",
+        "name": "LP21H05",
+        "sima_id": 68,
+        "x": -115886.781,
+        "y": -25413.08,
+        "z": 386.58,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.54012274119918,
+          38.95573382106078
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-69",
+      "properties": {
+        "id": "sv-69",
+        "name": "LP21H06",
+        "sima_id": 69,
+        "x": -115873.133,
+        "y": -25418.27,
+        "z": 386.49,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.54006235408804,
+          38.95585662003589
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-70",
+      "properties": {
+        "id": "sv-70",
+        "name": "LP21H07",
+        "sima_id": 70,
+        "x": -115868.859,
+        "y": -25407.689,
+        "z": 386.61,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.5401842754588,
+          38.95589542949995
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-71",
+      "properties": {
+        "id": "sv-71",
+        "name": "LP21H08",
+        "sima_id": 71,
+        "x": -115882.047,
+        "y": -25402.211,
+        "z": 386.0,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.540247968167,
+          38.95577678276387
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-72",
+      "properties": {
+        "id": "sv-72",
+        "name": "LP21H09",
+        "sima_id": 72,
+        "x": -115856.289,
+        "y": -25432.471,
+        "z": 379.07,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.53989788198493,
+          38.95600794913201
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-73",
+      "properties": {
+        "id": "sv-73",
+        "name": "LP21H10",
+        "sima_id": 73,
+        "x": -115854.102,
+        "y": -25428.311,
+        "z": 379.15,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.53994579752268,
+          38.95602777160885
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-74",
+      "properties": {
+        "id": "sv-74",
+        "name": "LP21H11",
+        "sima_id": 74,
+        "x": -115851.188,
+        "y": -25429.59,
+        "z": 379.17,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.53993093257174,
+          38.95605398558308
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-75",
+      "properties": {
+        "id": "sv-75",
+        "name": "LP21H12",
+        "sima_id": 75,
+        "x": -115852.844,
+        "y": -25433.92,
+        "z": 379.28,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.5398810358848,
+          38.95603894173691
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-76",
+      "properties": {
+        "id": "sv-76",
+        "name": "LP21H13",
+        "sima_id": 76,
+        "x": -115854.961,
+        "y": -25445.801,
+        "z": 378.95,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.53974403526902,
+          38.95601952578506
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-77",
+      "properties": {
+        "id": "sv-77",
+        "name": "LP21H14",
+        "sima_id": 77,
+        "x": -115858.633,
+        "y": -25444.189,
+        "z": 378.98,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.5397627705035,
+          38.95598649297753
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-78",
+      "properties": {
+        "id": "sv-78",
+        "name": "LP21H15",
+        "sima_id": 78,
+        "x": -115857.078,
+        "y": -25440.52,
+        "z": 379.11,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.53980504447213,
+          38.95600060782543
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-79",
+      "properties": {
+        "id": "sv-79",
+        "name": "LP21H16",
+        "sima_id": 79,
+        "x": -115853.5,
+        "y": -25441.859,
+        "z": 378.96,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.53978946253636,
+          38.95603280175307
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-80",
+      "properties": {
+        "id": "sv-80",
+        "name": "LP21H17",
+        "sima_id": 80,
+        "x": -115878.406,
+        "y": -25425.26,
+        "z": 394.3,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.53998190167417,
+          38.95580891499293
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-81",
+      "properties": {
+        "id": "sv-81",
+        "name": "LP21H18",
+        "sima_id": 81,
+        "x": -115876.039,
+        "y": -25419.381,
+        "z": 394.29,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.54004964365072,
+          38.955830408823864
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-82",
+      "properties": {
+        "id": "sv-82",
+        "name": "LP21H19",
+        "sima_id": 82,
+        "x": -115868.961,
+        "y": -25421.939,
+        "z": 396.61,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.54001986747815,
+          38.95589409755353
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-83",
+      "properties": {
+        "id": "sv-83",
+        "name": "LP21H20",
+        "sima_id": 83,
+        "x": -115871.773,
+        "y": -25427.91,
+        "z": 396.87,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.53995108051424,
+          38.955868592208596
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-84",
+      "properties": {
+        "id": "sv-84",
+        "name": "LP21H21",
+        "sima_id": 84,
+        "x": -115797.633,
+        "y": -25478.77,
+        "z": 383.04,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.53936151554416,
+          38.956535013471935
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-85",
+      "properties": {
+        "id": "sv-85",
+        "name": "LP21H22",
+        "sima_id": 85,
+        "x": -115789.133,
+        "y": -25458.199,
+        "z": 389.05,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.53959854292066,
+          38.956612184160306
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-86",
+      "properties": {
+        "id": "sv-86",
+        "name": "LP21H23",
+        "sima_id": 86,
+        "x": -115821.969,
+        "y": -25445.09,
+        "z": 389.14,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.53975101225654,
+          38.95631675824605
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-87",
+      "properties": {
+        "id": "sv-87",
+        "name": "LP21H24",
+        "sima_id": 87,
+        "x": -115830.297,
+        "y": -25465.85,
+        "z": 383.01,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.5395117986667,
+          38.95624113185659
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-88",
+      "properties": {
+        "id": "sv-88",
+        "name": "LP21H25",
+        "sima_id": 88,
+        "x": -115788.992,
+        "y": -25457.949,
+        "z": 385.87,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.53960142212287,
+          38.95661346163254
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-89",
+      "properties": {
+        "id": "sv-89",
+        "name": "LP21H26",
+        "sima_id": 89,
+        "x": -115787.719,
+        "y": -25453.789,
+        "z": 386.08,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.53964937196957,
+          38.956625050367975
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-90",
+      "properties": {
+        "id": "sv-90",
+        "name": "LP21H27",
+        "sima_id": 90,
+        "x": -115810.031,
+        "y": -25444.811,
+        "z": 386.17,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.53975378755135,
+          38.956424311040635
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-91",
+      "properties": {
+        "id": "sv-91",
+        "name": "LP21H28",
+        "sima_id": 91,
+        "x": -115808.438,
+        "y": -25440.369,
+        "z": 386.23,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.53980497905067,
+          38.956438790649116
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-92",
+      "properties": {
+        "id": "sv-92",
+        "name": "LP21H29",
+        "sima_id": 92,
+        "x": -115818.062,
+        "y": -25436.539,
+        "z": 386.04,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.53984952626223,
+          38.95635220298438
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-93",
+      "properties": {
+        "id": "sv-93",
+        "name": "LP21H30",
+        "sima_id": 93,
+        "x": -115821.297,
+        "y": -25444.34,
+        "z": 385.98,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.5397596405809,
+          38.95632283379341
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-94",
+      "properties": {
+        "id": "sv-94",
+        "name": "A001",
+        "sima_id": 94,
+        "x": -114563.862,
+        "y": -26691.975,
+        "z": 322.39,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.52531572620862,
+          38.96761344430626
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-95",
+      "properties": {
+        "id": "sv-95",
+        "name": "A002",
+        "sima_id": 95,
+        "x": -113464.621,
+        "y": -28022.815,
+        "z": 283.26,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.50991340888964,
+          38.977474470991645
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-96",
+      "properties": {
+        "id": "sv-96",
+        "name": "A003",
+        "sima_id": 96,
+        "x": -114962.347,
+        "y": -29278.463,
+        "z": 305.8,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49548592240382,
+          38.963941080183865
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-97",
+      "properties": {
+        "id": "sv-97",
+        "name": "A004",
+        "sima_id": 97,
+        "x": -115828.185,
+        "y": -31158.237,
+        "z": 362.85,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4738348055241,
+          38.95607633923458
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-98",
+      "properties": {
+        "id": "sv-98",
+        "name": "A005",
+        "sima_id": 98,
+        "x": -110520.139,
+        "y": -31808.484,
+        "z": 214.64,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.46608557448377,
+          39.00387051771099
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-99",
+      "properties": {
+        "id": "sv-99",
+        "name": "A006",
+        "sima_id": 99,
+        "x": -113084.478,
+        "y": -31032.228,
+        "z": 263.16,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.47516419788613,
+          38.980797564270446
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-100",
+      "properties": {
+        "id": "sv-100",
+        "name": "A007",
+        "sima_id": 100,
+        "x": -105993.541,
+        "y": -33105.994,
+        "z": 166.73,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.45088570806524,
+          39.04459987612822
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-101",
+      "properties": {
+        "id": "sv-101",
+        "name": "A008",
+        "sima_id": 101,
+        "x": -105062.402,
+        "y": -33049.035,
+        "z": 206.81,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.45149853669008,
+          39.05299008339111
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-102",
+      "properties": {
+        "id": "sv-102",
+        "name": "5730",
+        "sima_id": 102,
+        "x": -105331.991,
+        "y": -35362.995,
+        "z": 160.851,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.42477861180421,
+          39.05047094478226
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-103",
+      "properties": {
+        "id": "sv-103",
+        "name": "A009",
+        "sima_id": 103,
+        "x": -102650.12,
+        "y": -30366.044,
+        "z": 177.3,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4823885526051,
+          39.07481821246116
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-104",
+      "properties": {
+        "id": "sv-104",
+        "name": "H27-2NO.9",
+        "sima_id": 104,
+        "x": -103667.147,
+        "y": -31680.662,
+        "z": 139.575,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4672429390273,
+          39.06560975353024
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-105",
+      "properties": {
+        "id": "sv-105",
+        "name": "H27-2NO.7",
+        "sima_id": 105,
+        "x": -104277.563,
+        "y": -32422.784,
+        "z": 146.681,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4586964764703,
+          39.06008366901884
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-106",
+      "properties": {
+        "id": "sv-106",
+        "name": "H27-2NO.6",
+        "sima_id": 106,
+        "x": -104637.588,
+        "y": -32743.403,
+        "z": 152.801,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.45500919022746,
+          39.05682847271149
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-107",
+      "properties": {
+        "id": "sv-107",
+        "name": "H27-2NO.5",
+        "sima_id": 107,
+        "x": -105109.923,
+        "y": -33140.585,
+        "z": 158.898,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4504431397149,
+          39.052558529004315
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-108",
+      "properties": {
+        "id": "sv-108",
+        "name": "H27-2NO.1",
+        "sima_id": 108,
+        "x": -105674.222,
+        "y": -35030.177,
+        "z": 172.65,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4286412184813,
+          39.04740141277759
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-109",
+      "properties": {
+        "id": "sv-109",
+        "name": "2NO.1",
+        "sima_id": 109,
+        "x": -105125.806,
+        "y": -34997.307,
+        "z": 164.187,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.42899277817904,
+          39.05234305379859
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-110",
+      "properties": {
+        "id": "sv-110",
+        "name": "H27-2NO.2",
+        "sima_id": 110,
+        "x": -105065.077,
+        "y": -34495.956,
+        "z": 161.035,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.43478191845844,
+          39.052910059044756
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-111",
+      "properties": {
+        "id": "sv-111",
+        "name": "2NO.1",
+        "sima_id": 111,
+        "x": -105125.78230062363,
+        "y": -34997.31852305705,
+        "z": 163.853,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.42899264383337,
+          39.052343266829276
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-112",
+      "properties": {
+        "id": "sv-112",
+        "name": "5731",
+        "sima_id": 112,
+        "x": -105331.91106898358,
+        "y": -35362.953797268514,
+        "z": 160.82389999999998,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4247790836667,
+          39.05047166649594
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-113",
+      "properties": {
+        "id": "sv-113",
+        "name": "T1",
+        "sima_id": 113,
+        "x": -105389.12638477606,
+        "y": -35066.20938447964,
+        "z": 166.30049999999997,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.42821028683338,
+          39.04996820949595
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-114",
+      "properties": {
+        "id": "sv-114",
+        "name": "T2",
+        "sima_id": 114,
+        "x": -105353.12388708474,
+        "y": -35093.9945675692,
+        "z": 164.52169999999998,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.42788743533336,
+          39.05029141716261
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-115",
+      "properties": {
+        "id": "sv-115",
+        "name": "T2A",
+        "sima_id": 115,
+        "x": -105353.11076585508,
+        "y": -35094.00469397132,
+        "z": 164.55356567141197,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.42788731766856,
+          39.05029153495654
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-116",
+      "properties": {
+        "id": "sv-116",
+        "name": "LP21B02A",
+        "sima_id": 116,
+        "x": -105361.47283942488,
+        "y": -35074.51884020851,
+        "z": 168.16052695396857,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.42811286569702,
+          39.05021698882719
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-117",
+      "properties": {
+        "id": "sv-117",
+        "name": "LP21B01A",
+        "sima_id": 117,
+        "x": -105355.45937794166,
+        "y": -35074.905627048305,
+        "z": 169.8417400020714,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4281080876484,
+          39.05027114466712
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-118",
+      "properties": {
+        "id": "sv-118",
+        "name": "LP21B03A",
+        "sima_id": 118,
+        "x": -105361.88538065668,
+        "y": -35081.526538215505,
+        "z": 168.13935129303576,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.42803192798243,
+          39.05021299120382
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-119",
+      "properties": {
+        "id": "sv-119",
+        "name": "LP21B04A",
+        "sima_id": 119,
+        "x": -105355.74699354432,
+        "y": -35081.93213392108,
+        "z": 169.88166074801558,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.42802692614384,
+          39.05026827165882
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-120",
+      "properties": {
+        "id": "sv-120",
+        "name": "TG01",
+        "sima_id": 120,
+        "x": -105401.90393141197,
+        "y": -35057.11076381676,
+        "z": 167.14505447923736,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.42831605896336,
+          39.04985346994468
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-121",
+      "properties": {
+        "id": "sv-121",
+        "name": "TG02",
+        "sima_id": 121,
+        "x": -105364.87671575883,
+        "y": -35044.02840053945,
+        "z": 167.39022726390598,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.42846529256147,
+          39.05018754882963
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-122",
+      "properties": {
+        "id": "sv-122",
+        "name": "LP21B03AA",
+        "sima_id": 122,
+        "x": -105361.86857918605,
+        "y": -35081.549503018956,
+        "z": 168.16438105209352,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4280316618082,
+          39.05021314163539
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-123",
+      "properties": {
+        "id": "sv-123",
+        "name": "LP21B04AA",
+        "sima_id": 123,
+        "x": -105355.72147016924,
+        "y": -35081.93992878571,
+        "z": 169.87148374311934,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4280268347767,
+          39.050268501269365
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-124",
+      "properties": {
+        "id": "sv-124",
+        "name": "LP21B01AA",
+        "sima_id": 124,
+        "x": -105355.29800626726,
+        "y": -35075.041416291046,
+        "z": 169.9375805554966,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4281065105861,
+          39.05027259290915
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-125",
+      "properties": {
+        "id": "sv-125",
+        "name": "LP21A03A",
+        "sima_id": 125,
+        "x": -105342.06435876706,
+        "y": -35080.57768166605,
+        "z": 169.58418640955114,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.42804186949613,
+          39.05039158399399
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-126",
+      "properties": {
+        "id": "sv-126",
+        "name": "LP21A02A",
+        "sima_id": 126,
+        "x": -105344.4385780161,
+        "y": -35086.86040575727,
+        "z": 169.57210476563665,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.42796940814526,
+          39.05036994394939
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-127",
+      "properties": {
+        "id": "sv-127",
+        "name": "LP21A01A",
+        "sima_id": 127,
+        "x": -105336.30048865237,
+        "y": -35089.951566244716,
+        "z": 169.55479141645696,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4279332772173,
+          39.050443130577456
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-128",
+      "properties": {
+        "id": "sv-128",
+        "name": "T4",
+        "sima_id": 128,
+        "x": -104718.81439484305,
+        "y": -32137.353876227007,
+        "z": 157.7819,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4620153026667,
+          39.05611925916262
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-129",
+      "properties": {
+        "id": "sv-129",
+        "name": "T3",
+        "sima_id": 129,
+        "x": -104726.20551979066,
+        "y": -32078.979006910115,
+        "z": 159.25369999999998,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.46269010633335,
+          39.05605482249594
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-130",
+      "properties": {
+        "id": "sv-130",
+        "name": "T4A",
+        "sima_id": 130,
+        "x": -104718.81891562605,
+        "y": -32137.36359887508,
+        "z": 157.93931819488193,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.46201519054577,
+          39.05611921808005
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-131",
+      "properties": {
+        "id": "sv-131",
+        "name": "LP21G01A",
+        "sima_id": 131,
+        "x": -104729.77453935976,
+        "y": -32113.495980999905,
+        "z": 162.93347178682674,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.46229147036246,
+          39.056021403335556
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-132",
+      "properties": {
+        "id": "sv-132",
+        "name": "LP21G02A",
+        "sima_id": 132,
+        "x": -104740.93228893727,
+        "y": -32115.172623688526,
+        "z": 162.9335227038821,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4622726247298,
+          39.05592082848408
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-133",
+      "properties": {
+        "id": "sv-133",
+        "name": "LP21G08A",
+        "sima_id": 133,
+        "x": -104746.35858421288,
+        "y": -32020.24957412387,
+        "z": 164.52512080195837,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.46336960527958,
+          39.05587543052985
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-134",
+      "properties": {
+        "id": "sv-134",
+        "name": "TG03",
+        "sima_id": 134,
+        "x": -104719.06746852427,
+        "y": -32071.812316661588,
+        "z": 162.3653043972925,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.46277257317809,
+          39.056119387877764
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-135",
+      "properties": {
+        "id": "sv-135",
+        "name": "LP21G03A",
+        "sima_id": 135,
+        "x": -104739.24947611209,
+        "y": -32126.466524807864,
+        "z": 163.02961242452366,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4621420574792,
+          39.05593557266586
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-136",
+      "properties": {
+        "id": "sv-136",
+        "name": "LP21G04A",
+        "sima_id": 136,
+        "x": -104728.06825371344,
+        "y": -32124.761647877516,
+        "z": 163.03109548950223,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4621612280376,
+          39.05603636002753
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-137",
+      "properties": {
+        "id": "sv-137",
+        "name": "TG04",
+        "sima_id": 137,
+        "x": -104721.88900362549,
+        "y": -32118.7896161122,
+        "z": 159.3105314698864,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.46222993666237,
+          39.05609224461886
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-138",
+      "properties": {
+        "id": "sv-138",
+        "name": "T6",
+        "sima_id": 138,
+        "x": -103612.20017988862,
+        "y": -29283.996253243433,
+        "z": 161.4353,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49493511833336,
+          39.066188385995936
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-139",
+      "properties": {
+        "id": "sv-139",
+        "name": "T5",
+        "sima_id": 139,
+        "x": -103590.53166168877,
+        "y": -29276.03356391521,
+        "z": 161.51699999999997,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49502619983338,
+          39.06638385149594
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-140",
+      "properties": {
+        "id": "sv-140",
+        "name": "T5A",
+        "sima_id": 140,
+        "x": -103590.54504397363,
+        "y": -29276.038481601594,
+        "z": 161.54525860211544,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49502614358207,
+          39.066383730778206
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-141",
+      "properties": {
+        "id": "sv-141",
+        "name": "LP21D07A",
+        "sima_id": 141,
+        "x": -103613.67631215618,
+        "y": -29266.800494623105,
+        "z": 164.5200182956161,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4951338882538,
+          39.066175664839584
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-142",
+      "properties": {
+        "id": "sv-142",
+        "name": "LP21D08A",
+        "sima_id": 142,
+        "x": -103612.09062249465,
+        "y": -29270.480697273462,
+        "z": 165.75066940062234,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49509129331926,
+          39.066189826019674
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-143",
+      "properties": {
+        "id": "sv-143",
+        "name": "LP21D05A",
+        "sima_id": 143,
+        "x": -103608.9031623809,
+        "y": -29269.10282544612,
+        "z": 165.75323325935227,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49510707835773,
+          39.06621858609446
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-144",
+      "properties": {
+        "id": "sv-144",
+        "name": "LP21C03A",
+        "sima_id": 144,
+        "x": -103604.02816838484,
+        "y": -29267.646833927072,
+        "z": 165.47263302134272,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49512369358152,
+          39.066262550754466
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-145",
+      "properties": {
+        "id": "sv-145",
+        "name": "LP21C01A",
+        "sima_id": 145,
+        "x": -103592.14908722746,
+        "y": -29273.092645625147,
+        "z": 166.57107851062182,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49506025340213,
+          39.066369379671734
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-146",
+      "properties": {
+        "id": "sv-146",
+        "name": "LP21C04A",
+        "sima_id": 146,
+        "x": -103600.78760012535,
+        "y": -29276.334299240247,
+        "z": 165.44945955142504,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4950231656799,
+          39.066291451886435
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-147",
+      "properties": {
+        "id": "sv-147",
+        "name": "TG05",
+        "sima_id": 147,
+        "x": -103592.56355917077,
+        "y": -29284.49682869566,
+        "z": 165.9715746353343,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4949284892756,
+          39.06636526361553
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-148",
+      "properties": {
+        "id": "sv-148",
+        "name": "LP21C04AA",
+        "sima_id": 148,
+        "x": -103600.79032673023,
+        "y": -29276.3494176679,
+        "z": 165.4824343816733,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4950229910951,
+          39.0662914268173
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-149",
+      "properties": {
+        "id": "sv-149",
+        "name": "LP21D02A",
+        "sima_id": 149,
+        "x": -103595.39371794247,
+        "y": -29264.370851776137,
+        "z": 166.4863636911129,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49516117826028,
+          39.066340443062714
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-150",
+      "properties": {
+        "id": "sv-150",
+        "name": "TG06",
+        "sima_id": 150,
+        "x": -103589.90835741193,
+        "y": -29265.470643638124,
+        "z": 163.796514855054,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49514823374165,
+          39.06638982049526
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-151",
+      "properties": {
+        "id": "sv-151",
+        "name": "TG07",
+        "sima_id": 151,
+        "x": -103588.04689005922,
+        "y": -29270.735438039646,
+        "z": 166.1671697245519,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4950873159378,
+          39.06640641288534
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-152",
+      "properties": {
+        "id": "sv-152",
+        "name": "TG08",
+        "sima_id": 152,
+        "x": -103583.04734959875,
+        "y": -29268.802392943977,
+        "z": 166.14786822794966,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4951094384755,
+          39.06645151549856
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-153",
+      "properties": {
+        "id": "sv-153",
+        "name": "TG09",
+        "sima_id": 153,
+        "x": -103561.85265601994,
+        "y": -29256.247382351812,
+        "z": 163.2784831433941,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49525360829847,
+          39.066642866313224
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-154",
+      "properties": {
+        "id": "sv-154",
+        "name": "TG10",
+        "sima_id": 154,
+        "x": -103560.18780840676,
+        "y": -29262.14376157069,
+        "z": 165.87560703534442,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49518540039278,
+          39.06665766636678
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-155",
+      "properties": {
+        "id": "sv-155",
+        "name": "TG11",
+        "sima_id": 155,
+        "x": -103553.57480790422,
+        "y": -29260.078736335076,
+        "z": 165.88705021848287,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49520897884102,
+          39.066717308064156
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-156",
+      "properties": {
+        "id": "sv-156",
+        "name": "TG12",
+        "sima_id": 156,
+        "x": -103553.57480790422,
+        "y": -29260.078736335076,
+        "z": 165.88705021848287,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49520897884102,
+          39.066717308064156
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-157",
+      "properties": {
+        "id": "sv-157",
+        "name": "T7",
+        "sima_id": 157,
+        "x": -114031.7075839255,
+        "y": -31055.73010077479,
+        "z": 287.4183,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.47493596050003,
+          38.972263601162666
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-158",
+      "properties": {
+        "id": "sv-158",
+        "name": "T8",
+        "sima_id": 158,
+        "x": -113990.12481924654,
+        "y": -31057.68106306586,
+        "z": 286.0575,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4749115578334,
+          38.972638131162675
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-159",
+      "properties": {
+        "id": "sv-159",
+        "name": "T8A",
+        "sima_id": 159,
+        "x": -113990.12832211894,
+        "y": -31057.680898719595,
+        "z": 286.1245817741915,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.47491155988905,
+          38.9726380996128
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-160",
+      "properties": {
+        "id": "sv-160",
+        "name": "LP21E11A",
+        "sima_id": 160,
+        "x": -114020.95931916282,
+        "y": -31076.03250429239,
+        "z": 289.9285266187554,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.47470117741264,
+          38.972359707330746
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-161",
+      "properties": {
+        "id": "sv-161",
+        "name": "LP21E10A",
+        "sima_id": 161,
+        "x": -114021.26334411137,
+        "y": -31068.533513745755,
+        "z": 291.1696165057346,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4747877315503,
+          38.97235723443488
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-162",
+      "properties": {
+        "id": "sv-162",
+        "name": "LP21E09A",
+        "sima_id": 162,
+        "x": -114011.32723637277,
+        "y": -31068.187324768536,
+        "z": 291.15658505705034,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4747912753589,
+          38.972446756329504
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-163",
+      "properties": {
+        "id": "sv-163",
+        "name": "TG13",
+        "sima_id": 163,
+        "x": -113999.19802537018,
+        "y": -31076.05646010297,
+        "z": 289.78183568931775,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.47469991229357,
+          38.97255574351633
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-164",
+      "properties": {
+        "id": "sv-164",
+        "name": "TG14",
+        "sima_id": 164,
+        "x": -113999.62840399476,
+        "y": -31071.54117002932,
+        "z": 288.1965101247576,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.47475203962557,
+          38.97255202656613
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-165",
+      "properties": {
+        "id": "sv-165",
+        "name": "TG15",
+        "sima_id": 165,
+        "x": -113993.1685893931,
+        "y": -31070.91324881569,
+        "z": 288.18068373570463,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.47475899258495,
+          38.97261024219565
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-166",
+      "properties": {
+        "id": "sv-166",
+        "name": "TG16",
+        "sima_id": 166,
+        "x": -114038.40449129161,
+        "y": -31062.64745689759,
+        "z": 290.27985454119204,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.47485643661332,
+          38.972203026750535
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-167",
+      "properties": {
+        "id": "sv-167",
+        "name": "TG17",
+        "sima_id": 167,
+        "x": -114036.10803458419,
+        "y": -31054.463895814923,
+        "z": 290.3311316927911,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.47495077260072,
+          38.97222400449085
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-168",
+      "properties": {
+        "id": "sv-168",
+        "name": "TG18",
+        "sima_id": 168,
+        "x": -113992.7034702599,
+        "y": -31075.450272289083,
+        "z": 289.8653479627644,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.47470661282222,
+          38.972614271338514
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-169",
+      "properties": {
+        "id": "sv-169",
+        "name": "TG19",
+        "sima_id": 169,
+        "x": -113993.12902141387,
+        "y": -31070.87805597945,
+        "z": 288.2480221171109,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.47475939692364,
+          38.97261059989247
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-170",
+      "properties": {
+        "id": "sv-170",
+        "name": "LP21E12A",
+        "sima_id": 170,
+        "x": -114011.01325446415,
+        "y": -31075.62974394529,
+        "z": 289.96946703538197,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.47470537350938,
+          38.9724493209312
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-171",
+      "properties": {
+        "id": "sv-171",
+        "name": "LP21E09AA",
+        "sima_id": 171,
+        "x": -114011.32084768648,
+        "y": -31068.182992038015,
+        "z": 291.21915195631476,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.47479132506967,
+          38.97244681403574
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-172",
+      "properties": {
+        "id": "sv-172",
+        "name": "TG20",
+        "sima_id": 172,
+        "x": -114003.0995260975,
+        "y": -31054.208284236734,
+        "z": 289.2568699660537,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4749522238328,
+          38.97252137134814
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-173",
+      "properties": {
+        "id": "sv-173",
+        "name": "T9",
+        "sima_id": 173,
+        "x": -113342.59148643895,
+        "y": -29079.339407680654,
+        "z": 277.4616,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.497714738,
+          38.97853934649601
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-174",
+      "properties": {
+        "id": "sv-174",
+        "name": "T10",
+        "sima_id": 174,
+        "x": -113308.1117985622,
+        "y": -29106.526248496644,
+        "z": 279.58989999999994,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49739949900004,
+          38.97884905499599
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-175",
+      "properties": {
+        "id": "sv-175",
+        "name": "T9A",
+        "sima_id": 175,
+        "x": -113342.59722549964,
+        "y": -29079.33488249672,
+        "z": 277.48062309400666,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49771479047058,
+          38.97853929494569
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-176",
+      "properties": {
+        "id": "sv-176",
+        "name": "LP21F04A",
+        "sima_id": 176,
+        "x": -113329.83689600395,
+        "y": -29094.83740590441,
+        "z": 281.4689015342703,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49753532834475,
+          38.97865373205698
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-177",
+      "properties": {
+        "id": "sv-177",
+        "name": "LP21F01A",
+        "sima_id": 177,
+        "x": -113330.62830738505,
+        "y": -29103.084720575713,
+        "z": 281.4648961223282,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49744017718731,
+          38.97864632865949
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-178",
+      "properties": {
+        "id": "sv-178",
+        "name": "LP21F02A",
+        "sima_id": 178,
+        "x": -113336.07800805896,
+        "y": -29102.58902988661,
+        "z": 281.1593026404037,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49744613004793,
+          38.97859725132643
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-179",
+      "properties": {
+        "id": "sv-179",
+        "name": "LP21F07A",
+        "sima_id": 179,
+        "x": -113308.4935315399,
+        "y": -29115.520151094166,
+        "z": 283.8151747323427,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49729571352475,
+          38.97884531727482
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-180",
+      "properties": {
+        "id": "sv-180",
+        "name": "LP21F08A",
+        "sima_id": 180,
+        "x": -113305.36963699653,
+        "y": -29119.027022630584,
+        "z": 283.82358990549386,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4972551064843,
+          38.97887334241698
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-181",
+      "properties": {
+        "id": "sv-181",
+        "name": "LP21F06A",
+        "sima_id": 181,
+        "x": -113313.3583236568,
+        "y": -29119.73546283482,
+        "z": 283.8430912067963,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4972472703323,
+          38.97880135253751
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-182",
+      "properties": {
+        "id": "sv-182",
+        "name": "LP21F10A",
+        "sima_id": 182,
+        "x": -113302.92298832291,
+        "y": -29127.469028262014,
+        "z": 286.3514302047767,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49715757013624,
+          38.97889510248067
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-183",
+      "properties": {
+        "id": "sv-183",
+        "name": "LP21F11A",
+        "sima_id": 183,
+        "x": -113296.37679347297,
+        "y": -29134.781224705373,
+        "z": 286.3369078562891,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4970728985855,
+          38.97895383092497
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-184",
+      "properties": {
+        "id": "sv-184",
+        "name": "LP21F03A",
+        "sima_id": 184,
+        "x": -113335.34973943535,
+        "y": -29094.349193328315,
+        "z": 281.1940896993996,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.4975411975198,
+          38.978604085646985
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-185",
+      "properties": {
+        "id": "sv-185",
+        "name": "LP21F04AA",
+        "sima_id": 185,
+        "x": -113329.8505851476,
+        "y": -29094.824451881814,
+        "z": 281.5262301879891,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49753547843366,
+          38.97865360916812
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-186",
+      "properties": {
+        "id": "sv-186",
+        "name": "TG21",
+        "sima_id": 186,
+        "x": -113343.4344260078,
+        "y": -29074.65924400459,
+        "z": 279.3854412054688,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49776878898987,
+          38.97853190818658
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-187",
+      "properties": {
+        "id": "sv-187",
+        "name": "TG22",
+        "sima_id": 187,
+        "x": -113332.51510045055,
+        "y": -29080.04354567092,
+        "z": 279.7994977246224,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.49770618281693,
+          38.97863009656637
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-188",
+      "properties": {
+        "id": "sv-188",
+        "name": "T11",
+        "sima_id": 188,
+        "x": -115839.00188197897,
+        "y": -25414.14471218688,
+        "z": 378.6079,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.54010868316672,
+          38.956164213329345
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-189",
+      "properties": {
+        "id": "sv-189",
+        "name": "T12",
+        "sima_id": 189,
+        "x": -115889.82452194513,
+        "y": -25393.419130571354,
+        "z": 377.458,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.5403496941667,
+          38.95570697282934
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-190",
+      "properties": {
+        "id": "sv-190",
+        "name": "LP21H05A",
+        "sima_id": 190,
+        "x": -115887.07105466032,
+        "y": -25414.246912472256,
+        "z": 386.21602129592014,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.54010928854905,
+          38.95573117424935
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-191",
+      "properties": {
+        "id": "sv-191",
+        "name": "LP21H08A",
+        "sima_id": 191,
+        "x": -115882.27287039213,
+        "y": -25402.566786162923,
+        "z": 386.18460727008255,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.54024387161252,
+          38.955774737678794
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-192",
+      "properties": {
+        "id": "sv-192",
+        "name": "LP21H07A",
+        "sima_id": 192,
+        "x": -115868.94086108303,
+        "y": -25408.015436610785,
+        "z": 386.25651709152237,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.54018051217986,
+          38.95589468258596
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-193",
+      "properties": {
+        "id": "sv-193",
+        "name": "LP21H06A",
+        "sima_id": 193,
+        "x": -115873.60548370001,
+        "y": -25419.67033540346,
+        "z": 386.17581251400287,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.54004621503628,
+          38.955852323019016
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-194",
+      "properties": {
+        "id": "sv-194",
+        "name": "TG23",
+        "sima_id": 194,
+        "x": -115891.71931796725,
+        "y": -25412.636712246116,
+        "z": 393.1426586976823,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.5401280390129,
+          38.95568934655899
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-195",
+      "properties": {
+        "id": "sv-195",
+        "name": "TG24",
+        "sima_id": 195,
+        "x": -115869.05186521301,
+        "y": -25421.92958672882,
+        "z": 396.4430640435867,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.54001997945966,
+          38.955893279257786
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-196",
+      "properties": {
+        "id": "sv-196",
+        "name": "TG25",
+        "sima_id": 196,
+        "x": -115871.59158719845,
+        "y": -25427.990592249473,
+        "z": 396.47531590740243,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.53995014392953,
+          38.95587022414723
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-197",
+      "properties": {
+        "id": "sv-197",
+        "name": "TG26",
+        "sima_id": 197,
+        "x": -115818.19265205356,
+        "y": -25436.533466192217,
+        "z": 385.6369342292249,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.53984959496458,
+          38.95635102615249
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-198",
+      "properties": {
+        "id": "sv-198",
+        "name": "TG27",
+        "sima_id": 198,
+        "x": -115808.77342680466,
+        "y": -25440.371433251003,
+        "z": 385.72846187670496,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.53980496344207,
+          38.956435768851755
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "sv-199",
+      "properties": {
+        "id": "sv-199",
+        "name": "TG28",
+        "sima_id": 199,
+        "x": -115821.8828997816,
+        "y": -25445.219282699218,
+        "z": 385.7168297731978,
+        "crs": "EPSG:6678",
+        "source": "20261107_yuzawa.sim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          140.53974951742654,
+          38.956317530136616
+        ]
+      }
+    }
+  ]
+}

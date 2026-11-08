@@ -1,6 +1,6 @@
 // Run: node --experimental-default-type=module tests/plane.test.mjs
 import assert from "node:assert/strict";
-import { lngLatToPlane10, formatPlaneXy } from "../app/plane.js";
+import { lngLatToPlane10, plane10ToLngLat, formatPlaneXy } from "../app/plane.js";
 
 /** Reference values from pyproj EPSG:4326 → EPSG:6678 (metre). */
 const REFS = [
@@ -46,5 +46,19 @@ for (const r of REFS) {
 assert.equal(lngLatToPlane10(null, 39), null);
 assert.equal(lngLatToPlane10(140.5, NaN), null);
 assert.equal(formatPlaneXy({ x: -93214.765185, y: -24486.34559 }, 3), "-93214.765, -24486.346");
+
+assert.equal(plane10ToLngLat(null, 0), null);
+for (const r of REFS) {
+  const ll = plane10ToLngLat(r.x, r.y);
+  assert.ok(ll, `${r.name}: inverse expected object`);
+  assert.ok(
+    Math.abs(ll.lng - r.lng) <= 1e-8,
+    `${r.name}: inverse lng got ${ll.lng}, want ${r.lng}`
+  );
+  assert.ok(
+    Math.abs(ll.lat - r.lat) <= 1e-8,
+    `${r.name}: inverse lat got ${ll.lat}, want ${r.lat}`
+  );
+}
 
 console.log("plane.test.mjs: ok");
