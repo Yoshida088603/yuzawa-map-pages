@@ -1,14 +1,7 @@
 {
-  "id": "lp21a-rgb",
-  "label": "LP21A RGB（5cm・補間なし）",
+  "id": "lp21-rgb-tiles",
+  "label": "LP21 RGB（5cm・補間なし・全タイル）",
   "preview": "data/roof/LP21A_dsm_5cm_rgb.png",
-  "points": "data/roof/rmse_points.geojson",
-  "source": "261107_yuzawa_roof_lp21a_5cm_rgb",
-  "notes": "LAZ 点 RGB を 5cm 格子に直書きした RGB ラスタ（DSM/高さバンドではない）。補間なし。空セルはアルファ0。正本 GeoTIFF は store の LP21A_rgb_5cm_epsg6678.tif。地図用 PNG は GeoTIFF から生成。",
-  "cacheVersion": "ad-t27-rgb-geotiff-nofill",
-  "gridResM": 0.05,
-  "interpolation": "none",
-  "productKind": "rgb",
   "coordinates": [
     [
       140.42722664060878,
@@ -27,5 +20,182 @@
       39.04978443640829
     ]
   ],
-  "fitZoom": 21
+  "tiles": [
+    {
+      "id": "LP21A",
+      "label": "LP21A RGB（5cm・補間なし）",
+      "preview": "data/roof/LP21A_dsm_5cm_rgb.png",
+      "coordinates": [
+        [
+          140.42722664060878,
+          39.050637076638075
+        ],
+        [
+          140.42857140151256,
+          39.05064175128414
+        ],
+        [
+          140.42857626819784,
+          39.04978911091309
+        ],
+        [
+          140.42723152346184,
+          39.04978443640829
+        ]
+      ],
+      "gridResM": 0.05,
+      "interpolation": "none"
+    },
+    {
+      "id": "LP21C",
+      "label": "LP21C RGB（5cm・補間なし）",
+      "preview": "data/roof/LP21C_rgb_5cm.png",
+      "coordinates": [
+        [
+          140.4947620824802,
+          39.06686776104157
+        ],
+        [
+          140.49531675425027,
+          39.06686937006419
+        ],
+        [
+          140.49532052218464,
+          39.066079333957454
+        ],
+        [
+          140.49476585659735,
+          39.06607772497988
+        ]
+      ],
+      "gridResM": 0.05,
+      "interpolation": "none",
+      "pointsInput": 14791,
+      "occupiedCells": 14504,
+      "approxDensityPtsPerM2": 3.516937872390541
+    },
+    {
+      "id": "LP21E",
+      "label": "LP21E RGB（5cm・補間なし）",
+      "preview": "data/roof/LP21E_rgb_5cm.png",
+      "coordinates": [
+        [
+          140.47435371990713,
+          38.97313591683533
+        ],
+        [
+          140.47557527021473,
+          38.97313966810074
+        ],
+        [
+          140.47558108944872,
+          38.97198297413185
+        ],
+        [
+          140.47435955900963,
+          38.97197922302031
+        ]
+      ],
+      "gridResM": 0.05,
+      "interpolation": "none",
+      "pointsInput": 22119,
+      "occupiedCells": 21578,
+      "approxDensityPtsPerM2": 1.628629602604892
+    },
+    {
+      "id": "LP21F",
+      "label": "LP21F RGB（5cm・補間なし）",
+      "preview": "data/roof/LP21F_rgb_5cm.png",
+      "coordinates": [
+        [
+          140.49627458529847,
+          38.979369517300064
+        ],
+        [
+          140.4982666360297,
+          38.97937525418456
+        ],
+        [
+          140.49827366669132,
+          38.97788344124606
+        ],
+        [
+          140.49628165775707,
+          38.97787770466506
+        ]
+      ],
+      "gridResM": 0.05,
+      "interpolation": "none",
+      "pointsInput": 141549,
+      "occupiedCells": 138127,
+      "approxDensityPtsPerM2": 4.953756921143486
+    },
+    {
+      "id": "LP21G",
+      "label": "LP21G RGB（5cm・補間なし）",
+      "preview": "data/roof/LP21G_rgb_5cm.png",
+      "coordinates": [
+        [
+          140.46151621368327,
+          39.05636249289028
+        ],
+        [
+          140.463601116605,
+          39.05636912109413
+        ],
+        [
+          140.46360437216092,
+          39.055744840448355
+        ],
+        [
+          140.4615194875961,
+          39.05573821239117
+        ]
+      ],
+      "gridResM": 0.05,
+      "interpolation": "none",
+      "pointsInput": 84325,
+      "occupiedCells": 82280,
+      "approxDensityPtsPerM2": 6.743905945448258
+    },
+    {
+      "id": "LP21H",
+      "label": "LP21H RGB（5cm・補間なし）",
+      "preview": "data/roof/LP21H_rgb_5cm.png",
+      "coordinates": [
+        [
+          140.53914618024652,
+          38.956823102745794
+        ],
+        [
+          140.54123221791042,
+          38.95682834219454
+        ],
+        [
+          140.54123756182292,
+          38.9555265989083
+        ],
+        [
+          140.53915156232122,
+          38.95552135970147
+        ]
+      ],
+      "gridResM": 0.05,
+      "interpolation": "none",
+      "pointsInput": 194391,
+      "occupiedCells": 190957,
+      "approxDensityPtsPerM2": 7.442279794923789
+    }
+  ],
+  "points": "data/roof/rmse_points.geojson",
+  "source": "261107_yuzawa_roof_lp21_rgb_ad_t28",
+  "notes": "各 LAZ 点 RGB を 5cm 格子に直書き（間引きなし・補間なし）。空セルはアルファ0。正本 GeoTIFF は admin store ad-t28。地図は tiles[] を1つのレイヤー切替で重ねる。測量点は data/roof/rmse_points.geojson（LP21A 近傍ピック＋他タイル SIMA 測量点）。",
+  "cacheVersion": "ad-t28-rgb-geotiff-nofill-multitile",
+  "gridResM": 0.05,
+  "interpolation": "none",
+  "thinning": "none",
+  "productKind": "rgb",
+  "layerToggle": "single_for_all_tiles",
+  "layerToggleReason": "index.html / sheets.js / layer-order.js / main.js を触ると open #6 とファイル衝突するため、既存の roof DSM 1 トグルで全タイル画像を出し入れする方が変更が小さい。",
+  "fitZoom": 18
 }
