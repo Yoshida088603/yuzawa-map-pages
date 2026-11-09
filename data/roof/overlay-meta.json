@@ -1,15 +1,31 @@
 {
-  "id": "lp21a-dsm",
-  "label": "LP21A DSM（0.5m プレビュー）",
-  "preview": "data/roof/LP21A_dsm_0p5m_preview.png",
+  "id": "lp21a-rgb",
+  "label": "LP21A RGB（5cm・補間なし）",
+  "preview": "data/roof/LP21A_dsm_5cm_rgb.png",
   "points": "data/roof/rmse_points.geojson",
-  "source": "261107_yuzawa_roof_geotiff_rmse_points",
-  "notes": "全市ではない LP21A サンプル。MapLibre image 用 PNG + RMSE 点。",
+  "source": "261107_yuzawa_roof_lp21a_5cm_rgb",
+  "notes": "LAZ 点 RGB を 5cm 格子に直書きした RGB ラスタ（DSM/高さバンドではない）。補間なし。空セルはアルファ0。正本 GeoTIFF は store の LP21A_rgb_5cm_epsg6678.tif。地図用 PNG は GeoTIFF から生成。",
+  "cacheVersion": "ad-t27-rgb-geotiff-nofill",
+  "gridResM": 0.05,
+  "interpolation": "none",
+  "productKind": "rgb",
   "coordinates": [
-    [140.42722372142293, 39.05064717032672],
-    [140.428577594914, 39.05064717032672],
-    [140.428577594914, 39.049779981565365],
-    [140.42722372142293, 39.049779981565365]
+    [
+      140.42722664060878,
+      39.050637076638075
+    ],
+    [
+      140.42857140151256,
+      39.05064175128414
+    ],
+    [
+      140.42857626819784,
+      39.04978911091309
+    ],
+    [
+      140.42723152346184,
+      39.04978443640829
+    ]
   ],
   "fitZoom": 21
 }

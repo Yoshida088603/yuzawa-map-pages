@@ -66,10 +66,24 @@ export function fitRoofDsm(map, opts = {}) {
   });
 }
 
+function previewUrlFromMeta(meta) {
+  const path = String(meta?.preview || "").replace(/^\.\//, "");
+  if (!path) {
+    throw new Error("overlay-meta.json に preview がありません");
+  }
+  const rel = "./" + path;
+  const url = new URL(rel, window.location.href);
+  url.searchParams.set("v", String(meta.cacheVersion || meta.gridResM || "0"));
+  return url.href;
+}
+
 export async function addRoofDsmLayers(map) {
   await loadRoofDsm();
   const meta = state.meta;
-  const previewUrl = await getVersionedUrl("roofDsmPreview");
+  // Prefer overlay-meta.preview so PNG 差し替えが #6 の manifest/sw と衝突しない
+  const previewUrl = meta?.preview
+    ? previewUrlFromMeta(meta)
+    : await getVersionedUrl("roofDsmPreview");
 
   if (!map.getSource(SOURCE_IDS.roofDsmImage)) {
     map.addSource(SOURCE_IDS.roofDsmImage, {
@@ -84,7 +98,8 @@ export async function addRoofDsmLayers(map) {
       type: "raster",
       source: SOURCE_IDS.roofDsmImage,
       paint: {
-        "raster-opacity": 0.78,
+        // alpha チャンネルで透過するため全体不透明度は 1
+        "raster-opacity": 1,
         "raster-resampling": "nearest",
       },
       layout: {
