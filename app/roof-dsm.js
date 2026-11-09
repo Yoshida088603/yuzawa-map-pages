@@ -1,15 +1,18 @@
-/** LP21A roof DSM preview (MapLibre image) + RMSE survey/pick points. */
+/** LP21 roof RGB overlays (MapLibre image) + RMSE / survey points. */
 
 import { getVersionedUrl, loadJson } from "./load.js";
 import { LAYER_IDS, SOURCE_IDS, bringOverlaysFront } from "./layer-order.js";
 
 const META_PATH = "./data/roof/overlay-meta.json";
+const EXTRA_LAYER_PREFIX = "yuzawa-roof-dsm-image-";
+const EXTRA_SOURCE_PREFIX = "yuzawa-roof-dsm-image-src-";
 
 const state = {
   meta: null,
   points: null,
   visible: true,
   pointsVisible: true,
+  tileLayerIds: [],
 };
 
 export function isRoofDsmVisible() {
@@ -31,9 +34,37 @@ export async function loadRoofDsm() {
   return state;
 }
 
+function tilesFromMeta(meta) {
+  if (Array.isArray(meta?.tiles) && meta.tiles.length > 0) {
+    return meta.tiles;
+  }
+  if (meta?.preview && Array.isArray(meta?.coordinates)) {
+    return [
+      {
+        id: meta.id || "LP21A",
+        preview: meta.preview,
+        coordinates: meta.coordinates,
+      },
+    ];
+  }
+  return [];
+}
+
+function allTileCoordinates(meta) {
+  const tiles = tilesFromMeta(meta);
+  const out = [];
+  for (const t of tiles) {
+    if (Array.isArray(t.coordinates)) out.push(...t.coordinates);
+  }
+  if (!out.length && Array.isArray(meta?.coordinates)) {
+    out.push(...meta.coordinates);
+  }
+  return out;
+}
+
 export function roofDsmBounds() {
-  const coords = state.meta?.coordinates;
-  if (!Array.isArray(coords) || coords.length < 4) return null;
+  const coords = allTileCoordinates(state.meta);
+  if (!coords.length) return null;
   const lngs = coords.map((c) => c[0]);
   const lats = coords.map((c) => c[1]);
   return [
@@ -49,7 +80,7 @@ export function roofDsmCenter() {
 }
 
 /**
- * Fly to the DSM sample at high zoom (default 21).
+ * Fly to the roof RGB coverage at high zoom (default from meta.fitZoom).
  * @param {import("maplibre-gl").Map} map
  * @param {{ zoom?: number, duration?: number, padding?: object }} [opts]
  */
@@ -66,10 +97,10 @@ export function fitRoofDsm(map, opts = {}) {
   });
 }
 
-function previewUrlFromMeta(meta) {
-  const path = String(meta?.preview || "").replace(/^\.\//, "");
+function previewUrlFromTile(tile, meta) {
+  const path = String(tile?.preview || "").replace(/^\.\//, "");
   if (!path) {
-    throw new Error("overlay-meta.json に preview がありません");
+    throw new Error("overlay-meta tile に preview がありません");
   }
   const rel = "./" + path;
   const url = new URL(rel, window.location.href);
@@ -77,35 +108,60 @@ function previewUrlFromMeta(meta) {
   return url.href;
 }
 
+function layerIdForTile(tile, index) {
+  if (index === 0) return LAYER_IDS.roofDsmImage;
+  return EXTRA_LAYER_PREFIX + String(tile.id || index);
+}
+
+function sourceIdForTile(tile, index) {
+  if (index === 0) return SOURCE_IDS.roofDsmImage;
+  return EXTRA_SOURCE_PREFIX + String(tile.id || index);
+}
+
 export async function addRoofDsmLayers(map) {
   await loadRoofDsm();
   const meta = state.meta;
-  // Prefer overlay-meta.preview so PNG 差し替えが #6 の manifest/sw と衝突しない
-  const previewUrl = meta?.preview
-    ? previewUrlFromMeta(meta)
-    : await getVersionedUrl("roofDsmPreview");
-
-  if (!map.getSource(SOURCE_IDS.roofDsmImage)) {
-    map.addSource(SOURCE_IDS.roofDsmImage, {
-      type: "image",
-      url: previewUrl,
-      coordinates: meta.coordinates,
-    });
+  const tiles = tilesFromMeta(meta);
+  if (!tiles.length) {
+    throw new Error("overlay-meta.json に tiles / preview がありません");
   }
-  if (!map.getLayer(LAYER_IDS.roofDsmImage)) {
-    map.addLayer({
-      id: LAYER_IDS.roofDsmImage,
-      type: "raster",
-      source: SOURCE_IDS.roofDsmImage,
-      paint: {
-        // alpha チャンネルで透過するため全体不透明度は 1
-        "raster-opacity": 1,
-        "raster-resampling": "nearest",
-      },
-      layout: {
-        visibility: state.visible ? "visible" : "none",
-      },
-    });
+
+  state.tileLayerIds = [];
+
+  for (let i = 0; i < tiles.length; i++) {
+    const tile = tiles[i];
+    if (!Array.isArray(tile.coordinates) || tile.coordinates.length < 4) {
+      throw new Error(`tile ${tile.id || i} の coordinates が不正です`);
+    }
+    const sourceId = sourceIdForTile(tile, i);
+    const layerId = layerIdForTile(tile, i);
+    const previewUrl = tile.preview
+      ? previewUrlFromTile(tile, meta)
+      : await getVersionedUrl("roofDsmPreview");
+
+    if (!map.getSource(sourceId)) {
+      map.addSource(sourceId, {
+        type: "image",
+        url: previewUrl,
+        coordinates: tile.coordinates,
+      });
+    }
+    if (!map.getLayer(layerId)) {
+      map.addLayer({
+        id: layerId,
+        type: "raster",
+        source: sourceId,
+        paint: {
+          // alpha チャンネルで透過するため全体不透明度は 1
+          "raster-opacity": 1,
+          "raster-resampling": "nearest",
+        },
+        layout: {
+          visibility: state.visible ? "visible" : "none",
+        },
+      });
+    }
+    state.tileLayerIds.push(layerId);
   }
 
   if (!map.getSource(SOURCE_IDS.roofRmsePoints)) {
@@ -176,6 +232,16 @@ export async function addRoofDsmLayers(map) {
   }
 
   bringOverlaysFront(map);
+  // Extra tile rasters are not in layer-order.js (#6 衝突回避)。境界線の直前へ寄せる。
+  const before = LAYER_IDS.boundariesLine;
+  for (const id of state.tileLayerIds) {
+    if (id === LAYER_IDS.roofDsmImage) continue;
+    if (map.getLayer(id) && map.getLayer(before)) {
+      try {
+        map.moveLayer(id, before);
+      } catch (_) {}
+    }
+  }
 }
 
 function setLayerVisibility(map, id, on) {
@@ -186,7 +252,12 @@ function setLayerVisibility(map, id, on) {
 
 export function setRoofDsmVisible(map, on) {
   state.visible = !!on;
-  setLayerVisibility(map, LAYER_IDS.roofDsmImage, state.visible);
+  const ids = state.tileLayerIds.length
+    ? state.tileLayerIds
+    : [LAYER_IDS.roofDsmImage];
+  for (const id of ids) {
+    setLayerVisibility(map, id, state.visible);
+  }
 }
 
 export function setRoofPointsVisible(map, on) {
