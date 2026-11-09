@@ -1,15 +1,29 @@
 {
   "id": "lp21a-dsm",
-  "label": "LP21A DSM（0.5m プレビュー）",
-  "preview": "data/roof/LP21A_dsm_0p5m_preview.png",
+  "label": "LP21A DSM（5cm RGB）",
+  "preview": "data/roof/LP21A_dsm_5cm_rgb.png",
   "points": "data/roof/rmse_points.geojson",
-  "source": "261107_yuzawa_roof_geotiff_rmse_points",
-  "notes": "全市ではない LP21A サンプル。MapLibre image 用 PNG + RMSE 点。",
+  "source": "261107_yuzawa_roof_lp21a_5cm_rgb",
+  "notes": "LP21A 点群 RGB・5cm 格子。空白はアルファ0。密度不足のため EDT 近傍補間（max 0.40m）。ファイル LP21A_dsm_5cm_rgb.png（互換用に旧名プレビューも同内容）。",
+  "cacheVersion": "ad-t27-5cm-rgb",
+  "gridResM": 0.05,
   "coordinates": [
-    [140.42722372142293, 39.05064717032672],
-    [140.428577594914, 39.05064717032672],
-    [140.428577594914, 39.049779981565365],
-    [140.42722372142293, 39.049779981565365]
+    [
+      140.42722664060878,
+      39.050637076638075
+    ],
+    [
+      140.42857140151256,
+      39.05064175128414
+    ],
+    [
+      140.42857626819784,
+      39.04978911091309
+    ],
+    [
+      140.42723152346184,
+      39.04978443640829
+    ]
   ],
   "fitZoom": 21
 }
