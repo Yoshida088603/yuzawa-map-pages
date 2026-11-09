@@ -1,0 +1,15 @@
+{
+  "id": "lp21a-dsm",
+  "label": "LP21A DSM（0.5m プレビュー）",
+  "preview": "data/roof/LP21A_dsm_0p5m_preview.png",
+  "points": "data/roof/rmse_points.geojson",
+  "source": "261107_yuzawa_roof_geotiff_rmse_points",
+  "notes": "全市ではない LP21A サンプル。MapLibre image 用 PNG + RMSE 点。",
+  "coordinates": [
+    [140.42722372142293, 39.05064717032672],
+    [140.428577594914, 39.05064717032672],
+    [140.428577594914, 39.049779981565365],
+    [140.42722372142293, 39.049779981565365]
+  ],
+  "fitZoom": 21
+}

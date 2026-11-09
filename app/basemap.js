@@ -53,7 +53,8 @@ export function buildInitialStyle() {
         source: "gsi-std",
         layout: { visibility: "none" },
         minzoom: 0,
-        maxzoom: 22,
+        // Above map maxZoom (22) so overzoom keeps the basemap visible.
+        maxzoom: 24,
       },
       {
         id: "gsi-photo",
@@ -61,7 +62,7 @@ export function buildInitialStyle() {
         source: "gsi-photo",
         layout: { visibility: "visible" },
         minzoom: 0,
-        maxzoom: 22,
+        maxzoom: 24,
       },
     ],
   };

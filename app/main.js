@@ -11,6 +11,7 @@ import { loadLaser, addLaserLayers, fitInitialYear } from "./laser.js";
 import { loadShinrin, addShinrinLayers } from "./shinrin.js";
 import { loadMemos, addMemoLayers, getMemoById } from "./memos.js";
 import { loadBoundaries, addBoundariesLayers } from "./boundaries.js";
+import { loadRoofDsm, addRoofDsmLayers, fitRoofDsm } from "./roof-dsm.js";
 import {
   bindSheetChrome,
   bindLayersSheet,
@@ -97,9 +98,25 @@ async function main() {
     return;
   }
 
+  let roofReady = false;
+  try {
+    await loadRoofDsm();
+    roofReady = true;
+  } catch (e) {
+    console.warn("LP21A DSM overlay skipped:", e);
+  }
+
   addBoundariesLayers(map);
   addShinrinLayers(map);
   addLaserLayers(map);
+  if (roofReady) {
+    try {
+      await addRoofDsmLayers(map);
+    } catch (e) {
+      console.warn("LP21A DSM layers skipped:", e);
+      roofReady = false;
+    }
+  }
   addMemoLayers(map);
   addGpsLayers(map);
   bringOverlaysFront(map);
@@ -117,6 +134,7 @@ async function main() {
   bindLayersSheet(map);
 
   const memoId = parseMemoQuery();
+  const wantRoof = new URLSearchParams(window.location.search).has("roof");
   if (memoId) {
     const feat = getMemoById(memoId);
     if (feat) {
@@ -124,6 +142,8 @@ async function main() {
       map.flyTo({ center: c, zoom: Math.max(map.getZoom(), 15), duration: 800 });
       openMemoDetail(feat);
     }
+  } else if (wantRoof && roofReady) {
+    fitRoofDsm(map, { zoom: 21, padding: hudPadding() });
   }
 
   registerServiceWorker().catch(() => {});
