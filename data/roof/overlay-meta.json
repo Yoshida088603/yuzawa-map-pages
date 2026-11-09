@@ -1,12 +1,13 @@
 {
   "id": "lp21a-dsm",
-  "label": "LP21A DSM（5cm RGB）",
+  "label": "LP21A DSM（5cm RGB・補間なし）",
   "preview": "data/roof/LP21A_dsm_5cm_rgb.png",
   "points": "data/roof/rmse_points.geojson",
   "source": "261107_yuzawa_roof_lp21a_5cm_rgb",
-  "notes": "LP21A 点群 RGB・5cm 格子。空白はアルファ0。密度不足のため EDT 近傍補間（max 0.40m）。ファイル LP21A_dsm_5cm_rgb.png（互換用に旧名プレビューも同内容）。",
-  "cacheVersion": "ad-t27-5cm-rgb",
+  "notes": "LP21A 点群 RGB を 5cm 格子に直書き。セル内は最大Zの点の RGB。補間・近傍埋め・膨張なし。点のないセルはアルファ0。ソース LAZ の RGB は高さ虚色（航空写真実色ではない）。",
+  "cacheVersion": "ad-t27-5cm-rgb-nofill",
   "gridResM": 0.05,
+  "interpolation": "none",
   "coordinates": [
     [
       140.42722664060878,
